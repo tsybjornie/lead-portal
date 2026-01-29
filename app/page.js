@@ -8,8 +8,12 @@ export default function HomePage() {
   console.log("SERVER: Rendering HomePage from page.js");
   const { market } = useMarket();
   const [showNotification, setShowNotification] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Fix for static generation
 
   useEffect(() => {
+    // Mark as client-side rendered
+    setIsClient(true);
+
     // Check if user has already closed the notification
     const hasClosedNotification = localStorage.getItem('hasClosedLaunchNotification');
     if (!hasClosedNotification) {
@@ -420,7 +424,7 @@ export default function HomePage() {
                 }}>
 
                   {/* Singapore Market - 6 Art Movements */}
-                  {market === 'SG' && (
+                  {isClient && market === 'SG' && (
                     <>
                       {/* Style Card 1 - Bauhaus */}
                       <div style={{
@@ -758,7 +762,7 @@ export default function HomePage() {
                   )}
 
                   {/* Malaysia Market - 6 Different Art Movements */}
-                  {market === 'MY' && (
+                  {isClient && market === 'MY' && (
                     <>
                       {/* MY Card 1 - Peranakan */}
                       <div style={{
