@@ -783,7 +783,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-project1.png"
+                            src="/project1.png"
                             alt="Peranakan"
                             style={{
                               width: '100%',
@@ -838,7 +838,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-project2.png"
+                            src="/project2.png"
                             alt="Tropical Modernism"
                             style={{
                               width: '100%',
@@ -893,7 +893,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-project3.png"
+                            src="/project3.png"
                             alt="Japandi"
                             style={{
                               width: '100%',
@@ -948,7 +948,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-project4.png"
+                            src="/project4.png"
                             alt="Mid-Century Modern"
                             style={{
                               width: '100%',
@@ -1003,7 +1003,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-art-deco-condo.png"
+                            src="/art-deco-condo.png"
                             alt="Colonial Revival"
                             style={{
                               width: '100%',
@@ -1058,7 +1058,7 @@ export default function HomePage() {
                           aspectRatio: '4/3'
                         }}>
                           <img
-                            src="/my-coastal-hdb.png"
+                            src="/coastal-hdb.png"
                             alt="Scandinavian Modern"
                             style={{
                               width: '100%',
