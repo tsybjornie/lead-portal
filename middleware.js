@@ -14,7 +14,7 @@ export function middleware(request) {
     // The matcher below handles this. If it matches /about, we redirect.
 
     // NOTE: If we are already in /[market]/..., pathname starts with /sg or /my.
-    const hasLocale = pathname.startsWith('/sg') || pathname.startsWith('/my') || pathname.startsWith('/jb');
+    const hasLocale = pathname.startsWith('/sg') || pathname.startsWith('/my');
 
     if (!hasLocale) {
         // If no locale, and it matched the config (meaning it's not api/admin/etc), redirect to /sg + pathname

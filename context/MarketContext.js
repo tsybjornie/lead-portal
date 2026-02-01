@@ -12,15 +12,16 @@ export function MarketProvider({ children }) {
     const pathname = usePathname();
 
     // Derive market from URL, fallback to localStorage or 'SG'
-    // validMarkets: 'sg', 'my', 'jb' (treating jb as my)
+    // validMarkets: 'sg', 'my'
     const urlMarket = params?.market ? params.market.toUpperCase() : null;
 
     // State is mainly for Client-Side immediate feedback, but URL is source of truth
-    const [market, setMarketState] = useState(urlMarket || 'SG');
+    // Drive state from URL, fallback to stored preference or default
+    const market = urlMarket || marketState;
 
     useEffect(() => {
         if (urlMarket) {
-            setMarketState(urlMarket);
+            // content is driven by URL, just sync storage
             localStorage.setItem('market_preference', urlMarket);
         }
     }, [urlMarket]);
@@ -28,11 +29,9 @@ export function MarketProvider({ children }) {
     const switchMarket = (targetMarket) => {
         const newMarketCode = targetMarket.toLowerCase();
         const currentMarketCode = market.toLowerCase();
-
-        // Simple Replace: /sg/about -> /my/about
-        // This regex ensures we only replace the FIRST path segment if it's a market
         const newPath = pathname.replace(`/${currentMarketCode}`, `/${newMarketCode}`);
 
+        // Optimistic update for UI responsiveness (though URL change will drive it momentarily)
         setMarketState(targetMarket);
         localStorage.setItem('market_preference', targetMarket);
         router.push(newPath);

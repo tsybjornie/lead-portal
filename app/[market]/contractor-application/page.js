@@ -443,7 +443,7 @@ export default function ContractorApplicationPage() {
                                 id="phone"
                                 value={formData.phone}
                                 onChange={(e) => updateField('phone', e.target.value)}
-                                placeholder={market === 'JB' ? "+60 XXX XXX XXX" : "+65 XXXX XXXX"}
+                                placeholder={market === 'MY' ? "+60 XXX XXX XXX" : "+65 XXXX XXXX"}
                                 required
                             />
                         </div>

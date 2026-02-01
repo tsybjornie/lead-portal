@@ -8,7 +8,7 @@ export const guides = [
         color: '#FFF8E1', // Warm Beige
         textColor: '#5D4037', // Dark Brown
         image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop', // Blueprint/Architecture focus
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'HDB Rules',
@@ -31,7 +31,7 @@ export const guides = [
         markets: ['SG']
     },
 
-    // JB Specific Guides
+    // Malaysia Specific Guides
     {
         title: 'Buying in JB',
         description: 'Singaporean Guide to buying property in Johor Bahru.',
@@ -40,7 +40,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?q=80&w=800&auto=format&fit=crop', // High rise scenic
-        markets: ['JB']
+        markets: ['MY']
     },
     {
         title: 'Johor Permits',
@@ -50,7 +50,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=800&auto=format&fit=crop', // Official building
-        markets: ['JB']
+        markets: ['MY']
     },
 
     // Expanded Content (Shared)
@@ -62,7 +62,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1554224155-9ffd4cea9585?q=80&w=800&auto=format&fit=crop', // Object focus: Calculator/Pen
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Tiling 101',
@@ -72,7 +72,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?q=80&w=800&auto=format&fit=crop', // Object focus: White marble texture
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Lighting',
@@ -82,7 +82,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop', // Object focus: Light bulb filament/details
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Carpentry',
@@ -92,7 +92,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1611486212557-88be5ff6f941?q=80&w=800&auto=format&fit=crop', // Object focus: Wood grain/texture
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Wet Works',
@@ -102,7 +102,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=800&auto=format&fit=crop', // Object focus: Bathroom tiles/faucet
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Defects Check',
@@ -112,7 +112,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?q=80&w=800&auto=format&fit=crop', // Object focus: Inspection checklist/Macro
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Red Flags',
@@ -122,7 +122,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?q=80&w=800&auto=format&fit=crop', // Object focus: Signing document/pen
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Countertops',
@@ -132,7 +132,7 @@ export const guides = [
         color: '#FFF8E1',
         textColor: '#5D4037',
         image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=800&auto=format&fit=crop', // Object focus: Stone texture
-        markets: ['SG', 'JB']
+        markets: ['SG', 'MY']
     },
     {
         title: 'Licenses',

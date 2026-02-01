@@ -297,9 +297,9 @@ export default function GuidePage({ params }) {
             ]
         },
         'renovation-budget-guide-2025': {
-            title: market === 'JB' ? 'Johor Renovation Budget Guide 2025' : 'Renovation Budget Guide 2025',
+            title: market === 'MY' ? 'Malaysia Renovation Budget Guide 2025' : 'Renovation Budget Guide 2025',
             category: 'Planning',
-            sections: market === 'JB' ? [
+            sections: market === 'MY' ? [
                 {
                     heading: 'Market Rates (Estimated in RM)',
                     type: 'comparison',
@@ -380,7 +380,7 @@ export default function GuidePage({ params }) {
                 {
                     heading: 'Vinyl vs. Tiles',
                     type: 'comparison',
-                    designBuild: market === 'JB' ? [
+                    designBuild: market === 'MY' ? [
                         'Cheaper (RM 6 - RM 12 psf)',
                         'Overlay over existing tiles',
                         'Softer underfoot',
@@ -393,7 +393,7 @@ export default function GuidePage({ params }) {
                         'Not waterproof (water resistant only)',
                         'Scratch adjacent'
                     ],
-                    traditional: market === 'JB' ? [
+                    traditional: market === 'MY' ? [
                         'More expensive (RM 25 - RM 45+ psf)',
                         'Requires hacking (or messy wet overlay)',
                         'Hard & cold feel',
@@ -411,8 +411,8 @@ export default function GuidePage({ params }) {
                     heading: 'Regulations (HDB vs Landed)',
                     type: 'infobox',
                     boxType: 'info',
-                    boxTitle: market === 'JB' ? 'Structure Matters' : 'HDB & Weight',
-                    content: market === 'JB'
+                    boxTitle: market === 'MY' ? 'Structure Matters' : 'HDB & Weight',
+                    content: market === 'MY'
                         ? 'For landed properties, ground floor tiling usually needs a solid concrete base to prevent "popping" tiles due to ground movement. For condos, ensure your contractor applies for management approval for hacking.'
                         : 'If you choose to overlay tiles on top of existing tiles, HDB has strict weight limits. You can usually only overlay ONCE. If the floor has already been overlaid before, you MUST hack everything up.'
                 },
@@ -579,9 +579,9 @@ export default function GuidePage({ params }) {
                     ]
                 },
                 {
-                    heading: market === 'JB' ? 'Missing SST Info' : 'Missing GST Info',
+                    heading: market === 'MY' ? 'Missing SST Info' : 'Missing GST Info',
                     type: 'text',
-                    content: market === 'JB'
+                    content: market === 'MY'
                         ? 'Is the price inclusive of SST (8%)? Most smaller contractors are not SST registered (verify their registration number). If they charge SST but have no license, it is illegal.'
                         : 'Is the price "before GST" or "inclusive of GST"? This adds 9% to your final bill. Ensure it is clearly stated.'
                 }
@@ -674,14 +674,14 @@ export default function GuidePage({ params }) {
                         'Resin + Stone dust',
                         'Stain resistant (mostly)',
                         'Cannot take hot pans (Resin burns)',
-                        market === 'JB' ? 'Cheaper (RM 180 - RM 300 pfr)' : 'Cheaper ($80-$150 pfr)'
+                        market === 'MY' ? 'Cheaper (RM 180 - RM 300 pfr)' : 'Cheaper ($80-$150 pfr)'
                     ],
                     traditional: [
                         '**Sintered Stone (Gardenia/Dekton)**',
                         'Baked mineral stone',
                         'Heat proof (Torch it!)',
                         'Scratch proof',
-                        market === 'JB' ? 'Expensive (RM 350 - RM 600+ pfr)' : 'Expensive ($150-$300+ pfr)',
+                        market === 'MY' ? 'Expensive (RM 350 - RM 600+ pfr)' : 'Expensive ($150-$300+ pfr)',
                         'Brittle (Can chip on edges)'
                     ]
                 },
