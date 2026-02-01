@@ -110,7 +110,7 @@ export default function Navigation() {
 
             {/* Desktop Market Toggle (Text Based) */}
             <button
-              onClick={() => switchMarket(market === 'SG' ? 'JB' : 'SG')}
+              onClick={() => switchMarket(market === 'SG' ? 'MY' : 'SG')}
               style={{
                 background: isScrolled ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.05)',
                 border: isScrolled ? '1px solid #777' : '1px solid rgba(255,255,255,0.2)',
