@@ -16,6 +16,9 @@ export function MarketProvider({ children }) {
     const urlMarket = params?.market ? params.market.toUpperCase() : null;
 
     // State is mainly for Client-Side immediate feedback, but URL is source of truth
+    // State is used for fallback if URL param isn't ready
+    const [marketState, setMarketState] = useState('SG');
+
     // Drive state from URL, fallback to stored preference or default
     const market = urlMarket || marketState;
 
