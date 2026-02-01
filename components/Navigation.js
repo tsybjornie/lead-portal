@@ -196,7 +196,7 @@ export default function Navigation() {
         {/* Mobile Market Toggle */}
         <button
           onClick={() => {
-            switchMarket(market === 'SG' ? 'JB' : 'SG');
+            switchMarket(market === 'SG' ? 'MY' : 'SG');
             setIsMenuOpen(false);
           }}
           style={{
