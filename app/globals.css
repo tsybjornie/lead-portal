@@ -506,3 +506,50 @@ a[style*="border-bottom: 1.5px solid white"]:hover {
   border-bottom-color: var(--accent-light) !important;
   transform: translateX(4px);
 }
+
+/* Home Page Responsive Layout */
+.home-layout {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  min-height: 100vh;
+  background: var(--bg-cream);
+}
+
+.home-left-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: var(--bg-cream);
+  color: var(--primary-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 3rem;
+}
+
+.home-right-panel {
+  background: var(--primary-dark);
+  color: white;
+  overflow-y: auto;
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 1024px) {
+  .home-layout {
+    display: block; /* Stack vertically */
+    min-height: auto;
+  }
+
+  .home-left-panel {
+    position: relative;
+    top: auto;
+    height: auto; /* Allow content to dictate height */
+    min-height: 70vh; /* Keep hero feel but allow scroll */
+    padding: 5rem 1.5rem 4rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .home-right-panel {
+    overflow-y: visible;
+  }
+}

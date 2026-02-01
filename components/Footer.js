@@ -29,7 +29,40 @@ export default function Footer() {
                             Connecting homeowners with {market === 'SG' ? "Singapore's" : "Malaysia's"} most trusted renovation professionals through intelligent matching.
                         </p>
                         <p style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
-                            <a href="mailto:hello@roofplatform.com" style={{ color: 'inherit', textDecoration: 'none', opacity: 0.8 }}>hello@roofplatform.com</a>
+                            <a
+                                href="mailto:hello@roofplatform.com"
+                                style={{
+                                    color: '#D4AF37', // Gold color for visibility
+                                    textDecoration: 'underline',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#FFD700';
+                                    e.currentTarget.style.opacity = '0.8';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = '#D4AF37';
+                                    e.currentTarget.style.opacity = '1';
+                                }}
+                            >
+                            </a>
+                        </p>
+                        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                            <a
+                                href="https://wa.me/6581109542"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: '#25D366',
+                                    textDecoration: 'none',
+                                    fontWeight: '500',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                }}
+                            >
+                                <span style={{ fontSize: '1.1rem' }}>✆</span> WhatsApp: +65 8110 9542
+                            </a>
                         </p>
                     </div>
 

@@ -9,17 +9,17 @@ class MyDocument extends Document {
                     <meta charSet="UTF-8" />
                     <meta name="description" content="Connect with Singapore's top interior designers and renovation contractors. Get matched with 2-4 pre-qualified professionals based on your style, budget, and project needs. Free service for homeowners." />
                     <meta name="keywords" content="Singapore renovation, interior design Singapore, HDB renovation, condo renovation, renovation contractors Singapore, interior designer Singapore, home renovation, renovation company" />
-                    <meta name="author" content="RenoBuilders" />
+                    <meta name="author" content="ROOF" />
 
                     {/* Open Graph / Facebook */}
                     <meta property="og:type" content="website" />
-                    <meta property="og:title" content="RenoBuilders - Find Your Perfect Interior Designer in Singapore" />
+                    <meta property="og:title" content="ROOF - Find Your Perfect Interior Designer in Singapore" />
                     <meta property="og:description" content="Get matched with 2-4 pre-qualified interior designers and contractors based on your renovation needs. Free for homeowners." />
-                    <meta property="og:site_name" content="RenoBuilders" />
+                    <meta property="og:site_name" content="ROOF" />
 
                     {/* Twitter */}
                     <meta name="twitter:card" content="summary_large_image" />
-                    <meta name="twitter:title" content="RenoBuilders - Find Your Perfect Interior Designer in Singapore" />
+                    <meta name="twitter:title" content="ROOF - Find Your Perfect Interior Designer in Singapore" />
                     <meta name="twitter:description" content="Get matched with 2-4 pre-qualified interior designers and contractors based on your renovation needs." />
 
                     {/* Structured Data for SEO */}
@@ -29,11 +29,11 @@ class MyDocument extends Document {
                             __html: JSON.stringify({
                                 "@context": "https://schema.org",
                                 "@type": "Service",
-                                "name": "RenoBuilders",
+                                "name": "ROOF",
                                 "description": "Interior design and renovation matching service in Singapore",
                                 "provider": {
                                     "@type": "Organization",
-                                    "name": "RenoBuilders",
+                                    "name": "ROOF",
                                     "address": {
                                         "@type": "PostalAddress",
                                         "addressCountry": "SG"

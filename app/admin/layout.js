@@ -88,7 +88,7 @@ export default function AdminLayout({ children }) {
                 <div style={{ padding: '0 1.5rem', marginBottom: '2rem' }}>
                     <Link href="/admin" style={{ color: 'white', textDecoration: 'none' }}>
                         <h2 style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display, serif' }}>
-                            RenoBuilders
+                            ROOF
                         </h2>
                         <span style={{ fontSize: '0.8rem', opacity: 0.6 }}>Admin Dashboard</span>
                     </Link>

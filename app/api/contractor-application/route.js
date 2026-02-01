@@ -90,13 +90,13 @@ export async function POST(request) {
     const confirmationEmail = {
       from: process.env.SMTP_USER,
       to: formData.email,
-      subject: 'RenoBuilders - Application Received',
+      subject: 'ROOF - Application Received',
       html: `
         <h2>Application Received</h2>
         
         <p>Dear ${formData.contact_person},</p>
         
-        <p>Thank you for applying to join the RenoBuilders network. We've received your application for <strong>${formData.company_name}</strong>.</p>
+        <p>Thank you for applying to join the ROOF network. We've received your application for <strong>${formData.company_name}</strong>.</p>
         
         <p><strong>What happens next:</strong></p>
         <ul>
@@ -107,7 +107,7 @@ export async function POST(request) {
         
         <p>If you have any questions in the meantime, feel free to reply to this email.</p>
         
-        <p>Best regards,<br>The RenoBuilders Team</p>
+        <p>Best regards,<br>The ROOF Team</p>
         
         <hr>
         <p style="color: #666; font-size: 0.9em;">
