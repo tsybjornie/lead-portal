@@ -10,6 +10,7 @@
     "db:setup": "node scripts/setup-db.js"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.6.1",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.6.2",
     "jsonwebtoken": "^9.0.3",

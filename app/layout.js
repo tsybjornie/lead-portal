@@ -1,4 +1,5 @@
 import './globals.css';
+import { Analytics } from '@vercel/analytics/react';
 import Link from 'next/link';
 import Navigation from '../components/Navigation';
 import { MarketProvider } from '../context/MarketContext';
@@ -132,6 +133,7 @@ export default function RootLayout({ children }) {
           <Footer />
           <FacebookPixel />
           <WhatsAppButton />
+          <Analytics />
         </MarketProvider>
       </body>
     </html>
