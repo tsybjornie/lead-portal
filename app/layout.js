@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Navigation from '../components/Navigation';
 import { MarketProvider } from '../context/MarketContext';
 import Footer from '../components/Footer';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'roof Singapore | Find Your Perfect Interior Designer & Renovation Contractor',
@@ -63,6 +64,7 @@ export default function RootLayout({ children }) {
 
           <Footer />
         </MarketProvider>
+        <Analytics />
       </body>
     </html>
   );
