@@ -601,7 +601,7 @@ export default function HomeownerEnquiryPage() {
                                     type="file"
                                     id="floorplan"
                                     accept=".pdf,.jpg,.jpeg,.png"
-                                    onChange={(e) => setUploadedFiles(prev => ({ ...prev, floorplan: e.target.files[0] }))}
+                                    onChange={(e) => handleFileUpload('floorplan', e.target.files[0])}
                                     style={{ padding: '0.5rem', fontSize: '0.9rem' }}
                                 />
                             </div>
@@ -613,7 +613,7 @@ export default function HomeownerEnquiryPage() {
                                         type="file"
                                         id="tenancyGuide"
                                         accept=".pdf"
-                                        onChange={(e) => setUploadedFiles(prev => ({ ...prev, tenancyGuide: e.target.files[0] }))}
+                                        onChange={(e) => handleFileUpload('tenancyGuide', e.target.files[0])}
                                         style={{ padding: '0.5rem', fontSize: '0.9rem' }}
                                     />
                                     <small style={{ color: 'var(--text-light)', fontSize: '0.85rem', marginTop: '0.25rem', display: 'block' }}>
@@ -628,7 +628,7 @@ export default function HomeownerEnquiryPage() {
                                     type="file"
                                     id="applianceList"
                                     accept=".pdf,.xls,.xlsx,.doc,.docx,.txt"
-                                    onChange={(e) => setUploadedFiles(prev => ({ ...prev, applianceList: e.target.files[0] }))}
+                                    onChange={(e) => handleFileUpload('applianceList', e.target.files[0])}
                                     style={{ padding: '0.5rem', fontSize: '0.9rem' }}
                                 />
                             </div>
@@ -639,7 +639,7 @@ export default function HomeownerEnquiryPage() {
                                     type="file"
                                     id="moodboard"
                                     accept=".pdf,.jpg,.jpeg,.png,.zip"
-                                    onChange={(e) => setUploadedFiles(prev => ({ ...prev, moodboard: e.target.files[0] }))}
+                                    onChange={(e) => handleFileUpload('moodboard', e.target.files[0])}
                                     style={{ padding: '0.5rem', fontSize: '0.9rem' }}
                                 />
                             </div>
