@@ -147,6 +147,25 @@ export default function HomeownerEnquiryPage() {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
+    const handleFileUpload = (fileKey, file) => {
+        if (file) {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload only images (JPG, PNG) or PDF files');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            setUploadedFiles(prev => ({ ...prev, [fileKey]: file }));
+        }
+    };
+
     const toggleScope = (item) => {
         setFormData(prev => ({
             ...prev,
@@ -188,10 +207,30 @@ export default function HomeownerEnquiryPage() {
     const handleSubmit = async () => {
         try {
             const isHighMaintenance = karenScore >= 12;
+
+            // Convert uploaded files to base64
+            const filesData = {};
+            for (const [key, file] of Object.entries(uploadedFiles)) {
+                if (file) {
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(file);
+                    });
+                    filesData[key] = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: base64
+                    };
+                }
+            }
+
             const finalData = {
                 ...formData,
                 karenScore,
-                tier: isHighMaintenance ? 'Concierge' : 'Standard'
+                tier: isHighMaintenance ? 'Concierge' : 'Standard',
+                attachments: filesData
             };
 
             const response = await fetch('/api/homeowner-enquiry', {

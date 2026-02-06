@@ -89,6 +89,20 @@ export async function POST(request) {
       ? formData.scope.join(', ')
       : 'Not specified';
 
+    // Prepare attachments from uploaded files
+    const attachments = [];
+    if (formData.attachments) {
+      for (const [key, file] of Object.entries(formData.attachments)) {
+        if (file && file.data) {
+          attachments.push({
+            filename: file.name,
+            content: file.data.split(',')[1], // Remove data:image/png;base64, prefix
+            encoding: 'base64'
+          });
+        }
+      }
+    }
+
     // Email to admin
     const adminEmail = {
       from: process.env.SMTP_USER,
@@ -119,11 +133,17 @@ export async function POST(request) {
           <p>${formData.additional_notes}</p>
         ` : ''}
         
+        ${attachments.length > 0 ? `
+          <h3>Attachments</h3>
+          <p>${attachments.map(a => a.filename).join(', ')}</p>
+        ` : ''}
+        
         <hr>
         <p style="color: #666; font-size: 0.9em;">
           Submitted: ${new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}
         </p>
-      `
+      `,
+      attachments: attachments
     };
 
     // Confirmation email to homeowner
