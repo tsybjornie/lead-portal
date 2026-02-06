@@ -62,7 +62,7 @@ export async function POST(request) {
       const nodemailerModule = await import('nodemailer');
       const nodemailer = nodemailerModule.default;
 
-      transporter = nodemailer.createTransporter({
+      transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.gmail.com',
         port: smtpPort,
         secure: smtpPort === 465, // Use true for 465, false for other ports (587 uses STARTTLS)
