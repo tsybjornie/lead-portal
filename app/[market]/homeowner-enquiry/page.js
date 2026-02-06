@@ -8,6 +8,7 @@ export default function HomeownerEnquiryPage() {
     const { market } = useMarket();
     const [currentStep, setCurrentStep] = useState(1);
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [assessmentStep, setAssessmentStep] = useState(0); // 0 to 9 for the 10 questions
     const [karenScore, setKarenScore] = useState(0);
     const [assessmentResponses, setAssessmentResponses] = useState([]); // Store selected answers
@@ -205,7 +206,10 @@ export default function HomeownerEnquiryPage() {
     };
 
     const handleSubmit = async () => {
+        if (submitting) return; // Prevent multiple submissions
+
         try {
+            setSubmitting(true);
             const isHighMaintenance = karenScore >= 12;
 
             // Convert uploaded files to base64
@@ -243,10 +247,12 @@ export default function HomeownerEnquiryPage() {
                 setSubmitted(true);
             } else {
                 alert('Failed to submit. Please try again or contact us directly.');
+                setSubmitting(false);
             }
         } catch (error) {
             console.error('Submission error:', error);
             alert('Failed to submit. Please try again or contact us directly.');
+            setSubmitting(false);
         }
     };
 
@@ -767,8 +773,9 @@ export default function HomeownerEnquiryPage() {
                             <button
                                 className="btn btn-primary"
                                 onClick={handleSubmit}
+                                disabled={submitting}
                             >
-                                Confirm & Submit
+                                {submitting ? 'Submitting...' : 'Confirm & Submit'}
                             </button>
                         </div>
                     </div>
