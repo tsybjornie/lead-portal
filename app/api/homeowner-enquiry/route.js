@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import * as nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
@@ -61,7 +60,7 @@ export async function POST(request) {
 
       // Dynamic import of nodemailer to bypass webpack
       const nodemailerModule = await import('nodemailer');
-      const nodemailer = nodemailerModule.default || nodemailerModule;
+      const nodemailer = nodemailerModule.default;
 
       transporter = nodemailer.createTransporter({
         host: process.env.SMTP_HOST || 'smtp.gmail.com',
