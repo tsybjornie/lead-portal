@@ -155,7 +155,7 @@ export default function HomePage() {
                 Be among the first 100 {market === 'SG' ? 'Singapore homeowners' : 'homeowners'} to get priority access to our top-rated network of interior designers!
               </p>
               <Link
-                href="/assessment"
+                href={`/${market.toLowerCase()}/assessment`}
                 onClick={handleCloseNotification}
                 style={{
                   display: 'inline-block',
@@ -222,7 +222,7 @@ export default function HomePage() {
               fontFamily: 'var(--font-body)',
               fontWeight: '500'
             }}>
-              Get matched with {market === 'SG' ? '5' : '3'} {market === 'SG' ? 'interior designers' : 'Malaysia renovation firms'} who fit your budget, style, and working preferences.
+              Get matched with {market === 'SG' ? '3' : '3'} {market === 'SG' ? 'interior designers' : 'Malaysia renovation firms'} who fit your budget, style, and working preferences.
             </p>
             <p style={{
               fontSize: '1rem',
@@ -232,13 +232,13 @@ export default function HomePage() {
               color: 'var(--text-light)',
               fontFamily: 'var(--font-body)'
             }}>
-              No endless browsing. No guesswork. Just {market === 'SG' ? '5' : '3'} pre-qualified {market === 'SG' ? 'designers' : 'contractors'} matched to how you actually work — in 24 hours.
+              No endless browsing. No guesswork. Just {market === 'SG' ? '3' : '3'} pre-qualified {market === 'SG' ? 'designers' : 'contractors'} matched to how you actually work — in 24 hours.
             </p>
-            <Link href="/assessment" className="btn btn-primary" style={{
+            <Link href={`/${market.toLowerCase()}/assessment`} className="btn btn-primary" style={{
               fontSize: '0.95rem',
               padding: '0.5rem 0'
             }}>
-              Get Your {market === 'SG' ? '5' : '3'} Matches →
+              Get Your {market === 'SG' ? '3' : '3'} Matches →
             </Link>
             <p style={{
               fontSize: '0.85rem',

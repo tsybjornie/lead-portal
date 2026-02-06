@@ -241,7 +241,7 @@ export default function HomeownerEnquiryPage() {
                             : "Based on your balanced preferences, we have matched you with our Core Design Partners."}
                     </p>
                     <p style={{ marginTop: '1rem', fontWeight: 500 }}>
-                        You will hear from {market === 'SG' ? '5' : '3'} selected Interior Design Partners within 24 hours.
+                        You will hear from {market === 'SG' ? '3' : '3'} selected Interior Design Partners within 24 hours.
                     </p>
                 </div>
 

@@ -60,10 +60,10 @@ export default function Navigation() {
   };
 
   const navLinks = [
-    { name: 'Get Matched', path: '/assessment' },
-    { name: 'Guides & References', path: '/guides' },
-    { name: 'FAQ', path: '/faq' },
-    { name: 'For Firms', path: '/contractor-application' },
+    { name: 'Get Matched', path: `/${market.toLowerCase()}/assessment` },
+    { name: 'Guides & References', path: `/${market.toLowerCase()}/guides` },
+    { name: 'FAQ', path: `/${market.toLowerCase()}/faq` },
+    { name: 'For Firms', path: `/${market.toLowerCase()}/contractor-application` },
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function Navigation() {
         }}>
 
           {/* LEFT: Logo Wordmark */}
-          <Link href="/" style={{
+          <Link href={`/${market.toLowerCase()}`} style={{
             fontFamily: 'Playfair Display, serif', // Keeping Brand Font
             fontSize: '1.5rem',
             color: '#1a1a1a', // Always dark

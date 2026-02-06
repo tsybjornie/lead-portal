@@ -44,7 +44,7 @@ export default function Assessment() {
                 }}>
                     Good renovations aren&apos;t just about pretty pictures. They&apos;re about finding designers who work the way <em>you</em> work. We match you with 3 firms based on communication style, timeline preferences, and decision-making approach.
                 </p>
-                <Link href={`/${market}/homeowner-enquiry`} className="btn btn-primary" style={{
+                <Link href={`/${market.toLowerCase()}/homeowner-enquiry`} className="btn btn-primary" style={{
                     padding: '1.2rem 3.5rem',
                     background: 'var(--primary-dark)',
                     color: 'white',

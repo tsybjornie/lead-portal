@@ -45,6 +45,7 @@ export default function Footer() {
                                     e.currentTarget.style.opacity = '1';
                                 }}
                             >
+                                <span style={{ fontSize: '1.1rem', marginRight: '0.5rem' }}>✉</span> hello@roofplatform.com
                             </a>
                         </p>
                         <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
@@ -70,11 +71,11 @@ export default function Footer() {
                     <div>
                         <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', color: '#888' }}>Platform</h4>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Home</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/assessment" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Get Matched</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/about" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>About Us</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/faq" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>FAQ</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/guides" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Guides & References</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Home</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/assessment`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Get Matched</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/about`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>About Us</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/faq`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>FAQ</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/guides`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Guides & References</Link></li>
                         </ul>
                     </div>
 
@@ -82,10 +83,10 @@ export default function Footer() {
                     <div>
                         <h4 style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', color: '#888' }}>Legal & Transparency</h4>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/legal/trust" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Trust & Transparency</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/legal/roles" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Roles & Responsibilities</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/legal/disclaimers" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Disclaimers</Link></li>
-                            <li style={{ marginBottom: '0.5rem' }}><Link href="/hard-truths" style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Hard Truths</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/legal/trust`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Trust & Transparency</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/legal/roles`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Roles & Responsibilities</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/legal/disclaimers`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Disclaimers</Link></li>
+                            <li style={{ marginBottom: '0.5rem' }}><Link href={`/${market.toLowerCase()}/hard-truths`} style={{ color: 'inherit', textDecoration: 'none', fontSize: '0.9rem' }}>Hard Truths</Link></li>
                         </ul>
                     </div>
                 </div>
