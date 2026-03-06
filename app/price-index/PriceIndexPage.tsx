@@ -9,8 +9,8 @@ const CATEGORIES = [
     {
         category: 'Tiling',
         items: [
-            { name: '600x600mm Homogeneous Tile (supply)', unit: 'sqft', sg: 8.50, my: 3.20 },
-            { name: '600x600mm Homogeneous Tile (install)', unit: 'sqft', sg: 5.00, my: 2.50 },
+            { name: '600×600mm Homogeneous Tile (supply)', unit: 'sqft', sg: 8.50, my: 3.20 },
+            { name: '600×600mm Homogeneous Tile (install)', unit: 'sqft', sg: 5.00, my: 2.50 },
             { name: 'Feature Wall Tile', unit: 'sqft', sg: 12.00, my: 5.00 },
             { name: 'Bathroom Floor Tile (non-slip)', unit: 'sqft', sg: 9.00, my: 3.50 },
         ],
@@ -82,7 +82,7 @@ const FAQS = [
     { question: 'How much does HDB renovation cost in Singapore in 2026?', answer: 'Based on Roof-managed projects, a 4-room HDB BTO renovation costs S$35,000-55,000 in 2026. This includes tiling, carpentry, painting, electrical, and plumbing. Basic packages start at S$25,000, while premium renovations can exceed S$80,000.' },
     { question: 'How much cheaper is renovation in Johor Bahru compared to Singapore?', answer: 'On average, renovation in JB costs 40-60% less than Singapore. A 4-room equivalent renovation costs RM 45,000-65,000 (S$13,500-19,500) in JB vs S$35,000-55,000 in SG. The savings come from lower labor costs and local material sourcing.' },
     { question: 'What is the Roof Price Index?', answer: 'The Roof Price Index is a monthly renovation cost report based on real transaction data from Roof-managed projects in Singapore and Johor Bahru. Unlike editorial estimates, these prices come from actual purchase orders, quotations, and completed projects.' },
-    { question: 'Why are Singapore renovation costs higher than Malaysia?', answer: 'Singapore renovation costs include foreign worker levies (S$30-50/day), higher material import costs, and multi-layer contractor margins. In Malaysia, local workers are the cost floor — there is no cheaper labor arbitrage layer below them, making prices more transparent and stable.' },
+    { question: 'Why are Singapore renovation costs higher than Malaysia?', answer: 'Singapore renovation costs include foreign worker levies (S$30-50/day), higher material import costs, and multi-layer contractor margins. In Malaysia, local workers are the cost floor — there is no cheaper labor arbitrage layer.' },
     { question: 'How do I get accurate renovation quotes in Singapore?', answer: 'Use Roof to get free, instant quotations based on real market data from 113 materials. Our quotation builder (Numbers) prices every item at current SG rates, giving you a transparent breakdown before you even speak to a designer.' },
 ];
 
@@ -92,44 +92,106 @@ function fmt(n: number, currency: string) {
 }
 
 export default function PriceIndexPage() {
-    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+    const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
+    const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
     const [market, setMarket] = useState<'both' | 'sg' | 'my'>('both');
+    const [openFaq, setOpenFaq] = useState<number | null>(null);
 
     return (
-        <div style={{ fontFamily: f, background: '#FAFAF9', minHeight: '100vh', padding: '40px 24px' }}>
-            {/* JSON-LD Structured Data for AI crawlers */}
+        <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+            {/* JSON-LD */}
             <OrganizationSchema />
             <FAQSchema faqs={FAQS} />
             {CATEGORIES[0].items.map(item => (
                 <PriceIndexSchema key={item.name} material={item.name} priceSG={item.sg} priceMY={item.my * 3.07} unit={item.unit} />
             ))}
 
-            <div style={{ maxWidth: 900, margin: '0 auto' }}>
-                {/* Header */}
-                <div style={{ marginBottom: 32 }}>
-                    <Link href="/landing" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                        <div style={{ width: 28, height: 28, borderRadius: 7, background: '#37352F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 800 }}>R</div>
-                        <span style={{ fontSize: 14, fontWeight: 800, color: '#37352F' }}>Roof</span>
-                    </Link>
-                    <h1 style={{ fontSize: 28, fontWeight: 900, color: '#37352F', margin: '0 0 4px', letterSpacing: '-0.03em' }}>Roof Price Index 2026</h1>
-                    <p style={{ fontSize: 14, color: '#9B9A97', margin: '0 0 16px' }}>Real renovation costs from actual projects. Updated monthly. Singapore and Johor Bahru.</p>
+            <style>{`
+                .price-row { transition: background 0.2s ease; }
+                .price-row:hover { background: rgba(0,0,0,0.02) !important; }
+                .faq-item { transition: all 0.2s ease; cursor: pointer; }
+                .faq-item:hover { background: rgba(0,0,0,0.02) !important; }
+            `}</style>
+
+            {/* ═══════ TOP BAR ═══════ */}
+            <nav style={{
+                padding: '0 48px', height: 56,
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+            }}>
+                <Link href="/landing" style={{
+                    fontFamily: mono, fontSize: 11, fontWeight: 500,
+                    color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
+                    textTransform: 'uppercase' as const, textDecoration: 'none',
+                }}>ORDINANCE SYSTEMS</Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+                    {[
+                        { name: 'Platform', path: '/hub' },
+                        { name: 'Founding 20', path: '/founding' },
+                        { name: 'Landing', path: '/landing' },
+                    ].map(link => (
+                        <Link key={link.name} href={link.path} style={{
+                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
+                            textDecoration: 'none', transition: 'color 0.2s',
+                        }}
+                            onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.8)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.35)'}
+                        >{link.name}</Link>
+                    ))}
+                    <Link href="/join" style={{
+                        fontSize: 12, fontWeight: 500, color: '#111',
+                        textDecoration: 'none', padding: '6px 16px', borderRadius: 6,
+                        border: '1px solid rgba(0,0,0,0.12)', transition: 'all 0.2s',
+                    }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#111'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#111'; }}
+                    >Get Started</Link>
+                </div>
+            </nav>
+
+            {/* ═══════ HEADER ═══════ */}
+            <div style={{ maxWidth: 900, margin: '0 auto', padding: '100px 48px 0' }}>
+                <div style={{ marginBottom: 60 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 10, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                        textTransform: 'uppercase' as const, marginBottom: 40,
+                    }}>PRICE INDEX · MARCH 2026</div>
+
+                    <h1 style={{
+                        fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 300, lineHeight: 1.05,
+                        letterSpacing: '-0.04em', margin: '0 0 16px',
+                    }}>
+                        Renovation costs.<br />
+                        <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>Real data.</span>
+                    </h1>
+
+                    <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.35)', margin: '0 0 32px', lineHeight: 1.7, maxWidth: 460 }}>
+                        From actual projects. Updated monthly.<br />Singapore and Johor Bahru.
+                    </p>
 
                     {/* Market Toggle */}
-                    <div style={{ display: 'flex', gap: 8 }}>
+                    <div style={{ display: 'flex', gap: 4 }}>
                         {[
                             { value: 'both', label: 'SG vs JB' },
-                            { value: 'sg', label: 'Singapore Only' },
-                            { value: 'my', label: 'Johor Bahru Only' },
+                            { value: 'sg', label: 'Singapore' },
+                            { value: 'my', label: 'Johor Bahru' },
                         ].map(m => (
                             <button
                                 key={m.value}
                                 onClick={() => setMarket(m.value as 'both' | 'sg' | 'my')}
                                 style={{
-                                    padding: '6px 14px', fontSize: 12, fontWeight: 600, borderRadius: 6, border: '1.5px solid',
-                                    borderColor: market === m.value ? '#37352F' : '#E9E9E7',
-                                    background: market === m.value ? '#37352F' : 'white',
-                                    color: market === m.value ? 'white' : '#6B6A67',
-                                    cursor: 'pointer', fontFamily: f,
+                                    padding: '6px 16px', fontSize: 11, fontWeight: 500,
+                                    borderRadius: 4, border: '1px solid',
+                                    borderColor: market === m.value ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.08)',
+                                    background: market === m.value ? '#111' : 'transparent',
+                                    color: market === m.value ? '#fff' : 'rgba(0,0,0,0.35)',
+                                    cursor: 'pointer', fontFamily: mono,
+                                    letterSpacing: '0.03em', transition: 'all 0.2s',
                                 }}
                             >
                                 {m.label}
@@ -138,87 +200,148 @@ export default function PriceIndexPage() {
                     </div>
                 </div>
 
-                {/* Category Tables */}
-                {CATEGORIES.map(cat => (
-                    <div key={cat.category} style={{ marginBottom: 24 }}>
-                        <h2 style={{ fontSize: 15, fontWeight: 700, color: '#37352F', margin: '0 0 10px' }}>{cat.category}</h2>
-                        <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', overflow: 'hidden' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
-                                <thead>
-                                    <tr style={{ background: '#FAFAF9', borderBottom: '1px solid #E9E9E7' }}>
-                                        <th style={{ padding: '10px 14px', textAlign: 'left', fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Item</th>
-                                        <th style={{ padding: '10px 14px', textAlign: 'center', fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', width: 60 }}>Unit</th>
-                                        {(market === 'both' || market === 'sg') && (
-                                            <th style={{ padding: '10px 14px', textAlign: 'right', fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', width: 100 }}>SG (S$)</th>
-                                        )}
-                                        {(market === 'both' || market === 'my') && (
-                                            <th style={{ padding: '10px 14px', textAlign: 'right', fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', width: 100 }}>JB (RM)</th>
-                                        )}
-                                        {market === 'both' && (
-                                            <th style={{ padding: '10px 14px', textAlign: 'right', fontSize: 10, fontWeight: 600, color: '#059669', textTransform: 'uppercase', width: 80 }}>Savings</th>
-                                        )}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cat.items.map((item, i) => {
-                                        const savings = Math.round((1 - (item.my / 3.07 / item.sg)) * 100); // Convert RM to SGD: divide by 3.07
-                                        return (
-                                            <tr key={item.name} style={{ borderBottom: i < cat.items.length - 1 ? '1px solid #F3F3F2' : 'none' }}>
-                                                <td style={{ padding: '10px 14px', color: '#37352F', fontWeight: 500 }}>{item.name}</td>
-                                                <td style={{ padding: '10px 14px', textAlign: 'center', color: '#9B9A97', fontSize: 11 }}>/{item.unit}</td>
-                                                {(market === 'both' || market === 'sg') && (
-                                                    <td style={{ padding: '10px 14px', textAlign: 'right', color: '#37352F', fontWeight: 600 }}>{fmt(item.sg, 'S$')}</td>
-                                                )}
-                                                {(market === 'both' || market === 'my') && (
-                                                    <td style={{ padding: '10px 14px', textAlign: 'right', color: '#37352F', fontWeight: 600 }}>{fmt(item.my, 'RM ')}</td>
-                                                )}
-                                                {market === 'both' && (
-                                                    <td style={{ padding: '10px 14px', textAlign: 'right', color: savings > 0 ? '#059669' : '#DC2626', fontWeight: 700, fontSize: 11 }}>
-                                                        {savings > 0 ? `${savings}% cheaper` : '—'}
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                {/* ═══════ CATEGORY TABLES ═══════ */}
+                {CATEGORIES.map((cat, catIdx) => (
+                    <div key={cat.category} style={{ marginBottom: 48 }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 400, color: 'rgba(0,0,0,0.12)', letterSpacing: '0.05em' }}>
+                                {String(catIdx + 1).padStart(2, '0')}
+                            </span>
+                            <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111', margin: 0, letterSpacing: '-0.01em' }}>
+                                {cat.category}
+                            </h2>
                         </div>
+
+                        {/* Header row */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: market === 'both' ? '1fr 60px 100px 100px 80px' : '1fr 60px 100px',
+                            padding: '12px 0', borderBottom: '1px solid rgba(0,0,0,0.08)', marginTop: 12,
+                        }}>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ITEM</span>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.15)', letterSpacing: '0.1em', textAlign: 'center' }}>UNIT</span>
+                            {(market === 'both' || market === 'sg') && (
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', textAlign: 'right' }}>SG (S$)</span>
+                            )}
+                            {(market === 'both' || market === 'my') && (
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', textAlign: 'right' }}>JB (RM)</span>
+                            )}
+                            {market === 'both' && (
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textAlign: 'right' }}>DELTA</span>
+                            )}
+                        </div>
+
+                        {/* Data rows */}
+                        {cat.items.map((item, i) => {
+                            const savings = Math.round((1 - (item.my / 3.07 / item.sg)) * 100);
+                            return (
+                                <div key={item.name} className="price-row" style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: market === 'both' ? '1fr 60px 100px 100px 80px' : '1fr 60px 100px',
+                                    padding: '12px 0',
+                                    borderBottom: i < cat.items.length - 1 ? '1px solid rgba(0,0,0,0.04)' : '1px solid rgba(0,0,0,0.08)',
+                                    alignItems: 'center',
+                                }}>
+                                    <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)', fontWeight: 400 }}>{item.name}</span>
+                                    <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.15)', textAlign: 'center' }}>/{item.unit}</span>
+                                    {(market === 'both' || market === 'sg') && (
+                                        <span style={{ fontFamily: mono, fontSize: 12, color: '#111', textAlign: 'right', fontWeight: 500 }}>{fmt(item.sg, 'S$')}</span>
+                                    )}
+                                    {(market === 'both' || market === 'my') && (
+                                        <span style={{ fontFamily: mono, fontSize: 12, color: 'rgba(0,0,0,0.5)', textAlign: 'right', fontWeight: 500 }}>{fmt(item.my, 'RM ')}</span>
+                                    )}
+                                    {market === 'both' && (
+                                        <span style={{
+                                            fontFamily: mono, fontSize: 10, textAlign: 'right',
+                                            color: savings > 0 ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.15)',
+                                            fontWeight: 500, letterSpacing: '0.02em',
+                                        }}>
+                                            {savings > 0 ? `−${savings}%` : '—'}
+                                        </span>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
 
-                {/* Data Source */}
-                <div style={{ padding: '16px 20px', borderRadius: 10, background: '#F9FAFB', border: '1px solid #F3F3F2', marginBottom: 28 }}>
-                    <div style={{ fontSize: 11, color: '#9B9A97', lineHeight: 1.7 }}>
-                        <strong style={{ color: '#6B6A67' }}>Data Source:</strong> Prices are based on actual purchase orders and quotations processed through Roof-managed renovation projects in Singapore and Johor Bahru. SG prices reflect current market rates inclusive of labor and materials. JB prices are in Malaysian Ringgit (RM). Conversion rate used: 1 SGD = 3.07 MYR. Last updated: March 2026.
+                {/* ═══════ DATA SOURCE ═══════ */}
+                <div style={{ padding: '20px 0', marginBottom: 60, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: 12 }}>DATA SOURCE</div>
+                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', lineHeight: 1.8 }}>
+                        Prices based on actual purchase orders and quotations processed through Roof-managed renovation projects in Singapore and Johor Bahru. SG prices reflect current market rates inclusive of labor and materials. JB prices in Malaysian Ringgit (RM). Conversion: 1 SGD = 3.07 MYR. Last updated March 2026.
                     </div>
                 </div>
 
-                {/* FAQ Section (AEO-optimized) */}
-                <div style={{ marginBottom: 28 }}>
-                    <h2 style={{ fontSize: 18, fontWeight: 800, color: '#37352F', margin: '0 0 16px' }}>Frequently Asked Questions</h2>
-                    {FAQS.map((faq, i) => (
-                        <details key={i} style={{ marginBottom: 8, background: 'white', borderRadius: 8, border: '1px solid #E9E9E7', overflow: 'hidden' }}>
-                            <summary style={{ padding: '14px 16px', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#37352F' }}>
-                                {faq.question}
-                            </summary>
-                            <div style={{ padding: '0 16px 14px', fontSize: 13, color: '#6B6A67', lineHeight: 1.7 }}>
-                                {faq.answer}
+                {/* ═══════ FAQ ═══════ */}
+                <div style={{ marginBottom: 60 }}>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>FREQUENTLY ASKED</div>
+
+                    <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+                        {FAQS.map((faq, i) => (
+                            <div key={i} className="faq-item"
+                                onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                                style={{ padding: '16px 0', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{
+                                        fontSize: 13, fontWeight: 500,
+                                        color: openFaq === i ? '#111' : 'rgba(0,0,0,0.5)',
+                                        transition: 'color 0.2s',
+                                    }}>{faq.question}</span>
+                                    <span style={{
+                                        color: 'rgba(0,0,0,0.25)', fontSize: 14,
+                                        transition: 'transform 0.2s',
+                                        transform: openFaq === i ? 'rotate(45deg)' : 'none',
+                                        flexShrink: 0, marginLeft: 16,
+                                    }}>+</span>
+                                </div>
+                                {openFaq === i && (
+                                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', lineHeight: 1.8, marginTop: 12, paddingRight: 40 }}>
+                                        {faq.answer}
+                                    </div>
+                                )}
                             </div>
-                        </details>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
-                {/* CTA */}
-                <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                {/* ═══════ CTA ═══════ */}
+                <div style={{ textAlign: 'center', padding: '60px 0 80px', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+                    <h2 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 8px' }}>
+                        Get your quote.<br />
+                        <span style={{ color: 'rgba(0,0,0,0.15)' }}>Know your numbers.</span>
+                    </h2>
+                    <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)', margin: '0 0 32px', letterSpacing: '0.05em' }}>
+                        Matched with 3 designers in 24 hours · No obligation
+                    </p>
                     <Link href="/signup/homeowner" style={{
-                        display: 'inline-block', padding: '14px 40px', fontSize: 15, fontWeight: 700,
-                        color: 'white', background: '#37352F', textDecoration: 'none', borderRadius: 10,
-                    }}>
-                        Get a Free Quote
-                    </Link>
-                    <div style={{ fontSize: 11, color: '#9B9A97', marginTop: 8 }}>Matched with 3 designers in 24 hours. No obligation.</div>
+                        display: 'inline-block', padding: '14px 44px', fontSize: 13, fontWeight: 600,
+                        color: '#fff', background: '#111', textDecoration: 'none', borderRadius: 8, transition: 'all 0.3s',
+                    }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#333'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#111'}
+                    >Get a Free Quote →</Link>
                 </div>
             </div>
+
+            {/* ═══════ FOOTER ═══════ */}
+            <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
+                <div style={{ display: 'flex', gap: 24 }}>
+                    {[
+                        { label: 'Landing', href: '/landing' },
+                        { label: 'Platform', href: '/hub' },
+                        { label: 'Founding 20', href: '/founding' },
+                    ].map(link => (
+                        <Link key={link.label} href={link.href}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
+                        >{link.label}</Link>
+                    ))}
+                </div>
+            </footer>
         </div>
     );
 }
