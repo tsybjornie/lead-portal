@@ -14,36 +14,91 @@ const COVERAGE = ['Island-wide SG', 'Central', 'East', 'West', 'North', 'JB / Is
 
 export default function ContractorSignup() {
     const [form, setForm] = useState({ company: '', uen: '', contact: '', email: '', phone: '', bca: '', hdb: '', trades: [] as string[], size: '', coverage: [] as string[], rate: '', notes: '' });
-    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+    const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
+    const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
-    const inputStyle = { width: '100%', padding: '12px 14px', fontSize: 14, fontFamily: f, border: '1.5px solid #E9E9E7', borderRadius: 8, outline: 'none', background: 'white', boxSizing: 'border-box' as const };
-    const labelStyle = { fontSize: 12, fontWeight: 600 as const, color: '#6B6A67', marginBottom: 6, display: 'block' as const };
-    const selectStyle = { ...inputStyle, cursor: 'pointer' as const, appearance: 'none' as const };
+    const inputStyle = {
+        width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
+        border: '1px solid rgba(0,0,0,0.1)', borderRadius: 6,
+        background: 'transparent', color: '#111', outline: 'none',
+        transition: 'border-color 0.2s', boxSizing: 'border-box' as const,
+    };
+    const labelStyle = {
+        fontFamily: mono, fontSize: 9, fontWeight: 500 as const,
+        color: 'rgba(0,0,0,0.3)', letterSpacing: '0.12em',
+        textTransform: 'uppercase' as const,
+        display: 'block' as const, marginBottom: 8,
+    };
     const chipStyle = (active: boolean) => ({
-        fontSize: 12, padding: '6px 12px', borderRadius: 20, cursor: 'pointer',
-        border: `1.5px solid ${active ? '#F59E0B' : '#E9E9E7'}`,
-        background: active ? '#FFF8E1' : 'white',
-        color: active ? '#E65100' : '#6B6A67', fontWeight: active ? 600 : 400,
-        transition: 'all 0.15s',
+        fontSize: 11, padding: '6px 14px', borderRadius: 4, cursor: 'pointer' as const,
+        border: `1px solid ${active ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.08)'}`,
+        background: active ? '#111' : 'transparent',
+        color: active ? '#fff' : 'rgba(0,0,0,0.4)',
+        fontWeight: active ? 600 : 400 as const,
+        transition: 'all 0.2s',
+        fontFamily: f,
     });
 
     const toggleTrade = (t: string) => setForm(p => ({ ...p, trades: p.trades.includes(t) ? p.trades.filter(x => x !== t) : [...p.trades, t] }));
     const toggleCov = (c: string) => setForm(p => ({ ...p, coverage: p.coverage.includes(c) ? p.coverage.filter(x => x !== c) : [...p.coverage, c] }));
 
     return (
-        <div style={{ fontFamily: f, background: '#FAFAF9', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px 24px' }}>
-            <div style={{ maxWidth: 560, width: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <Link href="/join" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#37352F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 16, fontWeight: 800 }}>R</div>
-                        <span style={{ fontSize: 16, fontWeight: 800, color: '#37352F' }}>Roof</span>
-                    </Link>
-                    <h1 style={{ fontSize: 28, fontWeight: 900, color: '#37352F', margin: '0 0 8px' }}>Join as Contractor</h1>
-                    <p style={{ fontSize: 14, color: '#9B9A97', margin: 0 }}>Get dispatched to verified renovation projects from ID firms on Roof.</p>
-                </div>
+        <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-                <div style={{ background: 'white', borderRadius: 16, padding: '32px 28px', border: '1px solid #E9E9E7' }}>
-                    {/* Company Info */}
+            <style>{`
+                input:focus, select:focus { border-color: rgba(0,0,0,0.4) !important; }
+                input::placeholder { color: rgba(0,0,0,0.2); }
+            `}</style>
+
+            {/* ═══════ TOP BAR ═══════ */}
+            <nav style={{
+                padding: '0 48px', height: 56,
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+            }}>
+                <Link href="/landing" style={{
+                    fontFamily: mono, fontSize: 11, fontWeight: 500,
+                    color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
+                    textTransform: 'uppercase' as const, textDecoration: 'none',
+                }}>ORDINANCE SYSTEMS</Link>
+                <Link href="/join" style={{
+                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none',
+                }}>
+                    ← Back to role selection
+                </Link>
+            </nav>
+
+            {/* ═══════ CONTENT ═══════ */}
+            <div style={{ maxWidth: 560, margin: '0 auto', padding: '80px 48px 80px' }}>
+                <div style={{
+                    fontFamily: mono, fontSize: 10, fontWeight: 500,
+                    color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                    textTransform: 'uppercase' as const, marginBottom: 24,
+                }}>CONTRACTOR APPLICATION</div>
+
+                <h1 style={{
+                    fontSize: 32, fontWeight: 300, letterSpacing: '-0.03em',
+                    margin: '0 0 8px', color: '#111',
+                }}>
+                    Join as<br />
+                    <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>Contractor.</span>
+                </h1>
+                <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.3)', margin: '0 0 48px', lineHeight: 1.6 }}>
+                    Get dispatched to verified renovation projects from ID firms on Roof.
+                </p>
+
+                {/* Company Info */}
+                <div style={{ marginBottom: 32 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 9, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        textTransform: 'uppercase' as const, marginBottom: 20,
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                    }}>COMPANY DETAILS</div>
+
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                         <div>
                             <label style={labelStyle}>Company Name</label>
@@ -64,13 +119,22 @@ export default function ContractorSignup() {
                             <input style={inputStyle} value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+65 9xxx xxxx" />
                         </div>
                     </div>
-                    <div style={{ marginBottom: 16 }}>
+                    <div>
                         <label style={labelStyle}>Email</label>
                         <input style={inputStyle} type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} placeholder="office@company.com" />
                     </div>
+                </div>
 
-                    {/* Licenses */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                {/* Licenses */}
+                <div style={{ marginBottom: 32 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 9, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        textTransform: 'uppercase' as const, marginBottom: 20,
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                    }}>LICENSES</div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                         <div>
                             <label style={labelStyle}>BCA License No. (if any)</label>
                             <input style={inputStyle} value={form.bca} onChange={e => setForm(p => ({ ...p, bca: e.target.value }))} placeholder="ME / CR / CW class" />
@@ -80,22 +144,28 @@ export default function ContractorSignup() {
                             <input style={inputStyle} value={form.hdb} onChange={e => setForm(p => ({ ...p, hdb: e.target.value }))} placeholder="HDB renovation permit" />
                         </div>
                     </div>
+                </div>
 
-                    {/* Trades */}
-                    <div style={{ marginBottom: 16 }}>
-                        <label style={labelStyle}>Trades You Cover (select all)</label>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                            {TRADE_TYPES.map(t => (
-                                <span key={t} onClick={() => toggleTrade(t)} style={chipStyle(form.trades.includes(t))}>{t}</span>
-                            ))}
-                        </div>
+                {/* Trades */}
+                <div style={{ marginBottom: 32 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 9, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        textTransform: 'uppercase' as const, marginBottom: 20,
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                    }}>TRADES & CAPACITY</div>
+
+                    <label style={labelStyle}>Trades You Cover (select all)</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+                        {TRADE_TYPES.map(t => (
+                            <span key={t} onClick={() => toggleTrade(t)} style={chipStyle(form.trades.includes(t))}>{t}</span>
+                        ))}
                     </div>
 
-                    {/* Size & Coverage */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
                         <div>
                             <label style={labelStyle}>Team Size</label>
-                            <select style={selectStyle} value={form.size} onChange={e => setForm(p => ({ ...p, size: e.target.value }))}>
+                            <select style={{ ...inputStyle, cursor: 'pointer', appearance: 'none' as const, color: form.size ? '#111' : 'rgba(0,0,0,0.2)' }} value={form.size} onChange={e => setForm(p => ({ ...p, size: e.target.value }))}>
                                 <option value="">How many workers?</option>
                                 {COMPANY_SIZES.map(s => <option key={s} value={s}>{s}</option>)}
                             </select>
@@ -106,26 +176,55 @@ export default function ContractorSignup() {
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: 24 }}>
-                        <label style={labelStyle}>Coverage Area</label>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                            {COVERAGE.map(c => (
-                                <span key={c} onClick={() => toggleCov(c)} style={chipStyle(form.coverage.includes(c))}>{c}</span>
-                            ))}
-                        </div>
+                    <label style={labelStyle}>Coverage Area</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {COVERAGE.map(c => (
+                            <span key={c} onClick={() => toggleCov(c)} style={chipStyle(form.coverage.includes(c))}>{c}</span>
+                        ))}
                     </div>
-
-                    <button style={{
-                        width: '100%', padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: f,
-                        color: 'white', background: '#F59E0B', border: 'none', borderRadius: 10, cursor: 'pointer',
-                    }}>
-                        Submit Contractor Application →
-                    </button>
-                    <p style={{ fontSize: 11, color: '#C8C7C3', textAlign: 'center', marginTop: 12 }}>
-                        BCA-registered firms get priority matching • Applications reviewed within 48hrs
-                    </p>
                 </div>
+
+                {/* Submit */}
+                <button style={{
+                    width: '100%', padding: '14px', fontSize: 13, fontWeight: 600, fontFamily: f,
+                    color: '#fff', background: '#111', border: 'none', borderRadius: 6,
+                    cursor: 'pointer', transition: 'background 0.2s',
+                }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#333'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#111'}
+                >
+                    Submit Contractor Application →
+                </button>
+                <p style={{
+                    fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.2)', textAlign: 'center',
+                    marginTop: 16, letterSpacing: '0.03em',
+                }}>
+                    BCA-registered firms get priority matching · Applications reviewed within 48hrs
+                </p>
             </div>
+
+            {/* ═══════ FOOTER ═══════ */}
+            <footer style={{
+                padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            }}>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>
+                    © 2026 ORDINANCE SYSTEMS · SINGAPORE
+                </span>
+                <div style={{ display: 'flex', gap: 24 }}>
+                    {[
+                        { label: 'Landing', href: '/landing' },
+                        { label: 'Platform', href: '/hub' },
+                        { label: 'All Roles', href: '/join' },
+                    ].map(link => (
+                        <Link key={link.label} href={link.href}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
+                        >{link.label}</Link>
+                    ))}
+                </div>
+            </footer>
         </div>
     );
 }

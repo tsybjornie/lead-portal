@@ -16,54 +16,89 @@ export default function SignupPage() {
     const [formData, setFormData] = useState({ name: '', email: '', firmName: '', role: '', phone: '', password: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+    const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
+    const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
     const handleSubmit = () => {
         if (!formData.name || !formData.email || !formData.password) return;
         setIsSubmitting(true);
-        setTimeout(() => {
-            router.push('/login');
-        }, 1200);
+        setTimeout(() => { router.push('/login'); }, 1200);
+    };
+
+    const inputStyle = {
+        width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
+        border: '1px solid rgba(0,0,0,0.1)', borderRadius: 6,
+        background: 'transparent', color: '#111', outline: 'none',
+        transition: 'border-color 0.2s', boxSizing: 'border-box' as const,
+    };
+    const labelStyle = {
+        fontFamily: mono, fontSize: 9, fontWeight: 500 as const,
+        color: 'rgba(0,0,0,0.3)', letterSpacing: '0.12em',
+        textTransform: 'uppercase' as const,
+        display: 'block' as const, marginBottom: 8,
     };
 
     return (
-        <div style={{
-            fontFamily: f, minHeight: '100vh',
-            background: 'linear-gradient(135deg, #FAFAF9 0%, #F0EFEB 50%, #E8E6E1 100%)',
-        }}>
-            {/* Nav */}
+        <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+            <style>{`
+                input:focus, select:focus { border-color: rgba(0,0,0,0.4) !important; }
+                input::placeholder { color: rgba(0,0,0,0.2); }
+            `}</style>
+
+            {/* ═══════ TOP BAR ═══════ */}
             <nav style={{
-                padding: '16px 48px',
+                padding: '0 48px', height: 56,
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
             }}>
-                <Link href="/landing" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-                    <div style={{
-                        width: 36, height: 36, borderRadius: 10, background: '#37352F',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'white', fontSize: 18, fontWeight: 800,
-                    }}>R</div>
-                    <span style={{ fontSize: 18, fontWeight: 800, color: '#37352F', letterSpacing: '-0.03em' }}>Roof</span>
-                </Link>
+                <Link href="/landing" style={{
+                    fontFamily: mono, fontSize: 11, fontWeight: 500,
+                    color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
+                    textTransform: 'uppercase' as const, textDecoration: 'none',
+                }}>ORDINANCE SYSTEMS</Link>
                 <Link href="/login" style={{
-                    fontSize: 13, fontWeight: 600, color: '#6B6A67', textDecoration: 'none',
-                }}>Already have an account? <span style={{ color: '#37352F', fontWeight: 700 }}>Log in</span></Link>
+                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none',
+                }}>
+                    Already have an account? <span style={{ fontWeight: 600, color: '#111' }}>Log in</span>
+                </Link>
             </nav>
 
-            <div style={{ display: 'flex', maxWidth: 960, margin: '0 auto', padding: '40px 24px 80px', gap: 56, alignItems: 'flex-start' }}>
+            {/* ═══════ CONTENT ═══════ */}
+            <div style={{
+                display: 'flex', maxWidth: 940, margin: '0 auto',
+                padding: '80px 48px 80px', gap: 80, alignItems: 'flex-start',
+            }}>
+                {/* LEFT: Form */}
+                <div style={{ flex: 1, maxWidth: 380 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 10, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                        textTransform: 'uppercase' as const, marginBottom: 24,
+                    }}>CREATE ACCOUNT</div>
 
-                {/* Left: Account Form */}
-                <div style={{ flex: 1, maxWidth: 400 }}>
-                    <h1 style={{ fontSize: 32, fontWeight: 800, color: '#37352F', letterSpacing: '-0.03em', margin: '0 0 8px' }}>
-                        Create your account
+                    <h1 style={{
+                        fontSize: 32, fontWeight: 300, letterSpacing: '-0.03em',
+                        margin: '0 0 8px', color: '#111',
+                    }}>
+                        Create your<br />
+                        <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>account.</span>
                     </h1>
-                    <p style={{ fontSize: 14, color: '#9B9A97', margin: '0 0 8px' }}>
+
+                    <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.3)', margin: '0 0 8px', lineHeight: 1.6 }}>
                         All tools free. No subscription.
                     </p>
-                    <p style={{ fontSize: 13, color: '#10B981', margin: '0 0 32px', fontWeight: 600 }}>
-                        You start at 2% — close more projects, your rate drops automatically.
+                    <p style={{
+                        fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)',
+                        margin: '0 0 40px', letterSpacing: '0.03em',
+                    }}>
+                        Start at 2% · Close more, rate drops automatically
                     </p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                         {[
                             { key: 'name', label: 'Full Name', placeholder: 'Bjorn Teo', type: 'text' },
                             { key: 'email', label: 'Email', placeholder: 'bjorn@vinterior.sg', type: 'email' },
@@ -73,21 +108,14 @@ export default function SignupPage() {
                             { key: 'password', label: 'Password', placeholder: 'Choose a password', type: 'password' },
                         ].map(field => (
                             <div key={field.key}>
-                                <label style={{
-                                    fontSize: 11, fontWeight: 600, color: '#6B6A67',
-                                    textTransform: 'uppercase', letterSpacing: '0.06em',
-                                    display: 'block', marginBottom: 6,
-                                }}>{field.label}</label>
+                                <label style={labelStyle}>{field.label}</label>
                                 {field.type === 'select' ? (
                                     <select
                                         value={(formData as any)[field.key]}
                                         onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
                                         style={{
-                                            width: '100%', padding: '12px 16px', fontSize: 14, fontFamily: f,
-                                            border: '1.5px solid #E9E9E7', borderRadius: 8,
-                                            background: 'white', color: (formData as any)[field.key] ? '#37352F' : '#9B9A97', outline: 'none',
-                                            transition: 'border-color 0.15s', boxSizing: 'border-box',
-                                            appearance: 'none', cursor: 'pointer',
+                                            ...inputStyle, cursor: 'pointer', appearance: 'none' as const,
+                                            color: (formData as any)[field.key] ? '#111' : 'rgba(0,0,0,0.2)',
                                         }}
                                     >
                                         <option value="" disabled>Select your role</option>
@@ -107,14 +135,7 @@ export default function SignupPage() {
                                         placeholder={field.placeholder}
                                         value={(formData as any)[field.key]}
                                         onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
-                                        style={{
-                                            width: '100%', padding: '12px 16px', fontSize: 14, fontFamily: f,
-                                            border: '1.5px solid #E9E9E7', borderRadius: 8,
-                                            background: 'white', color: '#37352F', outline: 'none',
-                                            transition: 'border-color 0.15s', boxSizing: 'border-box',
-                                        }}
-                                        onFocus={e => { e.target.style.borderColor = '#37352F'; }}
-                                        onBlur={e => { e.target.style.borderColor = '#E9E9E7'; }}
+                                        style={inputStyle}
                                     />
                                 )}
                             </div>
@@ -125,91 +146,101 @@ export default function SignupPage() {
                         onClick={handleSubmit}
                         disabled={isSubmitting || !formData.name || !formData.email || !formData.password}
                         style={{
-                            width: '100%', marginTop: 24, padding: '14px 0', fontSize: 14, fontWeight: 700,
-                            color: 'white', background: isSubmitting ? '#9B9A97' : '#37352F',
-                            border: 'none', borderRadius: 8, cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                            fontFamily: f, transition: 'all 0.15s',
+                            width: '100%', marginTop: 32, padding: '14px 0', fontSize: 13, fontWeight: 600,
+                            color: '#fff', background: isSubmitting ? 'rgba(0,0,0,0.3)' : '#111',
+                            border: 'none', borderRadius: 6, cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                            fontFamily: f, transition: 'all 0.2s',
                         }}
                     >
                         {isSubmitting ? 'Creating account...' : 'Create Account'}
                     </button>
 
-                    <p style={{ fontSize: 11, color: '#9B9A97', textAlign: 'center', marginTop: 16, lineHeight: 1.5 }}>
+                    <p style={{
+                        fontSize: 10, color: 'rgba(0,0,0,0.2)', textAlign: 'center',
+                        marginTop: 16, lineHeight: 1.6,
+                    }}>
                         By creating an account, you agree to Roof&apos;s Terms of Service and Privacy Policy.
                     </p>
                 </div>
 
-                {/* Right: Commission Structure (informational) */}
-                <div style={{ flex: 1, maxWidth: 440 }}>
+                {/* RIGHT: Commission Structure */}
+                <div style={{ flex: 1, maxWidth: 400, paddingTop: 80 }}>
                     <div style={{
-                        background: 'white', borderRadius: 16, padding: '32px',
-                        border: '1.5px solid #E9E9E7', boxShadow: '0 2px 16px rgba(55,53,47,0.04)',
-                    }}>
-                        <h3 style={{ fontSize: 16, fontWeight: 700, color: '#37352F', margin: '0 0 4px' }}>
-                            How Roof pricing works
-                        </h3>
-                        <p style={{ fontSize: 12, color: '#9B9A97', margin: '0 0 20px', lineHeight: 1.5 }}>
-                            Commission is only charged on signed project value. More volume = lower rate. Resets annually — maintain to keep your rate.
-                        </p>
+                        fontFamily: mono, fontSize: 10, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em',
+                        textTransform: 'uppercase' as const, marginBottom: 16,
+                    }}>PRICING MODEL</div>
 
-                        {/* Tier table */}
-                        <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #F1F1EF' }}>
-                            {TIERS.map((tier, i) => (
-                                <div key={i} style={{
-                                    display: 'flex', alignItems: 'center', padding: '14px 18px',
-                                    borderBottom: i < TIERS.length - 1 ? '1px solid #F1F1EF' : 'none',
-                                    background: i === 0 ? '#FAFAF8' : 'white',
-                                }}>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ fontSize: 13, fontWeight: 600, color: '#37352F' }}>{tier.projects} projects</div>
-                                        <div style={{ fontSize: 11, color: '#9B9A97' }}>{tier.label}</div>
-                                    </div>
-                                    <div style={{
-                                        fontSize: 20, fontWeight: 800, color: i === 0 ? '#37352F' : '#10B981',
+                    <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111', margin: '0 0 8px' }}>
+                        How Roof pricing works
+                    </h3>
+                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', margin: '0 0 28px', lineHeight: 1.7 }}>
+                        Commission only on signed project value. More volume = lower rate. Resets annually.
+                    </p>
+
+                    {/* Tier rows */}
+                    <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+                        {TIERS.map((tier, i) => (
+                            <div key={i} style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                padding: '14px 0',
+                                borderBottom: '1px solid rgba(0,0,0,0.06)',
+                            }}>
+                                <div>
+                                    <div style={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{tier.projects} projects</div>
+                                    <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>{tier.label}</div>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <span style={{
+                                        fontFamily: mono, fontSize: 18, fontWeight: 300,
+                                        color: i === 0 ? '#111' : 'rgba(0,0,0,0.5)',
                                         letterSpacing: '-0.02em',
-                                    }}>
-                                        {tier.rate}
-                                    </div>
+                                    }}>{tier.rate}</span>
                                     {i === 0 && (
-                                        <div style={{ marginLeft: 8, fontSize: 9, fontWeight: 700, background: '#37352F', color: 'white', padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                                            You start here
-                                        </div>
+                                        <span style={{
+                                            fontFamily: mono, fontSize: 8, fontWeight: 600,
+                                            background: '#111', color: '#fff',
+                                            padding: '3px 8px', borderRadius: 3,
+                                            letterSpacing: '0.06em', textTransform: 'uppercase',
+                                        }}>START</span>
                                     )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* What's included */}
+                    <div style={{ marginTop: 32 }}>
+                        <div style={{
+                            fontFamily: mono, fontSize: 9, fontWeight: 500,
+                            color: 'rgba(0,0,0,0.2)', letterSpacing: '0.12em',
+                            textTransform: 'uppercase' as const, marginBottom: 12,
+                        }}>ALL TIERS INCLUDE — FREE</div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                            {[
+                                'Quote Builder + BOQ', 'Material Catalog',
+                                'Follow Up CRM', 'Dispatch & POs',
+                                'Sequence Scheduling', 'Client Dashboard',
+                                'Ledger & P&L', 'Staff Seats',
+                            ].map(item => (
+                                <div key={item} style={{
+                                    fontSize: 11, color: 'rgba(0,0,0,0.4)',
+                                    display: 'flex', alignItems: 'center', gap: 6,
+                                }}>
+                                    <span style={{ color: 'rgba(0,0,0,0.15)', fontSize: 10 }}>●</span>{item}
                                 </div>
                             ))}
                         </div>
+                    </div>
 
-                        {/* What's included */}
-                        <div style={{ marginTop: 24, borderTop: '1px solid #F1F1EF', paddingTop: 18 }}>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: '#37352F', marginBottom: 10 }}>
-                                All tiers include — free
-                            </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                                {[
-                                    'Quote Builder + BOQ',
-                                    'Material Catalog',
-                                    'Follow Up CRM',
-                                    'Dispatch & POs',
-                                    'Sequence Scheduling',
-                                    'Client Dashboard',
-                                    'Ledger & P&L',
-                                    'Staff Seats',
-                                ].map(f => (
-                                    <div key={f} style={{ fontSize: 11, color: '#6B6A67', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                        <span style={{ color: '#10B981', fontSize: 12 }}>✓</span>{f}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Reassurance */}
-                        <div style={{
-                            marginTop: 18, padding: '12px 14px', borderRadius: 8,
-                            background: '#F7F6F3', fontSize: 11, color: '#6B6A67', lineHeight: 1.6,
-                        }}>
-                            <strong style={{ color: '#37352F' }}>No subscription. No setup fees.</strong><br />
-                            Commission is only charged when your client signs and pays through Roof. Your rate drops automatically as you close more projects each year.
-                        </div>
+                    {/* Reassurance */}
+                    <div style={{
+                        marginTop: 28, padding: '16px 0',
+                        borderTop: '1px solid rgba(0,0,0,0.06)',
+                        fontSize: 11, color: 'rgba(0,0,0,0.25)', lineHeight: 1.7,
+                    }}>
+                        <strong style={{ color: 'rgba(0,0,0,0.5)' }}>No subscription. No setup fees.</strong><br />
+                        Commission is only charged when your client signs and pays through Roof. Your rate drops automatically as you close more projects each year.
                     </div>
                 </div>
             </div>
