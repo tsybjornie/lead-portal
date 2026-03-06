@@ -83,7 +83,7 @@ export default function Login({ onLogin }: LoginProps) {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg py-2.5 pl-10 pr-10 text-sm text-slate-800 outline-none transition-all placeholder:text-slate-400"
-                                    placeholder="••••••••"
+                                    placeholder=""
                                 />
                                 <button
                                     onClick={() => setShowPassword(!showPassword)}

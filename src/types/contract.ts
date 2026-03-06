@@ -3,7 +3,7 @@
  * Contracts are always BRANDED (full company details) with T&Cs and signature blocks
  * 
  * FLOW:
- * 1. Quote (can be Anonymous) → Client shopping around
+ * 1. Quote (can be Anonymous)  Client shopping around
  * 2. Client decides to proceed
  * 3. Designer generates Contract (always Branded) from Quote
  * 4. Client signs Contract digitally
@@ -105,12 +105,12 @@ export interface PaymentMilestone {
     paymentReference?: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // HELPERS
-// ═══════════════════════════════════════════════════════════════
+// 
 
-export function generateContractNumber(year: number, sequence: number): string {
-    return `CTR-${year}-${String(sequence).padStart(4, '0')}`;
+export function generateContractNumber(year: number, Roof: number): string {
+    return `CTR-${year}-${String(Roof).padStart(4, '0')}`;
 }
 
 export function createDefaultPaymentSchedule(contractSum: number): PaymentMilestone[] {
@@ -146,11 +146,11 @@ export function isContractFullySigned(contract: ContractDocument): boolean {
     return !!contract.clientSignature && !!contract.companySignature;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // STORAGE
-// ═══════════════════════════════════════════════════════════════
+// 
 
-const CONTRACTS_KEY = 'paddleduck_contracts';
+const CONTRACTS_KEY = 'Roof_contracts';
 
 export function saveContracts(contracts: ContractDocument[]): boolean {
     if (typeof window === 'undefined') return false;

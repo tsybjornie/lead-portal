@@ -180,14 +180,14 @@ export default function InspectPage() {
                     href="/hub"
                     className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                 >
-                    ← Command Center
+                     Command Center
                 </Link>
                 <div className="flex items-center gap-4">
                     <Link
                         href="/reveal"
                         className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                     >
-                        → Reveal
+                         Reveal
                     </Link>
                     <span className="text-[#ddd]">|</span>
                     <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
@@ -248,7 +248,7 @@ export default function InspectPage() {
                     {/* Step 1: Zone */}
                     <div className="mb-10">
                         <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">
-                            01 — Select zone
+                            01  Select zone
                         </div>
                         <div className="flex flex-wrap gap-2">
                             {ZONES.map((zone) => {
@@ -290,7 +290,7 @@ export default function InspectPage() {
                                 className="mb-10"
                             >
                                 <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">
-                                    02 — Inspection category
+                                    02  Inspection category
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {CATEGORIES.map((cat) => {
@@ -324,7 +324,7 @@ export default function InspectPage() {
                                 exit={{ opacity: 0 }}
                             >
                                 <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">
-                                    03 — Common issues (tap to add)
+                                    03  Common issues (tap to add)
                                 </div>
                                 <div className="space-y-1 mb-6">
                                     {AI_SUGGESTIONS[activeCategory].map((suggestion) => {
@@ -493,7 +493,7 @@ export default function InspectPage() {
                             href="/reveal"
                             className="px-5 py-2 bg-[#111] text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
                         >
-                            → Generate Portfolio
+                             Generate Portfolio
                         </Link>
                     )}
                 </div>

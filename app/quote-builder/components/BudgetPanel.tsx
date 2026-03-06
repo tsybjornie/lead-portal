@@ -25,10 +25,10 @@ const TIER_COLORS: Record<MaterialTier, string> = {
 };
 
 const TIER_ICONS: Record<MaterialTier, string> = {
-    budget: '💰',
-    standard: '⭐',
-    premium: '✨',
-    luxury: '👑',
+    budget: '',
+    standard: '',
+    premium: '',
+    luxury: '',
 };
 
 export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProps) {
@@ -75,7 +75,7 @@ export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProp
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                            🎯 Budget Optimizer
+                             Budget Optimizer
                         </h3>
                         <p className="text-xs text-gray-500 mt-0.5">
                             Current quote: <span className="font-medium text-gray-700">{formatCurrency(currentTotal)}</span>
@@ -150,7 +150,7 @@ export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProp
                     <div className={`rounded-lg p-4 ${result.fitsInBudget ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-gray-700">
-                                {result.fitsInBudget ? '✅ Fits within budget' : '⚠️ Close to budget'}
+                                {result.fitsInBudget ? ' Fits within budget' : '️ Close to budget'}
                             </span>
                             <span className="text-sm font-bold">
                                 Saved {formatCurrency(result.originalTotal - result.optimizedTotal)}
@@ -158,7 +158,7 @@ export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProp
                         </div>
                         <div className="flex items-center gap-3 text-xs text-gray-600">
                             <span>Was: <s>{formatCurrency(result.originalTotal)}</s></span>
-                            <span>→</span>
+                            <span></span>
                             <span className="font-bold text-lg text-gray-900">{formatCurrency(result.optimizedTotal)}</span>
                             <span className="ml-auto">Budget: {formatCurrency(result.budget)}</span>
                         </div>
@@ -184,12 +184,12 @@ export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProp
                                             <span className="font-medium text-gray-700">{d.itemDescription}</span>
                                             <div className="text-gray-400 mt-0.5">
                                                 <span className="line-through">{d.fromLabel}</span>
-                                                {' → '}
+                                                {'  '}
                                                 <span className="text-emerald-600 font-medium">{d.toLabel}</span>
                                             </div>
                                         </div>
                                         <span className="text-emerald-600 font-medium ml-2">
-                                            −{formatCurrency(d.totalSaved)}
+                                            {formatCurrency(d.totalSaved)}
                                         </span>
                                     </div>
                                 ))}
@@ -206,7 +206,7 @@ export default function BudgetPanel({ sections, onApplyBudget }: BudgetPanelProp
                             <div className="flex flex-wrap gap-1.5">
                                 {result.removedItems.map((item, i) => (
                                     <span key={i} className="px-2 py-1 bg-red-50 text-red-600 text-xs rounded-lg border border-red-200">
-                                        ✕ {item}
+                                         {item}
                                     </span>
                                 ))}
                             </div>

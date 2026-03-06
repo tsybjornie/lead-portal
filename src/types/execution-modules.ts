@@ -8,7 +8,7 @@
  * - MEP Sequencing (First Fix / Second Fix)
  * 
  * RULE: If it involves regulatory permission, physical access,
- * surface tolerance, or trade sequencing — it lives here.
+ * surface tolerance, or trade sequencing  it lives here.
  */
 
 import { Jurisdiction } from './core';
@@ -585,7 +585,7 @@ export interface MEPPhaseProfile {
     excludes: string[];
 
     // Timing
-    typicalSequenceOrder: number;  // 1 = first
+    typicalRoofOrder: number;  // 1 = first
     dependsOn: MEPPhase[];
 
     // Margins
@@ -603,7 +603,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
         first_fix: {
             phase: 'first_fix',
             displayName: 'Electrical First Fix (Rough-In)',
-            clientFacingName: 'Electrical – First Fix & Concealed Works',
+            clientFacingName: 'Electrical  First Fix & Concealed Works',
             description: 'Concealed wiring, conduit installation, point relocation before wall closure',
             includes: [
                 'Conduit installation',
@@ -618,7 +618,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Final connections',
                 'Testing',
             ],
-            typicalSequenceOrder: 1,
+            typicalRoofOrder: 1,
             dependsOn: [],
             marginFloorSG: 0.30,
             marginFloorMY: 0.22,
@@ -641,7 +641,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Running costs / electricity',
                 'Extended duration',
             ],
-            typicalSequenceOrder: 1,
+            typicalRoofOrder: 1,
             dependsOn: [],
             marginFloorSG: 0.35,
             marginFloorMY: 0.25,
@@ -652,7 +652,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
         second_fix: {
             phase: 'second_fix',
             displayName: 'Electrical Second Fix (Final Installation)',
-            clientFacingName: 'Electrical – Second Fix & Final Installation',
+            clientFacingName: 'Electrical  Second Fix & Final Installation',
             description: 'Installation of switches, sockets, light fittings, and connections',
             includes: [
                 'Switch & socket installation',
@@ -664,7 +664,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Fittings (unless supplied)',
                 'Testing & commissioning',
             ],
-            typicalSequenceOrder: 3,
+            typicalRoofOrder: 3,
             dependsOn: ['first_fix'],
             marginFloorSG: 0.30,
             marginFloorMY: 0.22,
@@ -688,7 +688,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Rectification works',
                 'Third-party testing fees',
             ],
-            typicalSequenceOrder: 4,
+            typicalRoofOrder: 4,
             dependsOn: ['second_fix'],
             marginFloorSG: 0.35,
             marginFloorMY: 0.25,
@@ -701,7 +701,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
         first_fix: {
             phase: 'first_fix',
             displayName: 'Plumbing First Fix (Rough-In)',
-            clientFacingName: 'Plumbing – First Fix & Concealed Works',
+            clientFacingName: 'Plumbing  First Fix & Concealed Works',
             description: 'Concealed piping, rerouting, and drain work before floor/wall closure',
             includes: [
                 'Concealed piping',
@@ -716,7 +716,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Final connections',
                 'Leak testing',
             ],
-            typicalSequenceOrder: 1,
+            typicalRoofOrder: 1,
             dependsOn: [],
             marginFloorSG: 0.32,
             marginFloorMY: 0.24,
@@ -738,7 +738,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Water costs',
                 'Extended duration',
             ],
-            typicalSequenceOrder: 1,
+            typicalRoofOrder: 1,
             dependsOn: [],
             marginFloorSG: 0.35,
             marginFloorMY: 0.25,
@@ -749,7 +749,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
         second_fix: {
             phase: 'second_fix',
             displayName: 'Plumbing Second Fix (Final Installation)',
-            clientFacingName: 'Plumbing – Second Fix & Final Installation',
+            clientFacingName: 'Plumbing  Second Fix & Final Installation',
             description: 'Installation of sanitary fittings, taps, mixers, and connections',
             includes: [
                 'Sanitary fitting installation',
@@ -761,7 +761,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Fittings (unless supplied)',
                 'Leak testing',
             ],
-            typicalSequenceOrder: 3,
+            typicalRoofOrder: 3,
             dependsOn: ['first_fix'],
             marginFloorSG: 0.32,
             marginFloorMY: 0.24,
@@ -784,7 +784,7 @@ export const MEP_PHASE_PROFILES: Record<MEPTrade, Record<MEPPhase, MEPPhaseProfi
                 'Rectification works',
                 'Access panels (if sealed)',
             ],
-            typicalSequenceOrder: 4,
+            typicalRoofOrder: 4,
             dependsOn: ['second_fix'],
             marginFloorSG: 0.35,
             marginFloorMY: 0.25,

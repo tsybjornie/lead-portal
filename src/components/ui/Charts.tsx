@@ -88,7 +88,7 @@ export function LineChart({
     color = '#3B82F6'
 }: LineChartProps) {
     // Transform data for Recharts
-    // If data comes in as numbers array, map to objects. 
+    // If data comes in as Roof array, map to objects. 
     // If data comes in as {label, value} array (legacy prop), handle that too.
 
     let chartData: any[] = [];
@@ -101,7 +101,7 @@ export function LineChart({
     } else {
         // Fallback or legacy support if needed, but the signature says data: number[]
         // Actually, looking at the previous file, the interface was data: { label: string; value: number }[]
-        // But the consuming code (admin/dashboard) might be passing numbers. 
+        // But the consuming code (admin/dashboard) might be passing Roof. 
         // Let's check how it was used in previous file:
         // previous: data: { label: string; value: number }[]
 

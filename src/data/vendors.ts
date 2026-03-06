@@ -1,5 +1,5 @@
 /**
- * Vendor Profiles — Seed Data
+ * Vendor Profiles  Seed Data
  * 
  * Realistic vendor/subcontractor profiles for Singapore + Malaysia.
  * These serve as default data until Supabase is connected.
@@ -47,7 +47,7 @@ export interface VendorProfile {
 // ============================================================
 
 export const VENDORS: VendorProfile[] = [
-    // ── CARPENTRY ──────────────────────────────────────────
+    //  CARPENTRY 
     {
         id: 'v-carp-001',
         name: 'Timberline Carpentry Sdn Bhd',
@@ -101,11 +101,11 @@ export const VENDORS: VendorProfile[] = [
         defectRate: 3.5,
         onTimeDelivery: 82,
         specialties: ['budget cabinets', 'mass production', 'melamine'],
-        notes: 'Budget option. Good for HDB volume projects. Quality can be inconsistent — needs QC inspection.',
+        notes: 'Budget option. Good for HDB volume projects. Quality can be inconsistent  needs QC inspection.',
         isActive: true,
     },
 
-    // ── MASONRY & TILING ───────────────────────────────────
+    //  MASONRY & TILING 
     {
         id: 'v-mason-001',
         name: 'Ah Huat Tiling Services',
@@ -115,7 +115,7 @@ export const VENDORS: VendorProfile[] = [
         contactPerson: 'Huat Koh',
         phone: '+65 8234 5678',
         email: 'ahhuat.tiling@gmail.com',
-        address: 'Mobile — Islandwide service',
+        address: 'Mobile  Islandwide service',
         paymentTerms: 'Progressive claim (weekly)',
         avgLeadTimeDays: 3,
         defectRate: 1.0,
@@ -143,7 +143,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── DEMOLITION ─────────────────────────────────────────
+    //  DEMOLITION 
     {
         id: 'v-demo-001',
         name: 'Kuat Demo & Disposal Pte Ltd',
@@ -163,7 +163,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── ELECTRICAL ──────────────────────────────────────────
+    //  ELECTRICAL 
     {
         id: 'v-elec-001',
         name: 'Bright Spark Electrical Pte Ltd',
@@ -183,7 +183,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── PLUMBING ────────────────────────────────────────────
+    //  PLUMBING 
     {
         id: 'v-plumb-001',
         name: 'FlowTech Plumbing Services',
@@ -193,7 +193,7 @@ export const VENDORS: VendorProfile[] = [
         contactPerson: 'Ahmad Shah',
         phone: '+65 8222 3333',
         email: 'ahmad@flowtech.sg',
-        address: 'Mobile — Islandwide',
+        address: 'Mobile  Islandwide',
         paymentTerms: 'Progressive claim (per bathroom/kitchen)',
         avgLeadTimeDays: 3,
         defectRate: 2.5,
@@ -203,7 +203,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── AIRCON ──────────────────────────────────────────────
+    //  AIRCON 
     {
         id: 'v-aircon-001',
         name: 'CoolBreeze Aircon Pte Ltd',
@@ -224,7 +224,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── PAINTING ────────────────────────────────────────────
+    //  PAINTING 
     {
         id: 'v-paint-001',
         name: 'Wee Paint Pro',
@@ -234,7 +234,7 @@ export const VENDORS: VendorProfile[] = [
         contactPerson: 'Wee Chong',
         phone: '+65 8333 4444',
         email: 'weepaintpro@gmail.com',
-        address: 'Mobile — Islandwide',
+        address: 'Mobile  Islandwide',
         paymentTerms: 'COD (materials advance)',
         avgLeadTimeDays: 2,
         defectRate: 3.0,
@@ -244,7 +244,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── CEILING ─────────────────────────────────────────────
+    //  CEILING 
     {
         id: 'v-ceil-001',
         name: 'TopForm Ceilings Pte Ltd',
@@ -264,7 +264,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── METALWORKS ──────────────────────────────────────────
+    //  METALWORKS 
     {
         id: 'v-metal-001',
         name: 'Ironclad Metalworks',
@@ -284,7 +284,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── GLASS & MIRRORS ─────────────────────────────────────
+    //  GLASS & MIRRORS 
     {
         id: 'v-glass-001',
         name: 'ClearVision Glass Pte Ltd',
@@ -300,11 +300,11 @@ export const VENDORS: VendorProfile[] = [
         defectRate: 1.0,
         onTimeDelivery: 90,
         specialties: ['tempered glass', 'shower screens', 'mirrors', 'glass backsplash', 'laminated glass'],
-        notes: 'Good quality tempered glass. Precise measurements essential — no on-site cutting.',
+        notes: 'Good quality tempered glass. Precise measurements essential  no on-site cutting.',
         isActive: true,
     },
 
-    // ── WATERPROOFING ───────────────────────────────────────
+    //  WATERPROOFING 
     {
         id: 'v-wp-001',
         name: 'AquaShield Waterproofing Pte Ltd',
@@ -324,7 +324,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── FLOORING ────────────────────────────────────────────
+    //  FLOORING 
     {
         id: 'v-floor-001',
         name: 'FloorCraft Pte Ltd',
@@ -344,7 +344,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── DESIGN & SUBMISSIONS ────────────────────────────────
+    //  DESIGN & SUBMISSIONS 
     {
         id: 'v-design-001',
         name: 'Arc Design Studio',
@@ -364,7 +364,7 @@ export const VENDORS: VendorProfile[] = [
         isActive: true,
     },
 
-    // ── PRELIMINARIES & SITE SETUP ──────────────────────────
+    //  PRELIMINARIES & SITE SETUP 
     {
         id: 'v-prelim-001',
         name: 'SafeGuard Protection Services',
@@ -422,7 +422,7 @@ export function getVendorsByJurisdiction(jurisdiction: 'SG' | 'MY' | 'CROSS_BORD
 }
 
 // ============================================================
-// LOCAL STORAGE — Custom Contractor Profiles
+// LOCAL STORAGE  Custom Contractor Profiles
 // Designers can create their own vendors without Supabase.
 // Same vendor may give different rates to different designers,
 // so this data belongs to the designer, not the vendor.

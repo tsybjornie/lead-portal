@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import QuoteBuilderEnhanced from '@/components/QuoteBuilderEnhanced';
-import PromptQuote from '@/components/PromptQuote';
+import QuoteBuilderEnhanced from '@/../../app/quote-builder/components/QuoteBuilderEnhanced';
+import PromptQuote from '@/../../app/quote-builder/components/PromptQuote';
 import { GeneratedTradeSection } from '@/lib/ai/auto-quote';
 
 export default function QuoteBuilderPage() {

@@ -150,17 +150,17 @@ export function formatPerformancePeriod(period: PerformancePeriod): string {
 
 export function getTrendIcon(trend: PerformanceTrend): string {
     switch (trend) {
-        case 'up': return '↑';
-        case 'down': return '↓';
-        case 'stable': return '→';
+        case 'up': return '';
+        case 'down': return '';
+        case 'stable': return '';
     }
 }
 
 export function getRankBadge(rank: number): string {
     switch (rank) {
-        case 1: return '🥇';
-        case 2: return '🥈';
-        case 3: return '🥉';
+        case 1: return '';
+        case 2: return '';
+        case 3: return '';
         default: return `#${rank}`;
     }
 }

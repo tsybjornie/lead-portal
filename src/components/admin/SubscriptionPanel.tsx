@@ -39,7 +39,7 @@ export default function SubscriptionPanel() {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="text-lg font-bold text-navy-900">💳 Subscription & Billing</h2>
+                <h2 className="text-lg font-bold text-navy-900"> Subscription & Billing</h2>
                 <div className="flex bg-gray-100 rounded-lg p-1 text-sm font-medium">
                     <button
                         onClick={() => setBillingCycle('monthly')}
@@ -65,9 +65,9 @@ export default function SubscriptionPanel() {
                             <div>
                                 <h4 className="font-bold text-lg text-navy-900">{currentPlan.name}</h4>
                                 <div className="flex gap-2 text-xs text-gray-600 mt-1">
-                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200">✨ Unlimited Users</span>
-                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200">🚀 Unlimited Projects</span>
-                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200">🛡️ {currentPlan.jurisdictionAccess} Market</span>
+                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200"> Unlimited Users</span>
+                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200"> Unlimited Projects</span>
+                                    <span className="bg-white px-2 py-0.5 rounded border border-blue-200">️ {currentPlan.jurisdictionAccess} Market</span>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -98,7 +98,7 @@ export default function SubscriptionPanel() {
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className={`font-bold text-sm ${isActive ? 'text-green-800' : 'text-gray-900'}`}>
-                                                {isActive ? '✓ ' : ''}{addOn.name}
+                                                {isActive ? ' ' : ''}{addOn.name}
                                             </h4>
                                             <span className="text-sm font-bold text-gray-700">
                                                 ${addOn.priceMonthly}/mo

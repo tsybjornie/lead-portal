@@ -178,7 +178,7 @@ export interface DesignerDashboardStats {
     totalQuotes: number;
     activeQuotes: number;
     completedQuotes: number;
-    conversionRate: number;    // sent → accepted
+    conversionRate: number;    // sent  accepted
 
     // Financial Stats
     totalProjectValue: number;

@@ -196,7 +196,7 @@ const GLOSSARY: { term: string; definition: string }[] = [
     { term: 'Carcass', definition: 'The structural body of a cabinet, made from plywood or particle board. Doors and drawers are separate.' },
     { term: 'Laminate', definition: 'Decorative surface finish for cabinets. Comes in various textures and colours. Not the same as natural wood veneer.' },
     { term: 'Quartz countertop', definition: 'Engineered stone slab made from crushed quartz + resin. Non-porous, low-maintenance. Priced by linear metre.' },
-    { term: 'Soft-close hinges', definition: 'Cabinet door hinges with a built-in damper that prevents slamming. Carpenter-supplied by default — brand is not selectable.' },
+    { term: 'Soft-close hinges', definition: 'Cabinet door hinges with a built-in damper that prevents slamming. Carpenter-supplied by default  brand is not selectable.' },
     { term: 'Overlay tiling', definition: 'Installing new tiles directly over existing tiles without hacking. Saves labour but adds floor height (~10mm).' },
     { term: 'Trunking', definition: 'Casing that conceals air-con piping. Can be built into false ceiling or run along walls as boxed-up conduit.' },
     { term: 'BTO', definition: 'Build-To-Order. New HDB flats sold by the government before construction. Raw units require full renovation.' },
@@ -208,7 +208,7 @@ const GLOSSARY: { term: string; definition: string }[] = [
     { term: 'LEW', definition: 'Licensed Electrical Worker. Must be engaged for any DB box upgrade, full rewiring, or capacity increase. Required by EMA/SP Group.' },
     { term: 'SLD', definition: 'Single Line Diagram. Electrical schematic of the entire unit, submitted to SP Group by a LEW for approval before major electrical work.' },
     { term: 'HPL', definition: 'High Pressure Laminate. Durable decorative surface (e.g. Formica, Lamitak) pressed onto cabinet doors. Industry standard for quality finishes.' },
-    { term: 'Melamine (LPL)', definition: 'Low Pressure Laminate. Thin decorative paper fused directly onto particle board. Budget option — not the same as HPL.' },
+    { term: 'Melamine (LPL)', definition: 'Low Pressure Laminate. Thin decorative paper fused directly onto particle board. Budget option  not the same as HPL.' },
     { term: 'Edge banding', definition: 'Thin strip (PVC, ABS, or laser-bonded) applied to exposed plywood/MDF edges to seal and finish them. Quality varies widely.' },
     { term: 'Fire-rated door (FRD)', definition: 'SCDF-mandated 1-hour fire-rated main door for HDB units. Must be self-closing. Replaced for aesthetic reasons but must meet specs.' },
 ];
@@ -218,9 +218,9 @@ const GLOSSARY: { term: string; definition: string }[] = [
 // ============================================================
 
 function parseDescription(desc: string): { title: string; details: string; material?: string } {
-    const parts = desc.split(' — ');
+    const parts = desc.split('  ');
     const title = parts[0] || desc;
-    const body = parts.slice(1).join(' — ');
+    const body = parts.slice(1).join('  ');
     const materialMatch = body.match(/Material:\s*([^.]+)\./);
     const material = materialMatch ? materialMatch[1].trim() : undefined;
     return { title, details: body, material };
@@ -293,7 +293,7 @@ export default function ClientQuotePreview({
     const totalItems = sections.reduce((sum, s) => sum + s.items.length, 0);
     const qNum = quoteNumber || `VS-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`;
 
-    // Google Fonts link — loads all 15 preset families
+    // Google Fonts link  loads all 15 preset families
     const fontFamilies = [
         'Space+Grotesk:wght@400;500;600;700',
         'Inter:wght@400;500;600;700',
@@ -334,7 +334,7 @@ export default function ClientQuotePreview({
             <link rel="stylesheet" href={fontLink} />
 
             <div style={{ fontFamily: selectedFont.body }}>
-                {/* ── TOOLBAR (not printed) ── */}
+                {/*  TOOLBAR (not printed)  */}
                 <div className="flex items-center justify-between mb-6 print:hidden">
                     <div className="flex items-center gap-2">
                         {(['cover', 'glossary', 'quote'] as const).map(page => (
@@ -346,7 +346,7 @@ export default function ClientQuotePreview({
                                     : 'bg-gray-100 text-gray-500 hover:text-gray-700'
                                     }`}
                             >
-                                {page === 'cover' ? '📄 Cover' : page === 'glossary' ? '📖 Glossary' : '📊 Quote'}
+                                {page === 'cover' ? ' Cover' : page === 'glossary' ? ' Glossary' : ' Quote'}
                             </button>
                         ))}
                     </div>
@@ -357,7 +357,7 @@ export default function ClientQuotePreview({
                         >
                             <span className="text-xs">Aa</span>
                             <span>{selectedFont.label}</span>
-                            <span className="text-gray-400">▼</span>
+                            <span className="text-gray-400"></span>
                         </button>
                         {showFontPicker && (
                             <div className="absolute right-0 top-12 w-72 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden max-h-[480px] overflow-y-auto">
@@ -378,7 +378,7 @@ export default function ClientQuotePreview({
                                             >
                                                 {fp.label}
                                             </span>
-                                            {selectedFont.id === fp.id && <span className="text-blue-500">✓</span>}
+                                            {selectedFont.id === fp.id && <span className="text-blue-500"></span>}
                                         </div>
                                         <p className="text-xs text-gray-400 mt-0.5">{fp.description}</p>
                                     </button>
@@ -388,12 +388,12 @@ export default function ClientQuotePreview({
                     </div>
                 </div>
 
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {/* COVER PAGE                             */}
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {currentPage === 'cover' && (
                     <div className="min-h-[700px] flex flex-col justify-between py-16 px-12 border border-gray-200 rounded-lg">
-                        {/* Top — company */}
+                        {/* Top  company */}
                         <div>
                             <h1
                                 className={`text-4xl font-bold text-gray-900 ${selectedFont.style}`}
@@ -406,7 +406,7 @@ export default function ClientQuotePreview({
                             </p>
                         </div>
 
-                        {/* Middle — quote info */}
+                        {/* Middle  quote info */}
                         <div className="space-y-8">
                             <div>
                                 <p className="text-xs text-gray-400 uppercase tracking-[0.25em] mb-2" style={{ fontFamily: selectedFont.heading }}>
@@ -452,14 +452,14 @@ export default function ClientQuotePreview({
                             </div>
                         </div>
 
-                        {/* Bottom — spacer (address removed per request) */}
+                        {/* Bottom  spacer (address removed per request) */}
                         <div />
                     </div>
                 )}
 
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {/* GLOSSARY PAGE                          */}
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {currentPage === 'glossary' && (
                     <div className="border border-gray-200 rounded-lg px-12 py-10">
                         <h2
@@ -492,9 +492,9 @@ export default function ClientQuotePreview({
                     </div>
                 )}
 
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {/* QUOTE PAGE                             */}
-                {/* ══════════════════════════════════════ */}
+                {/*  */}
                 {currentPage === 'quote' && (
                     <div>
                         {/* Header bar */}
@@ -549,7 +549,7 @@ export default function ClientQuotePreview({
                                                     {formatPrice(section.subtotalSelling)}
                                                 </span>
                                                 <span className="text-gray-400 text-sm print:hidden">
-                                                    {isExpanded ? '▲' : '▼'}
+                                                    {isExpanded ? '' : ''}
                                                 </span>
                                             </div>
                                         </button>
@@ -581,7 +581,7 @@ export default function ClientQuotePreview({
                                                                             )}
                                                                             {parsed.material && (
                                                                                 <span className="inline-flex items-center gap-1 mt-2 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">
-                                                                                    🏷️ {parsed.material}
+                                                                                    ️ {parsed.material}
                                                                                 </span>
                                                                             )}
                                                                         </div>

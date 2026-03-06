@@ -116,14 +116,14 @@ export default function MeasurePage() {
                     href="/hub"
                     className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                 >
-                    ← Command Center
+                     Command Center
                 </Link>
                 <div className="flex items-center gap-4">
                     <Link
                         href="/"
                         className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                     >
-                        → Numbers
+                         Roof
                     </Link>
                     <span className="text-[#ddd]">|</span>
                     <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
@@ -146,7 +146,7 @@ export default function MeasurePage() {
                         <span className="italic font-light text-[#bbb]">measurement.</span>
                     </h1>
                     <p className="text-[#999] text-sm tracking-wide max-w-md mt-6">
-                        Capture room dimensions. Areas auto-sync to Numbers for quoting.
+                        Capture room dimensions. Areas auto-sync to Roof for quoting.
                     </p>
                 </motion.div>
 
@@ -345,7 +345,7 @@ export default function MeasurePage() {
                             href="/"
                             className="px-5 py-2 bg-[#111] text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
                         >
-                            → Build Quote
+                             Build Quote
                         </Link>
                     )}
                 </div>

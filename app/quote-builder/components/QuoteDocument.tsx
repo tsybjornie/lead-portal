@@ -114,14 +114,14 @@ export default function QuoteDocument({
                     onClick={handlePrint}
                     className="bg-navy-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-navy-800 transition-colors shadow-lg"
                 >
-                    🖨️ Print / Download PDF
+                    ️ Print / Download PDF
                 </button>
                 {onClose && (
                     <button
                         onClick={onClose}
                         className="bg-gray-600 text-white px-4 py-3 rounded-lg font-bold hover:bg-gray-500 transition-colors shadow-lg"
                     >
-                        ✕
+                        
                     </button>
                 )}
             </div>

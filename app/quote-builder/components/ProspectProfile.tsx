@@ -235,24 +235,24 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                 >
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-sm shadow-md">
-                            👤
+                            
                         </div>
                         <div className="text-left">
                             <h3 className="font-bold text-gray-900 text-sm">
                                 {data.clientName || 'New Prospect'}
                                 {data.propertyType && (
                                     <span className="ml-2 text-xs font-normal text-gray-400">
-                                        {data.propertyType.toUpperCase()} {data.unitNumber && `• ${data.unitNumber}`}
+                                        {data.propertyType.toUpperCase()} {data.unitNumber && ` ${data.unitNumber}`}
                                     </span>
                                 )}
                             </h3>
                             <p className="text-[11px] text-gray-400">
-                                Client details • Property info • Floorplan
+                                Client details  Property info  Floorplan
                             </p>
                         </div>
                     </div>
                     <span className="text-gray-400 text-xs">
-                        {isExpanded ? '▲' : '▼'}
+                        {isExpanded ? '' : ''}
                     </span>
                 </button>
 
@@ -261,9 +261,9 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                         {/* Tabs */}
                         <div className="flex border-b border-gray-100">
                             {[
-                                { key: 'client' as const, label: '👤 Client', },
-                                { key: 'property' as const, label: '🏠 Property', },
-                                { key: 'floorplan' as const, label: '📐 Floorplan', badge: rooms.length > 0 ? rooms.length : undefined },
+                                { key: 'client' as const, label: ' Client', },
+                                { key: 'property' as const, label: ' Property', },
+                                { key: 'floorplan' as const, label: ' Floorplan', badge: rooms.length > 0 ? rooms.length : undefined },
                             ].map(tab => (
                                 <button
                                     key={tab.key}
@@ -360,7 +360,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                         placeholder="Min"
                                                         className="w-full border border-gray-200 rounded-lg px-2 py-2 text-sm focus:border-indigo-400"
                                                     />
-                                                    <span className="text-gray-300 text-xs">—</span>
+                                                    <span className="text-gray-300 text-xs"></span>
                                                     <input
                                                         type="number"
                                                         value={data.budgetMax ?? ''}
@@ -407,7 +407,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                         : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
                                                     }`}
                                             >
-                                                {type === 'hdb' ? '🏢 HDB' : type === 'condo' ? '🏙️ Condo' : type === 'landed' ? '🏡 Landed' : '🏪 Commercial'}
+                                                {type === 'hdb' ? ' HDB' : type === 'condo' ? '️ Condo' : type === 'landed' ? ' Landed' : ' Commercial'}
                                             </button>
                                         ))}
                                     </div>
@@ -436,7 +436,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                             <label className="block text-[11px] font-medium text-gray-500 mb-1">Rooms</label>
                                             <div className="flex gap-2">
                                                 <div className="flex items-center gap-1 flex-1">
-                                                    <span className="text-[10px] text-gray-400">🛏</span>
+                                                    <span className="text-[10px] text-gray-400"></span>
                                                     <input
                                                         type="number"
                                                         value={data.numBedrooms}
@@ -447,7 +447,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                     />
                                                 </div>
                                                 <div className="flex items-center gap-1 flex-1">
-                                                    <span className="text-[10px] text-gray-400">🚿</span>
+                                                    <span className="text-[10px] text-gray-400"></span>
                                                     <input
                                                         type="number"
                                                         value={data.numBathrooms}
@@ -478,9 +478,9 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                     : 'border-gray-300 bg-gray-50 hover:border-indigo-300 hover:bg-indigo-50/30'
                                                 }`}
                                         >
-                                            <div className="text-4xl mb-2">📐</div>
+                                            <div className="text-4xl mb-2"></div>
                                             <p className="font-medium text-gray-700 text-sm">Drop floorplan here or click to upload</p>
-                                            <p className="text-xs text-gray-400 mt-1">JPEG, PNG • Max 10MB</p>
+                                            <p className="text-xs text-gray-400 mt-1">JPEG, PNG  Max 10MB</p>
                                             <input
                                                 ref={fileInputRef}
                                                 type="file"
@@ -506,13 +506,13 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                     className="absolute top-2 right-2 w-7 h-7 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 shadow-md"
                                                     title="Remove floorplan"
                                                 >
-                                                    ✕
+                                                    
                                                 </button>
                                                 <button
                                                     onClick={() => fileInputRef.current?.click()}
                                                     className="absolute top-2 left-2 px-2.5 py-1 bg-white/90 backdrop-blur rounded-lg text-xs font-medium text-gray-700 hover:bg-white shadow-md"
                                                 >
-                                                    🔄 Replace
+                                                     Replace
                                                 </button>
                                                 <input
                                                     ref={fileInputRef}
@@ -535,7 +535,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                     <div className="border border-gray-200 rounded-xl overflow-hidden">
                                         <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-200">
                                             <div className="flex items-center gap-2">
-                                                <h4 className="text-xs font-semibold text-gray-700">📏 Room Dimensions</h4>
+                                                <h4 className="text-xs font-semibold text-gray-700"> Room Dimensions</h4>
                                                 {totalRoomArea > 0 && (
                                                     <span className="text-[10px] text-gray-400 font-mono">
                                                         {totalRoomArea.toFixed(1)} sqm total
@@ -604,7 +604,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                             type="number"
                                                             value={room.lengthM || ''}
                                                             onChange={e => updateRoom(room.id, { lengthM: parseFloat(e.target.value) || 0 })}
-                                                            placeholder="—"
+                                                            placeholder=""
                                                             step="0.1"
                                                             className="border border-gray-200 rounded px-2 py-1 text-xs text-center focus:border-indigo-400"
                                                         />
@@ -612,7 +612,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                             type="number"
                                                             value={room.widthM || ''}
                                                             onChange={e => updateRoom(room.id, { widthM: parseFloat(e.target.value) || 0 })}
-                                                            placeholder="—"
+                                                            placeholder=""
                                                             step="0.1"
                                                             className="border border-gray-200 rounded px-2 py-1 text-xs text-center focus:border-indigo-400"
                                                         />
@@ -627,7 +627,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                         <span className="text-[11px] text-gray-500 font-mono text-center">
                                                             {room.lengthM > 0 && room.widthM > 0
                                                                 ? `${(room.lengthM * room.widthM).toFixed(1)}`
-                                                                : '—'
+                                                                : ''
                                                             }
                                                             <span className="text-[9px] text-gray-300 ml-0.5">sqm</span>
                                                         </span>
@@ -635,7 +635,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                             onClick={() => removeRoom(room.id)}
                                                             className="text-gray-300 hover:text-red-500 transition-colors text-center"
                                                         >
-                                                            ✕
+                                                            
                                                         </button>
                                                     </div>
                                                 ))}
@@ -649,7 +649,7 @@ export default function ProspectProfile({ onPropertyChange, onRoomsToZones }: Pr
                                                     onClick={pushToZones}
                                                     className="w-full py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
                                                 >
-                                                    📍 Apply {rooms.filter(r => r.name && (r.lengthM > 0 || r.widthM > 0)).length} Rooms to Zone Manager
+                                                     Apply {rooms.filter(r => r.name && (r.lengthM > 0 || r.widthM > 0)).length} Rooms to Zone Manager
                                                 </button>
                                                 <p className="text-[10px] text-gray-400 text-center mt-1">
                                                     This will add these rooms as zones with dimensions

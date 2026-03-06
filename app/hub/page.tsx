@@ -14,67 +14,35 @@ interface Product {
 
 const products: Product[] = [
     {
-        id: "followup",
-        name: "FollowUp",
-        tagline: "Lead CRM",
+        id: "pipeline",
+        name: "Roof Pipeline",
+        tagline: "Capture and convert every lead",
         index: "01",
-        href: "http://localhost:5500/follow%20up%20-%20lead%20reponse/dashboard.html",
-        external: true,
+        href: "/follow-up",
+        external: false,
     },
     {
         id: "numbers",
-        name: "Numbers",
-        tagline: "Quoting Engine",
+        name: "Roof Numbers",
+        tagline: "Build quotes that protect your margin",
         index: "02",
         href: "/",
         external: false,
     },
     {
-        id: "sequence",
-        name: "Sequence",
-        tagline: "Workflow Automation",
+        id: "dispatch",
+        name: "Roof Dispatch",
+        tagline: "Auto-price, source, and deploy",
         index: "03",
-        href: "http://localhost:5500/sequence/index.html",
-        external: true,
+        href: "/dispatch",
+        external: false,
     },
     {
-        id: "paddleduck",
-        name: "PaddleDuck",
-        tagline: "Project Management",
+        id: "sequence",
+        name: "Roof Sequence",
+        tagline: "Your design studio, codified",
         index: "04",
-        href: "http://localhost:3001",
-        external: true,
-    },
-    {
-        id: "measure",
-        name: "Measure",
-        tagline: "Site Measurement",
-        index: "05",
-        href: "/measure",
-        external: false,
-    },
-    {
-        id: "inspect",
-        name: "Inspect",
-        tagline: "Quality Control",
-        index: "06",
-        href: "/inspect",
-        external: false,
-    },
-    {
-        id: "ledger",
-        name: "Ledger",
-        tagline: "Project Finance",
-        index: "07",
-        href: "/ledger",
-        external: false,
-    },
-    {
-        id: "reveal",
-        name: "Reveal",
-        tagline: "Portfolio Generator",
-        index: "08",
-        href: "/reveal",
+        href: "/sequence",
         external: false,
     },
 ];
@@ -104,7 +72,7 @@ export default function HubPage() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ type: "spring" as const, stiffness: 500, damping: 30 }}
                     >
-                        Open →
+                        Open
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -144,7 +112,7 @@ export default function HubPage() {
                     </h1>
                 </motion.div>
 
-                {/* Product list — editorial style */}
+                {/* Product list  editorial style */}
                 <div className="w-full">
                     {products.map((product, i) => {
                         const isHovered = hoveredId === product.id;
@@ -216,7 +184,7 @@ export default function HubPage() {
                                             }}
                                             transition={{ duration: 0.3 }}
                                         >
-                                            →
+
                                         </motion.div>
                                     </div>
                                 </a>
@@ -240,7 +208,7 @@ export default function HubPage() {
                     Professional Infrastructure
                 </div>
                 <div className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#ccc]">
-                    © {new Date().getFullYear()}
+                    {new Date().getFullYear()}
                 </div>
             </motion.footer>
         </div>

@@ -357,7 +357,7 @@ export function QuoteProvider({
         if (!quote) return false;
 
         if (!canTransition(quote.status, newStatus)) {
-            console.warn(`Invalid transition: ${quote.status} → ${newStatus}`);
+            console.warn(`Invalid transition: ${quote.status}  ${newStatus}`);
             return false;
         }
 

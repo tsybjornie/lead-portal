@@ -1,7 +1,7 @@
 /**
  * Site Protection & Preliminaries Module
  * 
- * RULE: If it prevents damage, complaints, fines, or stop-work orders — it is billable.
+ * RULE: If it prevents damage, complaints, fines, or stop-work orders  it is billable.
  * 
  * This is NOT "miscellaneous". This is mandatory risk control.
  * Must be explicit, priced, and enforceable.

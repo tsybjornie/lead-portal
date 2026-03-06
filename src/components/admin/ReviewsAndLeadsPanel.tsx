@@ -23,7 +23,7 @@ const SAMPLE_CUSTOMER_REVIEWS: CustomerReview[] = [
         clientId: 'C001',
         clientName: 'Mr. & Mrs. Tan',
         designerId: 'D001',
-        designerName: 'Sarah Chen',
+        designerName: 'Bjorn Teo',
         overallRating: 5,
         designRating: 5,
         workmanshipRating: 4,
@@ -34,7 +34,7 @@ const SAMPLE_CUSTOMER_REVIEWS: CustomerReview[] = [
         wouldRecommend: true,
         submittedAt: '2024-01-25',
         isPublic: true,
-        followUpRequired: false,
+        RoofRequired: false,
     },
     {
         id: 'REV-002',
@@ -54,7 +54,7 @@ const SAMPLE_CUSTOMER_REVIEWS: CustomerReview[] = [
         wouldRecommend: false,
         submittedAt: '2024-01-20',
         isPublic: false,
-        followUpRequired: true,
+        RoofRequired: true,
     },
 ];
 
@@ -91,7 +91,7 @@ const SAMPLE_DEFECTS: DefectReport[] = [
         severity: 'minor',
         photos: [],
         discoveredAt: '2024-01-22',
-        discoveredBy: 'Sarah Chen',
+        discoveredBy: 'Bjorn Teo',
         status: 'resolved',
         resolvedAt: '2024-01-23',
         resolutionNotes: 'Vendor touched up same day',
@@ -161,7 +161,7 @@ const SAMPLE_LEADS: Lead[] = [
 ];
 
 const TEAM_MEMBERS = [
-    { id: 'D001', name: 'Sarah Chen', activeProjects: 3 },
+    { id: 'D001', name: 'Bjorn Teo', activeProjects: 3 },
     { id: 'D002', name: 'Mike Tan', activeProjects: 2 },
     { id: 'D003', name: 'Jenny Lim', activeProjects: 4 },
     { id: 'D004', name: 'Ahmad Hassan', activeProjects: 1 },
@@ -242,7 +242,7 @@ export default function ReviewsAndLeadsPanel() {
                                 <div className="flex justify-between items-start">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-lg">{lead.jurisdiction === 'SG' ? '🇸🇬' : '🇲🇾'}</span>
+                                            <span className="text-lg">{lead.jurisdiction === 'SG' ? '' : ''}</span>
                                             <h3 className="font-bold text-gray-900">{lead.name}</h3>
                                             <span className={`text-xs px-2 py-0.5 rounded-full ${getSourceBadge(lead.source)}`}>
                                                 {lead.source.replace('_', ' ')}
@@ -252,8 +252,8 @@ export default function ReviewsAndLeadsPanel() {
                                             )}
                                         </div>
                                         <div className="text-sm text-gray-600 space-y-0.5">
-                                            <p><span className="text-gray-400">📞</span> {lead.phone} {lead.email && `• ${lead.email}`}</p>
-                                            <p><span className="text-gray-400">🏠</span> {lead.propertyType} {lead.estimatedBudget && `• ${lead.estimatedBudget}`}</p>
+                                            <p><span className="text-gray-400"></span> {lead.phone} {lead.email && ` ${lead.email}`}</p>
+                                            <p><span className="text-gray-400"></span> {lead.propertyType} {lead.estimatedBudget && ` ${lead.estimatedBudget}`}</p>
                                             {lead.notes && <p className="text-gray-500 italic">"{lead.notes}"</p>}
                                         </div>
                                         <p className="text-xs text-gray-400 mt-2">Received: {formatDate(lead.createdAt)}</p>
@@ -267,7 +267,7 @@ export default function ReviewsAndLeadsPanel() {
                                                     onClick={() => setAssignModalOpen(assignModalOpen === lead.id ? null : lead.id)}
                                                     className="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded hover:bg-blue-700"
                                                 >
-                                                    ASSIGN →
+                                                    ASSIGN 
                                                 </button>
                                                 {assignModalOpen === lead.id && (
                                                     <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-2 w-48">
@@ -298,12 +298,12 @@ export default function ReviewsAndLeadsPanel() {
                         {SAMPLE_CUSTOMER_REVIEWS.map(review => (
                             <div
                                 key={review.id}
-                                className={`p-4 border rounded-lg ${review.followUpRequired ? 'border-red-200 bg-red-50/50' : 'border-gray-200'}`}
+                                className={`p-4 border rounded-lg ${review.RoofRequired ? 'border-red-200 bg-red-50/50' : 'border-gray-200'}`}
                             >
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <h3 className="font-bold text-gray-900">{review.clientName}</h3>
-                                        <p className="text-sm text-gray-500">{review.projectName} • Designer: {review.designerName}</p>
+                                        <p className="text-sm text-gray-500">{review.projectName}  Designer: {review.designerName}</p>
                                     </div>
                                     <div className="text-right">
                                         <div className="text-2xl text-amber-500">{getRatingStars(review.overallRating)}</div>
@@ -314,24 +314,24 @@ export default function ReviewsAndLeadsPanel() {
                                     <p className="text-sm text-gray-600 italic mb-3">"{review.testimonial}"</p>
                                 )}
                                 <div className="flex gap-4 text-xs text-gray-500">
-                                    <span>Design: {review.designRating}★</span>
-                                    <span>Workmanship: {review.workmanshipRating}★</span>
-                                    <span>Communication: {review.communicationRating}★</span>
-                                    <span>Timeliness: {review.timelinessRating}★</span>
+                                    <span>Design: {review.designRating}</span>
+                                    <span>Workmanship: {review.workmanshipRating}</span>
+                                    <span>Communication: {review.communicationRating}</span>
+                                    <span>Timeliness: {review.timelinessRating}</span>
                                 </div>
                                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
                                     <div className="flex gap-2">
                                         {review.wouldRecommend ? (
-                                            <span className="text-xs text-green-600">✓ Would recommend</span>
+                                            <span className="text-xs text-green-600"> Would recommend</span>
                                         ) : (
-                                            <span className="text-xs text-red-500">✗ Would not recommend</span>
+                                            <span className="text-xs text-red-500"> Would not recommend</span>
                                         )}
-                                        {review.followUpRequired && (
+                                        {review.RoofRequired && (
                                             <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium">Follow-up Required</span>
                                         )}
                                     </div>
                                     {review.isPublic && (
-                                        <span className="text-xs text-blue-600">📢 Public testimonial</span>
+                                        <span className="text-xs text-blue-600"> Public testimonial</span>
                                     )}
                                 </div>
                             </div>
@@ -356,7 +356,7 @@ export default function ReviewsAndLeadsPanel() {
                                             </span>
                                         </div>
                                         <p className="text-sm text-gray-500">
-                                            {defect.projectName} • {defect.location}
+                                            {defect.projectName}  {defect.location}
                                         </p>
                                         <p className="text-sm text-gray-600 mt-1">
                                             Vendor: <span className="font-medium">{defect.vendorName}</span>
@@ -367,14 +367,14 @@ export default function ReviewsAndLeadsPanel() {
                                     <span>Discovered: {formatDate(defect.discoveredAt)}</span>
                                     {defect.assignedTo && <span>Assigned: {defect.assignedTo}</span>}
                                     {defect.delayedProject && (
-                                        <span className="text-red-500">⚠️ Delayed project by {defect.delayDays} days</span>
+                                        <span className="text-red-500">️ Delayed project by {defect.delayDays} days</span>
                                     )}
                                     {defect.chargedToVendor && (
-                                        <span className="text-amber-600">💰 Charged to vendor</span>
+                                        <span className="text-amber-600"> Charged to vendor</span>
                                     )}
                                 </div>
                                 {defect.status === 'resolved' && defect.resolutionNotes && (
-                                    <p className="text-xs text-green-600 mt-2">✓ {defect.resolutionNotes}</p>
+                                    <p className="text-xs text-green-600 mt-2"> {defect.resolutionNotes}</p>
                                 )}
                             </div>
                         ))}

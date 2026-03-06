@@ -146,7 +146,7 @@ export default function ClientManager() {
                                         </span>
                                     </div>
                                     <div className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-                                        <span>📧 {c.contact}</span>
+                                        <span> {c.contact}</span>
                                     </div>
                                 </div>
                                 <button className="text-xs text-gray-400 hover:text-navy-900 underline opacity-0 group-hover:opacity-100 transition-opacity">

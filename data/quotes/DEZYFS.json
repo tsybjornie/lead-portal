@@ -1,0 +1,26 @@
+{
+  "shareCode": "DEZYFS",
+  "createdAt": "2026-03-05T17:26:13.489Z",
+  "updatedAt": "2026-03-05T17:26:13.489Z",
+  "quoteNumber": "20260306/VIN/D01/C001/QO1",
+  "status": "SENT",
+  "companyName": "VINTERIOR STUDIO",
+  "companyTagline": "",
+  "projectName": "4-Room HDB Renovation",
+  "clientName": "",
+  "jurisdiction": "SG",
+  "sections": [
+    {
+      "id": "section-1772731381131",
+      "category": "design_submissions",
+      "displayName": "Design & Submissions",
+      "items": [],
+      "subtotalCost": 0,
+      "subtotalSelling": 0,
+      "overallMargin": 0,
+      "isExpanded": true
+    }
+  ],
+  "zones": [],
+  "clientFeedback": {}
+}

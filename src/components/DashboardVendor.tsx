@@ -18,9 +18,9 @@ import {
     MeasurementUnit
 } from '@/types/quote';
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // VENDOR QUOTE LINE ITEM (Mirrors Designer's UniversalQuoteLine)
-// ═══════════════════════════════════════════════════════════════
+// 
 
 interface VendorQuoteLine {
     id: string;
@@ -166,9 +166,9 @@ export default function DashboardVendor({ onLogout }: DashboardVendorProps) {
 
             <main className="max-w-6xl mx-auto px-6 py-8 space-y-4">
 
-                {/* ═══════════════════════════════════════════════════════════════ */}
+                {/*  */}
                 {/* QUOTE LINE ITEMS (Same structure as Designer's QuoteBuilder) */}
-                {/* ═══════════════════════════════════════════════════════════════ */}
+                {/*  */}
 
                 {lines.map((line) => (
                     <section
@@ -189,7 +189,7 @@ export default function DashboardVendor({ onLogout }: DashboardVendorProps) {
                                     {line.taskDescription || 'Untitled Item'}
                                 </p>
                                 <p className="text-xs text-slate-500">
-                                    {line.mainCategory || 'No category'} {line.subCategory ? `→ ${line.subCategory}` : ''}
+                                    {line.mainCategory || 'No category'} {line.subCategory ? ` ${line.subCategory}` : ''}
                                 </p>
                             </div>
                             <div className="text-right">
@@ -317,9 +317,9 @@ export default function DashboardVendor({ onLogout }: DashboardVendorProps) {
                     Add Line Item
                 </button>
 
-                {/* ═══════════════════════════════════════════════════════════════ */}
+                {/*  */}
                 {/* QUOTE PRICE & MARGIN SUMMARY */}
-                {/* ═══════════════════════════════════════════════════════════════ */}
+                {/*  */}
                 <section className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-6 text-white shadow-lg">
                     <div className="grid grid-cols-4 gap-6 items-center">
                         <div>

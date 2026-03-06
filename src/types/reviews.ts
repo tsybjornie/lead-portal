@@ -34,7 +34,7 @@ export interface CustomerReview {
     // Metadata
     submittedAt: string;
     isPublic: boolean;           // Can be used for marketing
-    followUpRequired: boolean;   // Flag for negative reviews
+    RoofRequired: boolean;   // Flag for negative reviews
 }
 
 // ============================================================
@@ -189,5 +189,5 @@ export function getRatingStars(rating: number): string {
     const full = Math.floor(rating);
     const half = rating % 1 >= 0.5 ? 1 : 0;
     const empty = 5 - full - half;
-    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+    return ''.repeat(full) + (half ? '½' : '') + ''.repeat(empty);
 }

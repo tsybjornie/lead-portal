@@ -1,14 +1,17 @@
 /**
- * Ordinance Systems — Shared Project Store
+ * Ordinance Systems  Shared Project Store
  * 
  * Central data layer shared across all apps via localStorage + BroadcastChannel.
  * When any app updates project data, all other apps receive the update in real time.
  * 
  * Data flow (factory assembly line):
- *   Measure → Numbers → Ledger
- *              ↓
- *         PaddleDuck → Inspect → Reveal
+ *   Measure  Roof  Ledger
+ *              
+ *         Roof  Inspect  Reveal
  */
+
+import type { ProjectAsset } from '@/types/project-assets';
+import type { PhotoshootBooking } from '@/types/photoshoot';
 
 export interface OSRoom {
     id: string;
@@ -55,7 +58,7 @@ export interface OSProject {
     rooms: OSRoom[];
     totalFloorArea: number;
     totalWallArea: number;
-    // Numbers data
+    // Roof data
     quoteItems: OSQuoteItem[];
     quoteTotalAmount: number;
     quoteDate: string;
@@ -71,6 +74,10 @@ export interface OSProject {
     // Reveal data
     revealReady: boolean;
     photosUploaded: number;
+    // Asset data (synced from Roof)
+    assets: ProjectAsset[];
+    // Photoshoot data
+    photoshoot?: PhotoshootBooking;
     // Pipeline status
     stage: "measure" | "quote" | "execution" | "inspect" | "reveal" | "complete";
     lastUpdatedBy: string;
@@ -120,6 +127,8 @@ export function createProject(clientName: string, propertyType: string = ""): OS
         inspectionComplete: false,
         revealReady: false,
         photosUploaded: 0,
+        assets: [],
+        photoshoot: undefined,
         stage: "measure",
         lastUpdatedBy: "hub",
         lastUpdatedAt: new Date().toISOString(),
@@ -175,7 +184,7 @@ export function updateQuoteData(items: OSQuoteItem[], total: number) {
     project.quoteTotalAmount = total;
     project.quoteDate = new Date().toISOString().split("T")[0];
     if (project.stage === "quote") project.stage = "execution";
-    project.lastUpdatedBy = "numbers";
+    project.lastUpdatedBy = "Roof";
     saveProject(project);
 }
 
@@ -212,6 +221,33 @@ export function updateRevealData(photosUploaded: number) {
     if (!project) return;
     project.photosUploaded = photosUploaded;
     if (photosUploaded > 0 && project.stage === "reveal") project.stage = "complete";
+    project.lastUpdatedBy = "reveal";
+    saveProject(project);
+}
+
+/** Update asset data (from Roof uploads) */
+export function updateAssetData(assets: ProjectAsset[]) {
+    const project = loadProject();
+    if (!project) return;
+    project.assets = assets;
+    project.lastUpdatedBy = "Roof";
+    saveProject(project);
+}
+
+/** Add a single asset */
+export function addAsset(asset: ProjectAsset) {
+    const project = loadProject();
+    if (!project) return;
+    project.assets = [...(project.assets || []), asset];
+    project.lastUpdatedBy = "Roof";
+    saveProject(project);
+}
+
+/** Update photoshoot booking data */
+export function updatePhotoshootData(photoshoot: PhotoshootBooking) {
+    const project = loadProject();
+    if (!project) return;
+    project.photoshoot = photoshoot;
     project.lastUpdatedBy = "reveal";
     saveProject(project);
 }

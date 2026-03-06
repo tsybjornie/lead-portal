@@ -37,8 +37,8 @@ export interface DesignerRecommendation {
     };
 
     // Follow-up
-    followUpDate?: string;
-    followUpNotes?: string;
+    RoofDate?: string;
+    RoofNotes?: string;
 }
 
 // Pre-defined risk acknowledgment texts by category
@@ -56,12 +56,12 @@ export const RISK_ACKNOWLEDGMENTS: Record<string, string> = {
         'I acknowledge that by declining the recommended structural assessment, I accept responsibility for any structural issues that may arise. I understand that modifications without proper assessment may affect building integrity.',
 
     'default':
-        'I understand that by declining this recommendation from my designer, I accept the associated risks and consequences. I acknowledge that this decision is my own and I release the design firm from liability related to this specific item.'
+        'I understand that by declining this recommendation from my designer, I accept the associated risks and conRoofs. I acknowledge that this decision is my own and I release the design firm from liability related to this specific item.'
 };
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // HELPER FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function createRecommendation(
     projectId: string,
@@ -124,11 +124,11 @@ export function recordRiskAcknowledgment(
     };
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // STORAGE
-// ═══════════════════════════════════════════════════════════════
+// 
 
-const RECOMMENDATIONS_KEY = 'paddleduck_recommendations';
+const RECOMMENDATIONS_KEY = 'Roof_recommendations';
 
 export function saveRecommendations(recs: DesignerRecommendation[]): boolean {
     if (typeof window === 'undefined') return false;

@@ -145,7 +145,7 @@ export default function VendorManager() {
                                 <div className="text-xs text-gray-500 flex gap-4">
                                     <span>Terms: {s.paymentTerms}</span>
                                     {s.hiddenPainFields?.transportIssues && (
-                                        <span className="text-red-500 font-medium">⚠️ {s.hiddenPainFields.transportIssues}</span>
+                                        <span className="text-red-500 font-medium">️ {s.hiddenPainFields.transportIssues}</span>
                                     )}
                                 </div>
                             </div>

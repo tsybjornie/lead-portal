@@ -20,10 +20,10 @@ export interface Zone {
     surfaces?: {
         floorSqm: number;       // L × W
         ceilingSqm: number;     // L × W (same as floor)
-        wallASqm: number;       // Wall A — long wall (L × H)
-        wallBSqm: number;       // Wall B — long wall opposite (L × H)
-        wallCSqm: number;       // Wall C — short wall (W × H)
-        wallDSqm: number;       // Wall D — short wall opposite (W × H)
+        wallASqm: number;       // Wall A  long wall (L × H)
+        wallBSqm: number;       // Wall B  long wall opposite (L × H)
+        wallCSqm: number;       // Wall C  short wall (W × H)
+        wallDSqm: number;       // Wall D  short wall opposite (W × H)
         totalWallSqm: number;   // A + B + C + D
         totalSurfaceSqm: number; // floor + ceiling + all walls
     };
@@ -219,10 +219,10 @@ export default function ZoneManager({ zones, onZonesChange }: ZoneManagerProps) 
                 <div className="flex items-center gap-3">
                     <MapPin className="w-5 h-5 text-blue-600" />
                     <div className="text-left">
-                        <h3 className="font-bold text-gray-900">📍 Zones</h3>
+                        <h3 className="font-bold text-gray-900"> Zones</h3>
                         <p className="text-xs text-gray-500">
                             {zones.length} zone{zones.length !== 1 ? 's' : ''}
-                            {totalArea > 0 && ` • ${totalArea.toFixed(1)} sqm total`}
+                            {totalArea > 0 && `  ${totalArea.toFixed(1)} sqm total`}
                         </p>
                     </div>
                 </div>

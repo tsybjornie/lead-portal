@@ -57,20 +57,20 @@ export const DEFAULT_TERMS_AND_CONDITIONS = `
 10. Disputes shall be resolved under the laws of the specified jurisdiction.
 `.trim();
 
-// Default company profile (placeholder)
+// Default company profile  Vinterior Pte Ltd (dogfood)
 export const DEFAULT_COMPANY_PROFILE: CompanyProfile = {
-    id: 'default',
-    name: 'Your Company Name',
-    registrationNumber: '000000000X',
-    email: 'hello@yourcompany.com',
-    phone: '+65 0000 0000',
+    id: 'vinterior',
+    name: 'Vinterior Pte Ltd',
+    registrationNumber: '202XXXXXXX',  // TODO: Update with real UEN
+    email: 'hello@vinterior.sg',       // TODO: Update
+    phone: '+65 XXXX XXXX',            // TODO: Update
     address: {
-        line1: '123 Sample Street',
-        line2: '#01-01 Sample Building',
+        line1: 'TBC',                   // TODO: Update
+        line2: '',
         city: 'Singapore',
-        postalCode: '000000',
+        postalCode: '000000',           // TODO: Update
         country: 'Singapore',
     },
-    logoUrl: undefined,
-    website: 'www.yourcompany.com',
+    logoUrl: undefined,                 // TODO: Upload logo
+    website: 'www.vinterior.sg',        // TODO: Update
 };

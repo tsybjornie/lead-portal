@@ -152,7 +152,7 @@ const ITEM_PRIORITY: Record<string, number> = {
     'bedroom_door': 40,
     'wardrobe': 45,
 
-    // High priority (core kitchen — used daily)
+    // High priority (core kitchen  used daily)
     'base_cabinet': 50,
     'upper_cabinet': 50,
     'countertop_quartz': 55,
@@ -279,14 +279,14 @@ export function optimizeBudget(
             savingsBreakdown: [],
             removedItems: [],
             downgradedItems: [],
-            warnings: ['✅ Your quote already fits within the budget!'],
+            warnings: [' Your quote already fits within the budget!'],
         };
     }
 
     const deficit = originalTotal - targetBudget;
     let totalSaved = 0;
 
-    // ── STEP 1: Downgrade materials (sorted by priority — lowest first) ──
+    //  STEP 1: Downgrade materials (sorted by priority  lowest first) 
     interface DowngradeCandidate {
         sectionIdx: number;
         itemIdx: number;
@@ -357,7 +357,7 @@ export function optimizeBudget(
             totalSaved += savedOnSelling;
 
             downgradedItems.push({
-                itemDescription: updatedItem.description.split(' — ')[0],
+                itemDescription: updatedItem.description.split('  ')[0],
                 fromTier: cand.currentTier,
                 toTier: targetTier,
                 fromLabel: currentOption.label,
@@ -368,7 +368,7 @@ export function optimizeBudget(
 
             savingsBreakdown.push({
                 category: optimized[cand.sectionIdx].displayName,
-                description: `${updatedItem.description.split(' — ')[0]}: ${currentOption.label} → ${targetOption.label}`,
+                description: `${updatedItem.description.split('  ')[0]}: ${currentOption.label}  ${targetOption.label}`,
                 saved: savedOnSelling,
             });
 
@@ -376,7 +376,7 @@ export function optimizeBudget(
         }
     }
 
-    // ── STEP 2: Remove optional items if still over budget ──
+    //  STEP 2: Remove optional items if still over budget 
     if (totalSaved < deficit) {
         for (let si = 0; si < optimized.length; si++) {
             if (totalSaved >= deficit) break;
@@ -388,10 +388,10 @@ export function optimizeBudget(
                 const isRemovable = REMOVABLE_ITEMS.some(r => desc.includes(r));
                 if (isRemovable) {
                     totalSaved += item.sellingPrice;
-                    removedItems.push(item.description.split(' — ')[0]);
+                    removedItems.push(item.description.split('  ')[0]);
                     savingsBreakdown.push({
                         category: optimized[si].displayName,
-                        description: `Removed: ${item.description.split(' — ')[0]}`,
+                        description: `Removed: ${item.description.split('  ')[0]}`,
                         saved: item.sellingPrice,
                     });
                     return false;
@@ -401,7 +401,7 @@ export function optimizeBudget(
         }
     }
 
-    // ── STEP 3: Recalculate section totals ──
+    //  STEP 3: Recalculate section totals 
     optimized = optimized
         .map(section => {
             const subtotalCost = section.items.reduce((s, i) => s + i.costPrice, 0);
@@ -417,7 +417,7 @@ export function optimizeBudget(
     if (!fitsInBudget) {
         const stillOver = optimizedTotal - targetBudget;
         warnings.push(
-            `⚠️ Even after downgrading all materials to budget tier and removing optional items, the quote is still S$${stillOver.toLocaleString('en-US', { maximumFractionDigits: 0 })} over budget. The current scope may need to be reduced (e.g. fewer wardrobes, skip aircon).`
+            `️ Even after downgrading all materials to budget tier and removing optional items, the quote is still S$${stillOver.toLocaleString('en-US', { maximumFractionDigits: 0 })} over budget. The current scope may need to be reduced (e.g. fewer wardrobes, skip aircon).`
         );
     }
 
@@ -471,10 +471,10 @@ export function generateBudgetTiers(
         const total = cloned.reduce((s, sec) => s + sec.subtotalSelling, 0);
 
         const labels: Record<MaterialTier, string> = {
-            budget: '💰 Budget',
-            standard: '⭐ Standard',
-            premium: '✨ Premium',
-            luxury: '👑 Luxury',
+            budget: ' Budget',
+            standard: ' Standard',
+            premium: ' Premium',
+            luxury: ' Luxury',
         };
 
         const descs: Record<MaterialTier, string> = {

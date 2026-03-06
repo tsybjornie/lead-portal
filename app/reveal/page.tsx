@@ -4,7 +4,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import AppDock from "../components/AppDock";
-import { loadProject, updateRevealData } from "../lib/project-store";
+import { loadProject, updateRevealData, updatePhotoshootData } from "../lib/project-store";
+import {
+    type PhotoshootBooking,
+    type PhotoshootStatus,
+    PHOTOSHOOT_PACKAGES,
+    PHOTOGRAPHERS,
+    createPhotoshootBooking,
+} from "@/types/photoshoot";
 
 interface ProjectPhoto {
     id: string;
@@ -33,16 +40,16 @@ const PROPERTY_TYPES = [
 ];
 
 const STYLES = [
-    "Minimalist",
-    "Scandinavian",
-    "Industrial",
-    "Japanese",
-    "Modern",
-    "Contemporary",
-    "Mid-Century",
+    "Wabi-Sabi",
+    "Bauhaus",
+    "De Stijl",
+    "Brutalism",
+    "Art Nouveau",
+    "Peranakan",
+    "Hygge",
+    "Art Deco",
+    "Luxury",
     "Muji",
-    "Resort",
-    "Japandi",
 ];
 
 const ZONES = [
@@ -60,7 +67,7 @@ function generateCaption(info: ProjectInfo, photoCount: number): string {
     const lines = [];
     if (info.propertyType) {
         lines.push(
-            `${info.propertyType} transformation${info.style ? ` — ${info.style} style` : ""}.`
+            `${info.propertyType} transformation${info.style ? `  ${info.style} style` : ""}.`
         );
     }
     if (info.size || info.duration) {
@@ -102,9 +109,12 @@ export default function RevealPage() {
         style: "",
     });
     const [activeSection, setActiveSection] = useState<
-        "info" | "photos" | "output"
+        "info" | "photos" | "output" | "photoshoot"
     >("info");
     const [addingPhotoZone, setAddingPhotoZone] = useState<string | null>(null);
+    const [booking, setBooking] = useState<PhotoshootBooking | null>(null);
+    const [selectedPackage, setSelectedPackage] = useState('standard');
+    const [selectedPhotographer, setSelectedPhotographer] = useState('');
 
     // Load project info from shared store on mount
     useEffect(() => {
@@ -118,6 +128,10 @@ export default function RevealPage() {
                 size: project.totalFloorArea > 0 ? project.totalFloorArea.toFixed(0) : prev.size,
                 budget: project.quoteTotalAmount > 0 ? `$${project.quoteTotalAmount.toLocaleString()}` : prev.budget,
             }));
+            if (project.photoshoot) {
+                setBooking(project.photoshoot);
+                setSelectedPackage(project.photoshoot.packageId);
+            }
         }
     }, []);
 
@@ -163,6 +177,7 @@ export default function RevealPage() {
         { id: "info" as const, label: "Project Brief" },
         { id: "photos" as const, label: "Photography" },
         { id: "output" as const, label: "Portfolio Output" },
+        { id: "photoshoot" as const, label: "Photoshoot" },
     ];
 
     return (
@@ -176,14 +191,14 @@ export default function RevealPage() {
                     href="/hub"
                     className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                 >
-                    ← Command Center
+                    Command Center
                 </Link>
                 <div className="flex items-center gap-4">
                     <Link
                         href="/inspect"
                         className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
                     >
-                        ← Inspect
+                        Inspect
                     </Link>
                     <span className="text-[#ddd]">|</span>
                     <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
@@ -361,7 +376,7 @@ export default function RevealPage() {
                                 onClick={() => setActiveSection("photos")}
                                 className="mt-12 px-8 py-4 bg-[#111] text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
                             >
-                                Next: Photography →
+                                Next: Photography
                             </button>
                         </motion.div>
                     )}
@@ -408,7 +423,7 @@ export default function RevealPage() {
                                                     )}
                                                 </div>
                                                 <span className="text-sm font-extralight text-[#bbb]">
-                                                    {isExpanded ? "−" : "+"}
+                                                    {isExpanded ? "" : "+"}
                                                 </span>
                                             </button>
 
@@ -508,7 +523,7 @@ export default function RevealPage() {
                                 onClick={() => setActiveSection("output")}
                                 className="mt-12 px-8 py-4 bg-[#111] text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
                             >
-                                Next: Generate Portfolio →
+                                Next: Generate Portfolio
                             </button>
                         </motion.div>
                     )}
@@ -630,13 +645,187 @@ export default function RevealPage() {
                             </div>
                         </motion.div>
                     )}
+                    {/* Section: Photoshoot */}
+                    {activeSection === "photoshoot" && (
+                        <motion.div
+                            key="photoshoot"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            {!booking ? (
+                                /* Booking setup */
+                                <div className="space-y-10">
+                                    <div>
+                                        <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-6">Select Package</div>
+                                        <div className="grid grid-cols-3 gap-4">
+                                            {PHOTOSHOOT_PACKAGES.map(pkg => (
+                                                <button
+                                                    key={pkg.id}
+                                                    onClick={() => setSelectedPackage(pkg.id)}
+                                                    className={`text-left p-6 border transition-all duration-300 ${selectedPackage === pkg.id
+                                                        ? 'bg-[#111] text-white border-[#111]'
+                                                        : 'border-[#e5e5e5] hover:border-[#111]'
+                                                        }`}
+                                                >
+                                                    <div className="text-lg font-extralight tracking-tight mb-1">{pkg.name}</div>
+                                                    <div className={`text-[10px] tracking-wider mb-3 ${selectedPackage === pkg.id ? 'text-white/60' : 'text-[#999]'}`}>
+                                                        {pkg.description}
+                                                    </div>
+                                                    <div className="flex items-baseline gap-2">
+                                                        <span className="text-xl font-light">${pkg.price}</span>
+                                                        <span className={`text-[10px] ${selectedPackage === pkg.id ? 'text-white/40' : 'text-[#bbb]'}`}>
+                                                            {pkg.photoCount} photos{pkg.videoTour ? ' + video' : ''}
+                                                        </span>
+                                                    </div>
+                                                    <div className={`text-[10px] mt-2 ${selectedPackage === pkg.id ? 'text-white/40' : 'text-[#ccc]'}`}>
+                                                        {pkg.editingDays} days editing
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">Photographer</div>
+                                        <div className="flex flex-wrap gap-3">
+                                            {PHOTOGRAPHERS.map(ph => (
+                                                <button
+                                                    key={ph.id}
+                                                    onClick={() => setSelectedPhotographer(ph.id)}
+                                                    className={`px-5 py-3 border text-sm font-extralight tracking-wide transition-all duration-300 ${selectedPhotographer === ph.id
+                                                        ? 'bg-[#111] text-white border-[#111]'
+                                                        : 'border-[#e5e5e5] hover:border-[#111]'
+                                                        }`}
+                                                >
+                                                    <div>{ph.name}</div>
+                                                    <div className={`text-[10px] mt-0.5 ${selectedPhotographer === ph.id ? 'text-white/60' : 'text-[#999]'}`}>
+                                                        {ph.specialty}   {ph.rating}
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">Zones to Shoot</div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {ZONES.map(zone => {
+                                                const zonePhotos = photos.filter(p => p.zone === zone && p.type === 'after');
+                                                return (
+                                                    <span
+                                                        key={zone}
+                                                        className={`px-4 py-2 border text-sm font-extralight ${zonePhotos.length > 0
+                                                            ? 'bg-[#111] text-white border-[#111]'
+                                                            : 'border-[#e5e5e5] text-[#999]'
+                                                            }`}
+                                                    >
+                                                        {zone} {zonePhotos.length > 0 && `(${zonePhotos.length})`}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                        <p className="text-[10px] text-[#ccc] mt-2">Zones with After photos will be included in the shoot</p>
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            const b = createPhotoshootBooking(selectedPackage);
+                                            if (selectedPhotographer) {
+                                                const ph = PHOTOGRAPHERS.find(p => p.id === selectedPhotographer);
+                                                b.photographer = ph?.name;
+                                            }
+                                            b.zones = photos
+                                                .filter(p => p.type === 'after')
+                                                .map(p => p.zone)
+                                                .filter((v, i, a) => a.indexOf(v) === i);
+                                            setBooking(b);
+                                            updatePhotoshootData(b);
+                                        }}
+                                        className="px-8 py-4 bg-[#111] text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
+                                    >
+                                        Book Photoshoot
+                                    </button>
+                                </div>
+                            ) : (
+                                /* Booking status */
+                                <div className="space-y-8">
+                                    <div className="border border-[#e5e5e5] bg-white p-8">
+                                        <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-6">Booking Confirmed</div>
+                                        <div className="space-y-4">
+                                            {[
+                                                { label: 'Package', value: booking.packageName },
+                                                { label: 'Photographer', value: booking.photographer || 'TBC' },
+                                                { label: 'Status', value: booking.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) },
+                                                { label: 'Zones', value: booking.zones.length > 0 ? booking.zones.join(', ') : 'All zones' },
+                                                { label: 'Portfolio Permission', value: booking.clientPermission ? 'Granted' : 'Not granted' },
+                                            ].map(item => (
+                                                <div key={item.label} className="flex items-center justify-between py-2 border-b border-[#f0f0f0] last:border-0">
+                                                    <span className="text-sm font-extralight text-[#999]">{item.label}</span>
+                                                    <span className="text-sm font-light text-[#111]">{item.value}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Permission toggle */}
+                                    <div className="flex items-center justify-between py-4 border border-[#e5e5e5] px-6">
+                                        <div>
+                                            <div className="text-sm font-light">Portfolio Permission</div>
+                                            <div className="text-[10px] text-[#999]">Allow designer to use photos in their portfolio</div>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                const updated = { ...booking, clientPermission: !booking.clientPermission, updatedAt: new Date().toISOString() };
+                                                setBooking(updated);
+                                                updatePhotoshootData(updated);
+                                            }}
+                                            className={`w-12 h-6 rounded-full relative transition-colors duration-300 ${booking.clientPermission ? 'bg-[#111]' : 'bg-[#ddd]'
+                                                }`}
+                                        >
+                                            <div className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform duration-300 shadow-sm ${booking.clientPermission ? 'translate-x-6' : 'translate-x-0.5'
+                                                }`} />
+                                        </button>
+                                    </div>
+
+                                    {/* Deliverables preview */}
+                                    {booking.deliverables.length > 0 ? (
+                                        <div>
+                                            <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">Deliverables</div>
+                                            <div className="grid grid-cols-3 gap-1">
+                                                {booking.deliverables.map(d => (
+                                                    <div key={d.id} className="aspect-square bg-[#f5f5f5] flex items-center justify-center">
+                                                        <span className="text-[10px] text-[#ccc]">{d.title}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="border border-dashed border-[#ddd] p-10 text-center">
+                                            <div className="text-sm font-extralight text-[#bbb]">Deliverables will appear here after the shoot</div>
+                                            <div className="text-[10px] text-[#ddd] mt-1">Estimated delivery: {PHOTOSHOOT_PACKAGES.find(p => p.id === booking.packageId)?.editingDays || 5} working days after shoot</div>
+                                        </div>
+                                    )}
+
+                                    {/* Change booking */}
+                                    <button
+                                        onClick={() => setBooking(null)}
+                                        className="text-[11px] tracking-[0.15em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
+                                    >
+                                        Change Booking
+                                    </button>
+                                </div>
+                            )}
+                        </motion.div>
+                    )}
                 </AnimatePresence>
             </div>
 
             {/* Bottom bar */}
             <footer className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between px-10 py-6 bg-[#fafafa]/80 backdrop-blur-sm border-t border-[#f0f0f0]">
                 <div className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#ccc]">
-                    {photos.length} photos uploaded
+                    {photos.length} photos uploaded{booking ? `  Shoot: ${booking.status.replace(/_/g, ' ')}` : ''}
                 </div>
                 <div className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#ccc]">
                     {info.propertyType || "No property set"}

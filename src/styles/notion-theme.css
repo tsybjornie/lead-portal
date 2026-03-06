@@ -1,0 +1,70 @@
+:root {
+  /* Notion-Style Color Palette */
+  --notion-bg: #FFFFFF;
+  --notion-bg-secondary: #F7F6F3;
+  --notion-text: #37352F;
+  --notion-text-gray: #787774;
+  --notion-border: rgba(55, 53, 47, 0.09);
+  --notion-hover: #EFEFED;
+  --notion-blue: #2383E2;
+  --notion-blue-bg: #E7F3FF;
+  --notion-red: #EB5757;
+  --notion-red-bg: #FFE2E2;
+  --notion-orange: #D9730D;
+  --notion-orange-bg: #FBECDD;
+  --notion-green: #0F7B6C;
+  --notion-green-bg: #E1F2EF;
+  
+  /* Typography */
+  --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+body {
+  background-color: var(--notion-bg);
+  color: var(--notion-text);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Notion-style components */
+.notion-card {
+  background: var(--notion-bg);
+  border: 1px solid var(--notion-border);
+  border-radius: 4px;
+  padding: 16px;
+  transition: background 0.1s ease-in;
+}
+
+.notion-card:hover {
+  background: var(--notion-hover);
+}
+
+.notion-callout {
+  display: flex;
+  padding: 16px;
+  border-radius: 4px;
+  margin: 12px 0;
+  background: var(--notion-bg-secondary);
+  border: 1px solid var(--notion-border);
+}
+
+.notion-table-header {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--notion-text-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--notion-border);
+}
+
+.notion-table-cell {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--notion-border);
+  font-size: 14px;
+}
+
+/* Hide Emojis */
+.no-emoji {
+  font-family: var(--font-inter) !important;
+}

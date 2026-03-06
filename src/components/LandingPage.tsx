@@ -65,7 +65,7 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             features: [
                 'Build professional quotes in minutes',
                 'Compare vendor prices across RFQs',
-                'Track prospect → client conversion',
+                'Track prospect  client conversion',
                 'Generate branded contracts'
             ],
             cta: 'Enter as Designer',
@@ -118,8 +118,8 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
     const workflow = [
         { step: 1, title: 'Prospect Inquiry', icon: Users },
         { step: 2, title: 'Build Quote', icon: Calculator },
-        { step: 3, title: 'Send RFQ to Vendors', icon: Truck },
-        { step: 4, title: 'Compare & Select', icon: BarChart3 },
+        { step: 3, title: 'Auto-Price & Source', icon: Truck },
+        { step: 4, title: 'Dispatch & Confirm', icon: BarChart3 },
         { step: 5, title: 'Client Accepts', icon: CheckCircle },
         { step: 6, title: 'Sign Contract', icon: FileText },
         { step: 7, title: 'Collect Payment', icon: TrendingUp },
@@ -129,9 +129,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
     return (
         <div className="min-h-screen bg-white text-slate-800">
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* HERO SECTION - Notion Style */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <header className="bg-white border-b border-gray-100">
                 <div className="max-w-5xl mx-auto px-6 pt-8 pb-20">
                     {/* Logo */}
@@ -139,13 +139,13 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                         <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-sm">N</span>
                         </div>
-                        <span className="text-lg font-semibold text-gray-900">Numbers</span>
+                        <span className="text-lg font-semibold text-gray-900">Roof</span>
                     </div>
 
                     {/* Hero Content */}
                     <div className="max-w-3xl">
                         <p className="text-gray-500 text-sm mb-4">
-                            Show me the numbers.
+                            Show me the Roof.
                         </p>
 
                         <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-[1.1]">
@@ -172,9 +172,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 </div>
             </header>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* WORKFLOW SECTION */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-16 bg-gray-50">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-12">
@@ -200,9 +200,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* PROBLEMS SECTION - Industry Pain Points */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-20 bg-white border-t border-gray-100">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-16">
@@ -334,7 +334,7 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
 
                     {/* Solution Banner */}
                     <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-8 text-center">
-                        <h4 className="text-2xl font-black mb-3">Numbers Solves All of This</h4>
+                        <h4 className="text-2xl font-black mb-3">Roof Solves All of This</h4>
                         <p className="text-blue-100 max-w-2xl mx-auto mb-6">
                             One standardized system for designers, vendors, and clients. Same structure, same language, complete transparency.
                         </p>
@@ -356,9 +356,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* FEATURES SECTION */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-20 bg-slate-50">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-12">
@@ -383,9 +383,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* ROLES / PORTALS SECTION */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-20">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="text-center mb-12">
@@ -433,9 +433,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* PHILOSOPHY - Michael Caine Quote */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-20 bg-gray-50">
                 <div className="max-w-3xl mx-auto px-6 text-center">
                     <div className="w-12 h-12 bg-gray-900 rounded-2xl flex items-center justify-center mb-6 mx-auto">
@@ -444,29 +444,29 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                     <blockquote className="text-2xl md:text-3xl font-medium text-gray-700 mb-4">
                         "In God we trust. All others must bring data."
                     </blockquote>
-                    <p className="text-gray-500 mb-8">— W. Edwards Deming</p>
+                    <p className="text-gray-500 mb-8"> W. Edwards Deming</p>
                     <p className="text-lg text-gray-600 max-w-xl mx-auto">
-                        That is the spirit of Numbers. Transparent pricing, backed by data.
+                        That is the spirit of Roof. Transparent pricing, backed by data.
                     </p>
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* TESTIMONIAL */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <section className="py-16 bg-white border-t border-slate-100">
                 <div className="max-w-3xl mx-auto px-6 text-center">
                     <blockquote className="text-xl font-medium text-gray-600 mb-4">
                         "Finally, a system that lets me compare vendor prices consistently.
-                        No more spreadsheet chaos — everything is standardized."
+                        No more spreadsheet chaos  everything is standardized."
                     </blockquote>
-                    <p className="text-gray-500">— Interior Designer, Singapore</p>
+                    <p className="text-gray-500"> Interior Designer, Singapore</p>
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* FOOTER - Minimal */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <footer className="py-12 border-t border-slate-100 bg-white">
                 <div className="max-w-5xl mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -475,8 +475,8 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                                 <span className="text-white font-bold text-sm">N</span>
                             </div>
                             <div>
-                                <p className="font-bold text-slate-800">Numbers</p>
-                                <p className="text-xs text-gray-500">© 2026 All rights reserved</p>
+                                <p className="font-bold text-slate-800">Roof</p>
+                                <p className="text-xs text-gray-500"> 2026 All rights reserved</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-6 text-sm text-gray-500">

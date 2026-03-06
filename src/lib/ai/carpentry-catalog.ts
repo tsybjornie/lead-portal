@@ -51,9 +51,9 @@ export type RoomContext =
 // ============================================================
 
 export const CARPENTRY_CATALOG: CarpentryConfig[] = [
-    // ────────────────────────────────────────────────
+    // 
     // STORAGE
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'wardrobe-swing',
         name: 'Swing Door Wardrobe',
@@ -89,7 +89,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['master'],
         description: 'Open or enclosed walk-in closet with hanging rods, drawers, shoe racks, accessories trays, and island counter. Requires dedicated room or partition.',
         materialNote: 'Plywood carcass, mix of open shelves + closed cabinets',
-        dimensions: 'Custom per room layout — typically 3-5 lm of panels',
+        dimensions: 'Custom per room layout  typically 3-5 lm of panels',
         unitOfMeasure: 'lot',
         rateRange: { low: 3500, high: 8000 },
         complexity: 'complex',
@@ -181,9 +181,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['shelving', 'bookcase', 'display'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // SEATING
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'window-bench',
         name: 'Window Bench / Bay Seat',
@@ -227,9 +227,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['daybed', 'lounge', 'guest bed'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // SLEEPING
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'platform-bed',
         name: 'Platform Bed with Storage',
@@ -287,9 +287,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['tatami', 'japanese', 'platform', 'zen'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // DISPLAY & FEATURE
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'feature-wall',
         name: 'Feature Wall Panel',
@@ -297,7 +297,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['living', 'master', 'dining'],
         description: 'Decorative wall panelling behind TV or bed. Fluted panels, slatted timber, marble lookalike, or fabric-wrapped. Can include concealed storage.',
         materialNote: 'Fluted MDF, timber slats, veneer, or PU panel',
-        dimensions: 'Custom — typically 8-12 ft wide × floor-to-ceiling',
+        dimensions: 'Custom  typically 8-12 ft wide × floor-to-ceiling',
         unitOfMeasure: 'sqft',
         rateRange: { low: 80, high: 200 },
         complexity: 'moderate',
@@ -353,7 +353,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['living', 'dining', 'kitchen'],
         description: 'Built-in wine storage with diamond lattice, horizontal slots, or pull-out trays. Can include glass holder rail and mini bar counter.',
         materialNote: 'Plywood, timber lattice, tempered glass shelf',
-        dimensions: 'Custom — from 4-bottle niche to full wine wall',
+        dimensions: 'Custom  from 4-bottle niche to full wine wall',
         unitOfMeasure: 'pcs',
         rateRange: { low: 400, high: 2500 },
         complexity: 'moderate',
@@ -361,9 +361,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['wine', 'bar', 'rack', 'drinks'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // PARTITIONS & DIVIDERS
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'partition-cabinet',
         name: 'Partition Cabinet (Room Divider)',
@@ -407,9 +407,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['sliding', 'partition', 'flexible', 'track'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // SURFACES & DESKS
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'study-desk',
         name: 'Built-in Study Desk',
@@ -445,7 +445,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['kitchen', 'balcony', 'utility'],
         description: 'Cabinet with aluminium frame and composite/aluminium panel doors. Fully waterproof and termite-proof. Ideal for outdoor kitchens, wet balconies, and utility areas. Will never warp or delaminate.',
         materialNote: 'Aluminium extrusion frame, aluminium composite panel (ACP) doors, SS hinges',
-        dimensions: 'Custom — matches standard kitchen module sizes',
+        dimensions: 'Custom  matches standard kitchen module sizes',
         unitOfMeasure: 'lm',
         rateRange: { low: 500, high: 850 },
         complexity: 'moderate',
@@ -457,7 +457,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         name: 'Stainless Steel Kitchen Cabinet',
         category: 'storage',
         rooms: ['kitchen'],
-        description: 'Full stainless steel cabinet system — carcass, doors, and countertop all in SS304. Commercial-grade hygiene. Easy to clean, heat-resistant, zero formaldehyde. Common in professional and high-end residential kitchens.',
+        description: 'Full stainless steel cabinet system  carcass, doors, and countertop all in SS304. Commercial-grade hygiene. Easy to clean, heat-resistant, zero formaldehyde. Common in professional and high-end residential kitchens.',
         materialNote: 'SS304 grade, 1.2mm thickness, brushed or mirror finish',
         dimensions: 'Standard kitchen module sizes, H720/850 × D550-600mm',
         unitOfMeasure: 'lm',
@@ -537,15 +537,15 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['island', 'peninsula', 'counter', 'bar'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // CONCEALMENT & HIDDEN
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'hidden-door',
         name: 'Hidden / Secret Door',
         category: 'concealment',
         rooms: ['living', 'bedroom', 'master', 'study'],
-        description: 'Door disguised as part of a wall panel or bookshelf. Push-open or touch-latch mechanism. Seamless when closed — no visible handle or frame.',
+        description: 'Door disguised as part of a wall panel or bookshelf. Push-open or touch-latch mechanism. Seamless when closed  no visible handle or frame.',
         materialNote: 'Plywood door leaf, concealed hinges, push-latch mechanism',
         dimensions: 'Standard door: W800-900 × H2100mm',
         unitOfMeasure: 'pcs',
@@ -597,9 +597,9 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         tags: ['boxing', 'pipe', 'column', 'cladding'],
     },
 
-    // ────────────────────────────────────────────────
+    // 
     // SPECIALTY / CREATIVE
-    // ────────────────────────────────────────────────
+    // 
     {
         id: 'pet-nook',
         name: 'Pet Nook / Built-in Pet House',
@@ -621,7 +621,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['kids'],
         description: 'Custom bunk bed with integrated play area, slide, climbing wall, or fort structure. Safety railings, rounded edges. Shared room solution.',
         materialNote: 'Plywood + solid timber, rounded edges, non-toxic finish',
-        dimensions: 'Custom per room — typically occupies 2×3m footprint',
+        dimensions: 'Custom per room  typically occupies 2×3m footprint',
         unitOfMeasure: 'lot',
         rateRange: { low: 4000, high: 10000 },
         complexity: 'specialist',
@@ -677,7 +677,7 @@ export const CARPENTRY_CATALOG: CarpentryConfig[] = [
         rooms: ['living', 'kitchen', 'study'],
         description: 'Cabinet with doors that slide back and disappear into the side panels when opened. Clean, flush look when closed and open.',
         materialNote: 'Plywood, pocket door track hardware, laminate',
-        dimensions: 'Custom — typically W1200-2400 × H2400mm',
+        dimensions: 'Custom  typically W1200-2400 × H2400mm',
         unitOfMeasure: 'lm',
         rateRange: { low: 500, high: 800 },
         complexity: 'complex',

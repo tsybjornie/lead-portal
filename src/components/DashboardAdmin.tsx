@@ -158,7 +158,7 @@ export default function DashboardAdmin() {
                                         <h3 className="font-bold text-navy-900 text-sm">Cost Update: Plywood 18mm</h3>
                                         <p className="text-xs text-gray-500">Supplier: WoodWorks Pte Ltd</p>
                                         <p className="text-xs text-gray-600 mt-1">
-                                            Current: $42.00/sheet → New: <span className="text-red-500 font-bold">$45.50/sheet (+8.3%)</span>
+                                            Current: $42.00/sheet  New: <span className="text-red-500 font-bold">$45.50/sheet (+8.3%)</span>
                                         </p>
                                         <p className="text-xs text-gray-400 mt-1">Source: Invoice #WW-2024-0892 dated 25 Jan</p>
                                     </div>
@@ -206,14 +206,14 @@ export default function DashboardAdmin() {
                             <div className="bg-white/5 p-3 rounded flex justify-between items-center border border-white/10">
                                 <div>
                                     <p className="text-sm font-bold">Plywood 18mm (WoodWorks)</p>
-                                    <p className="text-xs text-gray-400">Detected: $42.00 → <span className="text-red-400">$45.50 (+8%)</span></p>
+                                    <p className="text-xs text-gray-400">Detected: $42.00  <span className="text-red-400">$45.50 (+8%)</span></p>
                                 </div>
                                 <button className="text-xs bg-gold-500 text-navy-900 px-2 py-1 rounded font-bold hover:bg-white">UPDATE</button>
                             </div>
                             <div className="bg-white/5 p-3 rounded flex justify-between items-center border border-white/10">
                                 <div>
                                     <p className="text-sm font-bold">Hafele Hinge (Soft Close)</p>
-                                    <p className="text-xs text-gray-400">Detected: $4.50 → <span className="text-green-400">$4.20 (-6%)</span></p>
+                                    <p className="text-xs text-gray-400">Detected: $4.50  <span className="text-green-400">$4.20 (-6%)</span></p>
                                 </div>
                                 <button className="text-xs bg-gold-500 text-navy-900 px-2 py-1 rounded font-bold hover:bg-white">UPDATE</button>
                             </div>
@@ -226,7 +226,7 @@ export default function DashboardAdmin() {
             {/* DATA MANAGEMENT LAYER */}
             <div className="mt-12 pt-8 border-t-2 border-industrial-navy">
                 <h2 className="text-xl font-bold text-navy-900 mb-6 flex items-center gap-2">
-                    <span className="text-gold-600">◼</span> Data Management Layer
+                    <span className="text-gold-600"></span> Data Management Layer
                 </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* 1. Vendors */}

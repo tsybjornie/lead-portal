@@ -2,7 +2,7 @@
  * Trades / Execution Layer
  * The physical reality engine - where tools, labour, and cash meet the site
  * 
- * Rule: If it involves tools, labour, noise, dust, or risk on site — it lives here.
+ * Rule: If it involves tools, labour, noise, dust, or risk on site  it lives here.
  */
 
 import { Jurisdiction } from './core';
@@ -33,8 +33,8 @@ export type TradeCategory =
 // ============================================================
 
 export type MeasurementType =
-    | 'area'               // sqft / sqm → mm²
-    | 'linear'             // lm → mm
+    | 'area'               // sqft / sqm  mm²
+    | 'linear'             // lm  mm
     | 'unit'               // per piece
     | 'point'              // per electrical/plumbing point
     | 'lump_sum'           // fixed price

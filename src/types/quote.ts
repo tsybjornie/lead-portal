@@ -18,6 +18,15 @@ export type QuoteStatus =
     | 'cancelled'          // Quote killed
     | 'expired';           // Past validity date
 
+// Client Risk Taxonomy (The "Karen" Markers)
+export type RiskTrait =
+    | 'serial_scope_creep'       // Constantly asks for "small changes" for free
+    | 'payment_friction'           // Delays progress claims consistently
+    | 'communication_aggression'   // Abusive or 24/7 harassment
+    | 'undefined_expectations'    // Refuses to sign off on mocks/samples
+    | 'site_access_blocker'       // Repeatedly denies access to workers
+    | 'retail_price_shopper';    // Tries to poach workers at retail rates
+
 // Valid state transitions
 export const QUOTE_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
     draft: ['pending_review', 'cancelled'],
@@ -60,6 +69,44 @@ export interface QuoteLineItem {
     status: LineItemStatus;
     originalLineItemId?: string;         // If this is a variation, links to original
     variationId?: string;                // Which variation order modified this
+
+    // IFC (Issued For Coordination) & Accountability
+    assignedToTeamMember?: string;       // User ID of the person responsible for this line
+    ifcStatus?: 'IFC_OPEN' | 'IFC_RESOLVED' | 'IFC_STALLED';
+    ifcDueDate?: string;                 // ISO date
+    lastActionAt?: string;               // Tracks "freeloaders" (time since last update)
+    responseDebtHours?: number;          // Calculated: now - lastActionAt
+
+    // Technical Resume & End Result (Verified Portfolio)
+    methodologyUsed?: string;            // e.g., "Laser alignment", "Manual winging"
+    toolingVerified?: string[];          // e.g., ["Laser Level", "Wet Saw"]
+    technicalAnomalies?: string[];        // e.g., ["Perfect mitre", "Uneven jointing"]
+    endResultVerified?: boolean;         // Has the FINAL outcome been signed off?
+    endResultPhotos?: string[];          // Specifically final "Hero" shots
+    isTechnicalMasterpiece?: boolean;     // Flag for high-end portfolio highlight
+    reviewerNotes?: string;
+    verifiedAt?: string;
+
+    // Masked Identity (Privacy)
+    publicAlias?: string;                // e.g., "Master Carpenter #42" for client view
+
+    // 360 Mutual Accountability
+    idToWorkerReview?: {
+        techAdherenceRating: number;      // Was the methodology followed?
+        toolingRating: number;            // Were the right tools used?
+        comment?: string;
+    };
+    workerToIdReview?: {
+        specClarityRating: number;        // Were drawings/instructions clear?
+        siteReadinessRating: number;      // Was site ready for work?
+        comment?: string;
+    };
+    proToClientReview?: {
+        paymentPromptnessRating: number;  // Did client pay on time?
+        requirementClarityRating: number; // Did client keep changing mind?
+        respectSafetyRating: number;      // Site conduct
+        comment?: string;
+    };
 
     // Metadata
     notes?: string;
@@ -111,6 +158,29 @@ export interface Quote {
     createdBy: string;                   // Designer ID
     assignedTo?: string;                 // Account manager
     approvedBy?: string;                 // Admin who approved
+
+    // Risk Governance
+    riskTraits?: RiskTrait[];            // Internal-only markers for pros
+    systemGuardrailsActive?: string[];    // e.g., ["MANDATORY_ESCROW", "SIGNATURE_REQUIRED_FOR_ALL"]
+
+    // Internal Karma (Build it Back)
+    internalKarmaScore?: number;           // 0-1000 (Internal Only)
+    riskRecoveryProgress?: number;        // Count of successful projects since last flag
+
+    // Client Engagement Signals (The "Mating Phase" Tracker)
+    clientEngagement?: {
+        firstViewedAt?: string;           // When client first opened the quote
+        lastViewedAt?: string;            // Most recent view
+        totalViewCount?: number;          // How many times they've opened it
+        timeSpentSeconds?: number;        // Total time spent reviewing
+        sectionHeatmap?: Record<string, number>; // Section -> seconds spent
+        shortlistPosition?: number;       // null = not shortlisted, 1-3 = position
+        shortlistTotal?: number;          // How many IDs the client is comparing
+        commitmentLevel?: 'just_looking' | 'engaged' | 'shortlisted' | 'deciding' | 'committed';
+        budgetDeclared?: boolean;         // Did client reveal their budget range?
+        siteVisitBooked?: boolean;        // Did they book a physical site visit?
+        expiresAt?: string;               // Auto-expire date (7 days from send)
+    };
 
     // Timestamps
     createdAt: string;
@@ -240,6 +310,18 @@ export interface AuditEntry {
     description: string;
     previousValue?: string;              // JSON stringified
     newValue?: string;                   // JSON stringified
+
+    // Privacy
+    publicAlias?: string;                // Masked actor name for client audit logs
+
+    // Cross-Role Accountability
+    mutualRatingImpact?: {
+        targetUserId: string;
+        targetUserRole: string;
+        coordinationScore?: number;       // For Designers
+        technicalityScore?: number;       // For Workers/Vendors
+        clientHealthScore?: number;       // For Clients
+    };
 
     // Risk Flags
     isMarginViolation: boolean;          // Did this break margin floor?
@@ -387,7 +469,7 @@ export interface UniversalQuoteLine {
     lineNumber: number;
 
     // === USER INPUTS (Saved by User) ===
-    // 3-tier hierarchy: Category → Sub-Category → Task Description
+    // 3-tier hierarchy: Category  Sub-Category  Task Description
     mainCategory: string;       // Work type: "Demolition", "Masonry", "Carpentry", "Electrical"
     subCategory: string;        // Location: "Master Bedroom", "Kitchen", "Living Room"
     taskDescription: string;    // Specific work: "Remove wardrobe", "Build wardrobe"
@@ -410,6 +492,11 @@ export interface UniversalQuoteLine {
 
     // === INTERNAL NOTES ===
     internalRemarks?: string;   // Not shown on client quote
+
+    // === IFC & ACCOUNTABILITY ===
+    assignedToTeamMember?: string;
+    ifcStatus?: 'IFC_OPEN' | 'IFC_RESOLVED' | 'IFC_STALLED';
+    lastActionAt?: string;
 
     // === LINE TYPE ===
     type: 'ITEM' | 'HEADING' | 'REMARK';

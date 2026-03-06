@@ -4,7 +4,7 @@
   --industrial-navy: #0D122B;
   --industrial-gold: #F4C150;
   --industrial-gold-hover: #D6A83E;
-  --machine-grey: #F0F2F5; 
+  --machine-grey: #F0F2F5;
   --alert-red: #EF4444;
 }
 
@@ -18,4 +18,17 @@ body {
   --color-navy-900: var(--industrial-navy);
   --color-gold-500: var(--industrial-gold);
   --color-gold-600: var(--industrial-gold-hover);
+}
+
+@layer utilities {
+  .break-before-page {
+    break-before: page;
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }

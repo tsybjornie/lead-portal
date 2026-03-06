@@ -39,7 +39,7 @@ export default function AutoCompleteInput({
     const dropdownRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // ─── UPDATE SUGGESTIONS ON INPUT ────────────────────────
+    //  UPDATE SUGGESTIONS ON INPUT 
     const updateSuggestions = useCallback((text: string) => {
         if (text.trim().length < 2) {
             setSuggestions([]);
@@ -53,7 +53,7 @@ export default function AutoCompleteInput({
         setShowDropdown(results.length > 0);
         setSelectedIndex(-1);
 
-        // Ghost text — only for prefix matches
+        // Ghost text  only for prefix matches
         const ghost = getGhostText(text, category);
         setGhostText(ghost);
     }, [category]);
@@ -64,7 +64,7 @@ export default function AutoCompleteInput({
         }
     }, [value, isFocused, updateSuggestions]);
 
-    // ─── ACCEPT SUGGESTION ──────────────────────────────────
+    //  ACCEPT SUGGESTION 
     const acceptSuggestion = useCallback((suggestion: Suggestion) => {
         onChange(suggestion.text);
         setShowDropdown(false);
@@ -73,7 +73,7 @@ export default function AutoCompleteInput({
         if (onSelectSuggestion) onSelectSuggestion(suggestion);
     }, [onChange, onSelectSuggestion]);
 
-    // ─── ACCEPT GHOST TEXT ──────────────────────────────────
+    //  ACCEPT GHOST TEXT 
     const acceptGhost = useCallback(() => {
         if (ghostText) {
             const fullText = value + ghostText;
@@ -83,7 +83,7 @@ export default function AutoCompleteInput({
         }
     }, [value, ghostText, onChange]);
 
-    // ─── KEYBOARD HANDLING ──────────────────────────────────
+    //  KEYBOARD HANDLING 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Tab' && ghostText) {
             e.preventDefault();
@@ -122,7 +122,7 @@ export default function AutoCompleteInput({
         }
     };
 
-    // ─── CLICK OUTSIDE TO CLOSE ─────────────────────────────
+    //  CLICK OUTSIDE TO CLOSE 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -133,7 +133,7 @@ export default function AutoCompleteInput({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // ─── SCROLL SELECTED INTO VIEW ──────────────────────────
+    //  SCROLL SELECTED INTO VIEW 
     useEffect(() => {
         if (selectedIndex >= 0 && dropdownRef.current) {
             const items = dropdownRef.current.children;
@@ -145,7 +145,7 @@ export default function AutoCompleteInput({
         }
     }, [selectedIndex]);
 
-    // ─── HIGHLIGHT MATCHING TEXT ─────────────────────────────
+    //  HIGHLIGHT MATCHING TEXT 
     const highlightMatch = (text: string, query: string) => {
         if (!query) return text;
         const lowerText = text.toLowerCase();
@@ -165,7 +165,7 @@ export default function AutoCompleteInput({
         );
     };
 
-    // ─── RENDER ─────────────────────────────────────────────
+    //  RENDER 
     return (
         <div ref={containerRef} className="relative w-full">
             {/* Input layer with ghost text */}
@@ -219,10 +219,10 @@ export default function AutoCompleteInput({
                     {/* Header */}
                     <div className="px-3 py-1.5 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">
-                            ✨ AI Suggestions
+                             AI Suggestions
                         </span>
                         <span className="text-[10px] text-gray-300">
-                            ↑↓ navigate • Enter select • Esc close
+                             navigate  Enter select  Esc close
                         </span>
                     </div>
 

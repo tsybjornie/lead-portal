@@ -21,7 +21,7 @@ import { Jurisdiction } from '@/types/core';
 const SAMPLE_MEMBERS: Omit<TeamMemberPerformance, 'rank'>[] = [
     {
         memberId: 'D001',
-        name: 'Sarah Chen',
+        name: 'Bjorn Teo',
         role: 'senior_designer',
         jurisdiction: 'SG',
         quotesCreated: 12,
@@ -175,7 +175,7 @@ export default function TeamPerformancePanel() {
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                 <div>
                     <h2 className="text-lg font-bold text-gray-900">Team Performance</h2>
-                    <p className="text-sm text-gray-500">{rankedMembers.length} team members • {formatPerformancePeriod(period)}</p>
+                    <p className="text-sm text-gray-500">{rankedMembers.length} team members  {formatPerformancePeriod(period)}</p>
                 </div>
                 <div className="flex gap-3">
                     {/* Period Selector */}
@@ -198,8 +198,8 @@ export default function TeamPerformancePanel() {
                         className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-medium bg-white"
                     >
                         <option value="all">All Markets</option>
-                        <option value="SG">🇸🇬 Singapore</option>
-                        <option value="MY">🇲🇾 Malaysia</option>
+                        <option value="SG"> Singapore</option>
+                        <option value="MY"> Malaysia</option>
                     </select>
                 </div>
             </div>
@@ -228,11 +228,11 @@ export default function TeamPerformancePanel() {
             {needsAttention.length > 0 && (
                 <div className="mx-6 mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                     <div className="flex items-center gap-2 text-amber-800 font-medium text-sm">
-                        <span>⚠️</span>
+                        <span>️</span>
                         <span>Needs Attention</span>
                     </div>
                     <div className="text-sm text-amber-700 mt-1">
-                        {needsAttention.map(m => m.name).join(', ')} —
+                        {needsAttention.map(m => m.name).join(', ')} 
                         {needsAttention.some(m => m.trend === 'down')
                             ? ' declining performance or low conversion'
                             : ' bottom rankings this period'}
@@ -253,25 +253,25 @@ export default function TeamPerformancePanel() {
                                 className={`pb-3 text-right cursor-pointer hover:text-blue-600 ${sortBy === 'conversion' ? 'text-blue-600 font-bold' : ''}`}
                                 onClick={() => setSortBy('conversion')}
                             >
-                                Conversion ↕
+                                Conversion 
                             </th>
                             <th
                                 className={`pb-3 text-right cursor-pointer hover:text-blue-600 ${sortBy === 'value' ? 'text-blue-600 font-bold' : ''}`}
                                 onClick={() => setSortBy('value')}
                             >
-                                Value ↕
+                                Value 
                             </th>
                             <th
                                 className={`pb-3 text-right cursor-pointer hover:text-blue-600 ${sortBy === 'margin' ? 'text-blue-600 font-bold' : ''}`}
                                 onClick={() => setSortBy('margin')}
                             >
-                                Margin ↕
+                                Margin 
                             </th>
                             <th
                                 className={`pb-3 text-right cursor-pointer hover:text-blue-600 ${sortBy === 'commission' ? 'text-blue-600 font-bold' : ''}`}
                                 onClick={() => setSortBy('commission')}
                             >
-                                Commission ↕
+                                Commission 
                             </th>
                             <th className="pb-3 text-center w-20">Trend</th>
                         </tr>
@@ -292,7 +292,7 @@ export default function TeamPerformancePanel() {
                                         <div className="text-xs text-gray-500">{getRoleLabel(member.role)}</div>
                                     </td>
                                     <td className="py-3 text-center">
-                                        <span className="text-lg">{member.jurisdiction === 'SG' ? '🇸🇬' : '🇲🇾'}</span>
+                                        <span className="text-lg">{member.jurisdiction === 'SG' ? '' : ''}</span>
                                     </td>
                                     <td className="py-3 text-center">
                                         <span className="font-medium text-gray-900">{member.quotesAccepted}</span>
@@ -316,8 +316,8 @@ export default function TeamPerformancePanel() {
                                     </td>
                                     <td className="py-3 text-center">
                                         <span className={`text-lg ${member.trend === 'up' ? 'text-green-600' :
-                                                member.trend === 'down' ? 'text-red-500' :
-                                                    'text-gray-400'
+                                            member.trend === 'down' ? 'text-red-500' :
+                                                'text-gray-400'
                                             }`}>
                                             {getTrendIcon(member.trend)}
                                         </span>

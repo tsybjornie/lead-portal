@@ -7,12 +7,12 @@
  * 3. Prospect views quote in Client Portal (no login required)
  * 4. Prospect accepts T&Cs + digitally signs
  * 5. Prospect makes first payment (deposit)
- * 6. System auto-converts Prospect → Client with dashboard access
+ * 6. System auto-converts Prospect  Client with dashboard access
  */
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // TYPES
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export type ProspectStatus =
     | 'LEAD'          // Just captured contact info
@@ -21,7 +21,7 @@ export type ProspectStatus =
     | 'NEGOTIATING'   // Prospect is asking for changes
     | 'ACCEPTED'      // Accepted quote, pending T&C and payment
     | 'SIGNED'        // Signed T&Cs
-    | 'PAID'          // Made first payment → Ready for conversion
+    | 'PAID'          // Made first payment  Ready for conversion
     | 'CONVERTED'     // Now a full CLIENT
     | 'REJECTED'      // Declined the quote
     | 'STALE';        // No response after X days
@@ -98,9 +98,9 @@ export interface Client {
     updatedAt: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // CONVERSION LOGIC
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function isReadyForConversion(prospect: Prospect): boolean {
     return (
@@ -138,12 +138,12 @@ export function convertProspectToClient(prospect: Prospect): Client {
     return client;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // STORAGE
-// ═══════════════════════════════════════════════════════════════
+// 
 
-const PROSPECTS_KEY = 'paddleduck_prospects';
-const CLIENTS_KEY = 'paddleduck_clients';
+const PROSPECTS_KEY = 'Roof_prospects';
+const CLIENTS_KEY = 'Roof_clients';
 
 export function saveProspects(prospects: Prospect[]): boolean {
     if (typeof window === 'undefined') return false;
@@ -187,9 +187,9 @@ export function getClients(): Client[] {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // HELPERS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function createProspect(name: string, phone?: string, email?: string): Prospect {
     return {

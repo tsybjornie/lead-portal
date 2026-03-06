@@ -589,69 +589,69 @@ export function decideAccessMethod(input: AccessDecisionInput): AccessDecision {
     // DECISION TREE
     // ============================================================
 
-    // STAIRCASE / VOID → Always specialised scaffold
+    // STAIRCASE / VOID  Always specialised scaffold
     if (isStaircase || isVoid) {
         recommendedType = 'scaffold_staircase';
         reasoning = 'Staircase/void areas require specialised scaffold configuration due to non-level base and extended sightlines';
         warnings.push('Productivity penalty of 1.5x will be applied to downstream trades');
         warnings.push('Extended rental duration likely due to access complexity');
     }
-    // LOW HEIGHT (≤3m) → Ladder or A-frame
+    // LOW HEIGHT (3m)  Ladder or A-frame
     else if (heightRequired <= 3) {
         if (durationDays <= 3 && loadRequired === 'light') {
             recommendedType = 'ladder';
-            reasoning = 'Short duration, low height, light work → basic ladder access sufficient';
+            reasoning = 'Short duration, low height, light work  basic ladder access sufficient';
         } else {
             recommendedType = 'a_frame';
             alternativeType = 'ladder';
-            reasoning = 'Extended duration or moderate load → A-frame platform recommended for stability';
+            reasoning = 'Extended duration or moderate load  A-frame platform recommended for stability';
         }
     }
-    // MEDIUM HEIGHT (3-6m) → A-frame, scaffold, or scissor lift
+    // MEDIUM HEIGHT (3-6m)  A-frame, scaffold, or scissor lift
     else if (heightRequired <= 6) {
         if (durationDays <= 5 && isInterior && surfaceType === 'flat') {
             recommendedType = 'scissor_lift';
             alternativeType = 'scaffold_standard';
-            reasoning = 'Short duration interior work on flat surface → scissor lift efficient';
+            reasoning = 'Short duration interior work on flat surface  scissor lift efficient';
         } else {
             recommendedType = 'scaffold_standard';
             alternativeType = 'scissor_lift';
-            reasoning = 'Extended duration or irregular surface → scaffold provides stable platform';
+            reasoning = 'Extended duration or irregular surface  scaffold provides stable platform';
         }
     }
-    // HIGH HEIGHT (6-12m) → Scaffold or boom lift
+    // HIGH HEIGHT (6-12m)  Scaffold or boom lift
     else if (heightRequired <= 12) {
         if (durationDays <= 3 && loadRequired === 'light') {
             recommendedType = 'boom_lift';
             alternativeType = 'scaffold_standard';
-            reasoning = 'Short duration, light work at height → boom lift for quick access';
+            reasoning = 'Short duration, light work at height  boom lift for quick access';
         } else {
             recommendedType = 'scaffold_standard';
             alternativeType = 'scissor_lift';
-            reasoning = 'Extended work at height → scaffold for sustained platform access';
+            reasoning = 'Extended work at height  scaffold for sustained platform access';
         }
     }
-    // VERY HIGH (12-20m) → Boom lift or external scaffold
+    // VERY HIGH (12-20m)  Boom lift or external scaffold
     else if (heightRequired <= 20) {
         if (isInterior) {
             recommendedType = 'boom_lift';
-            reasoning = 'High interior work → boom lift required (check floor load capacity)';
+            reasoning = 'High interior work  boom lift required (check floor load capacity)';
             warnings.push('Verify floor can support boom lift weight');
         } else {
             recommendedType = 'scaffold_external';
             alternativeType = 'boom_lift';
-            reasoning = 'External high work → external scaffold for sustained access';
+            reasoning = 'External high work  external scaffold for sustained access';
         }
     }
-    // EXTREME HEIGHT (>20m) → External scaffold or rope access
+    // EXTREME HEIGHT (>20m)  External scaffold or rope access
     else {
         if (durationDays <= 2 && loadRequired === 'light') {
             recommendedType = 'rope_access';
-            reasoning = 'Short duration inspection/light work at extreme height → rope access specialist';
+            reasoning = 'Short duration inspection/light work at extreme height  rope access specialist';
             warnings.push('Requires certified rope access technicians');
         } else {
             recommendedType = 'scaffold_external';
-            reasoning = 'Extended work at extreme height → external scaffold required';
+            reasoning = 'Extended work at extreme height  external scaffold required';
             warnings.push('Significant mobilisation and rental cost');
         }
     }

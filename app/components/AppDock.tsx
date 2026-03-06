@@ -4,10 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const apps = [
-    { code: "FU", name: "FollowUp", href: "http://localhost:5500/follow%20up%20-%20lead%20reponse/dashboard.html", external: true },
-    { code: "NU", name: "Numbers", href: "http://localhost:3000/", external: true },
-    { code: "SQ", name: "Sequence", href: "http://localhost:5500/sequence/index.html", external: true },
-    { code: "PD", name: "PaddleDuck", href: "http://localhost:3001", external: true },
+    { code: "FU", name: "Roof", href: "http://localhost:5500/follow%20up%20-%20lead%20reponse/dashboard.html", external: true },
+    { code: "NU", name: "Roof", href: "http://localhost:3000/", external: true },
+    { code: "SQ", name: "Roof", href: "http://localhost:5500/Roof/index.html", external: true },
+    { code: "PD", name: "Roof", href: "http://localhost:3001", external: true },
     { code: "ME", name: "Measure", href: "http://localhost:3000/measure", external: true },
     { code: "IN", name: "Inspect", href: "http://localhost:3000/inspect", external: true },
     { code: "LE", name: "Ledger", href: "http://localhost:3000/ledger", external: true },
@@ -86,7 +86,7 @@ export default function AppDock() {
                             href="http://localhost:3000/hub"
                             className="block px-5 py-3 border-t border-[#f0f0f0] text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] hover:text-[#111] hover:bg-[#f0f0f0] transition-all"
                         >
-                            ← Command Center
+                             Command Center
                         </a>
                     </motion.div>
                 )}

@@ -77,7 +77,7 @@ export default function CompanySettings({ onSave }: Props) {
     return (
         <div className="bg-white border border-gray-200 rounded-lg p-6">
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-navy-900">⚙️ Company Settings</h3>
+                <h3 className="text-lg font-bold text-navy-900">️ Company Settings</h3>
                 <button
                     onClick={() => isEditing ? handleSave() : setIsEditing(true)}
                     className={`px-4 py-2 rounded text-sm font-bold transition-colors ${isEditing
@@ -85,7 +85,7 @@ export default function CompanySettings({ onSave }: Props) {
                         : 'bg-navy-900 text-white hover:bg-navy-800'
                         }`}
                 >
-                    {isEditing ? '✓ SAVE CHANGES' : 'EDIT SETTINGS'}
+                    {isEditing ? ' SAVE CHANGES' : 'EDIT SETTINGS'}
                 </button>
             </div>
 

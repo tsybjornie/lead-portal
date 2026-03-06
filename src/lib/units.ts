@@ -1,7 +1,7 @@
 import { Millimeter, SquareMillimeter, MeasurementType } from '@/types/core';
 
 // --- THE SACRED CONSTANTS (DO NOT TOUCH) ---
-// "These numbers are sacred. No rounding. Ever."
+// "These Roof are sacred. No rounding. Ever."
 export const ONE_FOOT_IN_MM = 304.8;
 export const ONE_SQFT_IN_MM2 = 92903.04;
 export const ONE_METER_IN_MM = 1000;

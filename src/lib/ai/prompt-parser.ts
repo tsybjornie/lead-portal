@@ -1,7 +1,7 @@
 /**
  * Prompt Parser Engine
  * Maps natural language renovation descriptions to structured trade intents.
- * No LLM required — uses keyword matching against existing trade/template data.
+ * No LLM required  uses keyword matching against existing trade/template data.
  */
 
 import { TradeCategory } from '@/types/trades';
@@ -60,7 +60,7 @@ export interface ParsedPrompt {
     matchedTemplateIds: string[];
     warnings: string[];
     suggestions: string[];
-    confidence: number;        // 0 to 1 — how many keywords matched
+    confidence: number;        // 0 to 1  how many keywords matched
     budget?: number;           // target budget in dollars (if specified)
 }
 
@@ -286,7 +286,7 @@ export function parsePrompt(input: string): ParsedPrompt {
         scope.wardrobes = rooms.bedrooms > 0 ? rooms.bedrooms : 1;
     }
 
-    // --- Infer room size → bedroom count if not explicitly set ---
+    // --- Infer room size  bedroom count if not explicitly set ---
     if (rooms.bedrooms === 0 && roomSize !== 'unknown') {
         const sizeMap: Record<RoomSize, number> = {
             '2-room': 1, '3-room': 2, '4-room': 3, '5-room': 4, 'executive': 4, 'unknown': 0
@@ -294,7 +294,7 @@ export function parsePrompt(input: string): ParsedPrompt {
         rooms.bedrooms = sizeMap[roomSize];
     }
 
-    // --- Infer room size → bathroom count if not explicitly set ---
+    // --- Infer room size  bathroom count if not explicitly set ---
     if (rooms.bathrooms === 0) {
         if (rooms.bedrooms >= 3) rooms.bathrooms = 2;
         else if (rooms.bedrooms >= 1) rooms.bathrooms = 1;
@@ -308,24 +308,24 @@ export function parsePrompt(input: string): ParsedPrompt {
         if (!scope.newWaterproofing) {
             scope.newWaterproofing = true;
             tradesSet.add('waterproofing');
-            suggestions.push('Auto-added waterproofing — required after bathroom hacking');
+            suggestions.push('Auto-added waterproofing  required after bathroom hacking');
         }
         if (!scope.newTiling) {
             scope.newTiling = true;
             tradesSet.add('masonry');
-            suggestions.push('Auto-added tiling — required after bathroom hacking');
+            suggestions.push('Auto-added tiling  required after bathroom hacking');
         }
         // Plumbing is almost always needed for bathroom reno
         if (!scope.plumbing) {
             scope.plumbing = true;
             tradesSet.add('plumbing');
-            suggestions.push('Auto-added plumbing — usually required for bathroom reno');
+            suggestions.push('Auto-added plumbing  usually required for bathroom reno');
         }
     }
 
     // If kitchen cabinets, suggest countertop
     if (scope.kitchenCabinets && !scope.kitchenCountertop) {
-        suggestions.push('💡 Consider adding a countertop (quartz/granite) to the kitchen scope');
+        suggestions.push(' Consider adding a countertop (quartz/granite) to the kitchen scope');
     }
 
     // If any demolition or tiling, add preliminaries
@@ -337,10 +337,10 @@ export function parsePrompt(input: string): ParsedPrompt {
     if (tradesSet.size >= 3 && !scope.cleaning) {
         scope.cleaning = true;
         tradesSet.add('cleaning');
-        suggestions.push('Auto-added final cleaning — standard for projects with 3+ trades');
+        suggestions.push('Auto-added final cleaning  standard for projects with 3+ trades');
     }
 
-    // Full reno → load everything
+    // Full reno  load everything
     if (scope.fullReno) {
         const fullRenoTrades: TradeCategory[] = [
             'design_submissions', 'preliminaries', 'demolition', 'masonry', 'carpentry',
@@ -371,10 +371,10 @@ export function parsePrompt(input: string): ParsedPrompt {
 
     // --- Warnings ---
     if (scope.hackBathrooms && !scope.showerScreen) {
-        warnings.push('⚠️ No shower screen specified — you may want to include one');
+        warnings.push('️ No shower screen specified  you may want to include one');
     }
     if (scope.wardrobes > 0 && !scope.lightingInstall) {
-        suggestions.push('💡 Consider adding LED strip lighting for wardrobes');
+        suggestions.push(' Consider adding LED strip lighting for wardrobes');
     }
 
     // --- Detect budget ---
@@ -404,7 +404,7 @@ export function parsePrompt(input: string): ParsedPrompt {
     // Auto-add design_submissions for significant projects
     if (tradesSet.size >= 4 && !tradesSet.has('design_submissions')) {
         tradesSet.add('design_submissions');
-        suggestions.push('Auto-added Design & Submissions — recommended for projects with 4+ trades');
+        suggestions.push('Auto-added Design & Submissions  recommended for projects with 4+ trades');
     }
 
     // --- Confidence ---

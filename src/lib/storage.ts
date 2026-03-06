@@ -4,10 +4,10 @@
  */
 
 const STORAGE_KEYS = {
-    QUOTES: 'paddleduck_quotes',
-    CURRENT_QUOTE_ID: 'paddleduck_current_quote_id',
-    FIRM_SETTINGS: 'paddleduck_firm_settings',
-    VENDOR_QUOTES: 'paddleduck_vendor_quotes',
+    QUOTES: 'Roof_quotes',
+    CURRENT_QUOTE_ID: 'Roof_current_quote_id',
+    FIRM_SETTINGS: 'Roof_firm_settings',
+    VENDOR_QUOTES: 'Roof_vendor_quotes',
 } as const;
 
 export interface FirmSettings {
@@ -60,9 +60,9 @@ export interface QuoteSnapshot {
     note?: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // CORE STORAGE FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 function safeGet<T>(key: string, fallback: T): T {
     if (typeof window === 'undefined') return fallback;
@@ -86,9 +86,9 @@ function safeSet(key: string, value: unknown): boolean {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // QUOTE OPERATIONS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function saveQuote(quote: SavedQuote): boolean {
     const quotes = getAllQuotes();
@@ -129,9 +129,9 @@ export function getCurrentQuoteId(): string | null {
     return safeGet<string | null>(STORAGE_KEYS.CURRENT_QUOTE_ID, null);
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // VERSIONING
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function createQuoteVersion(quote: SavedQuote, note?: string): SavedQuote {
     const snapshot: QuoteSnapshot = {
@@ -160,9 +160,9 @@ export function restoreQuoteVersion(quote: SavedQuote, targetVersion: number): S
     };
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // FIRM SETTINGS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function getFirmSettings(): FirmSettings {
     return safeGet<FirmSettings>(STORAGE_KEYS.FIRM_SETTINGS, {
@@ -183,9 +183,9 @@ export function saveFirmSettings(settings: FirmSettings): boolean {
     return safeSet(STORAGE_KEYS.FIRM_SETTINGS, settings);
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // GENERATE UNIQUE ID
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function generateQuoteId(): string {
     return `Q-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;

@@ -26,9 +26,9 @@ interface QuoteLineForAlerts {
     internalCost?: number;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // ALERT RULES
-// ═══════════════════════════════════════════════════════════════
+// 
 
 interface AlertRule {
     id: string;
@@ -206,9 +206,9 @@ const ALERT_RULES: AlertRule[] = [
     },
 ];
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // MAIN ENGINE
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function runSmartAlerts(lines: QuoteLineForAlerts[]): SmartAlert[] {
     const alerts: SmartAlert[] = [];
@@ -223,9 +223,9 @@ export function runSmartAlerts(lines: QuoteLineForAlerts[]): SmartAlert[] {
     return alerts;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // MARGIN ALERTS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function checkMarginAlerts(
     totalCost: number,
@@ -262,11 +262,11 @@ export function checkMarginAlerts(
     return null;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // DISMISSED ALERTS TRACKING
-// ═══════════════════════════════════════════════════════════════
+// 
 
-const DISMISSED_ALERTS_KEY = 'paddleduck_dismissed_alerts';
+const DISMISSED_ALERTS_KEY = 'Roof_dismissed_alerts';
 
 export function getDismissedAlerts(quoteId: string): string[] {
     if (typeof window === 'undefined') return [];

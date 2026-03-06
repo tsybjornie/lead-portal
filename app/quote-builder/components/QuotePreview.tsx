@@ -131,7 +131,7 @@ export default function QuotePreview({ clientName, projectArea, jurisdiction, li
                         <p>1. This quotation is valid for 14 days from the date of issue.</p>
                         <p>2. A 50% deposit is required to commence works.</p>
                         <p>3. Variations to the scope will be charged separately.</p>
-                        <p>4. All materials remain the property of PaddleDuck until fully paid.</p>
+                        <p>4. All materials remain the property of Roof until fully paid.</p>
                     </div>
 
                 </div>

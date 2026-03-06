@@ -247,7 +247,7 @@ function StatCard({
             </div>
             {trend && (
                 <div className={`mt-2 text-sm ${trend.value >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {trend.value >= 0 ? '↑' : '↓'} {Math.abs(trend.value)}% {trend.label}
+                    {trend.value >= 0 ? '' : ''} {Math.abs(trend.value)}% {trend.label}
                 </div>
             )}
         </div>
@@ -335,68 +335,68 @@ export default function DesignerCommissionDashboard({
                 <div className="space-y-6">
                     {/* COMMISSION STATS */}
                     <div>
-                        <h2 className="text-lg font-bold text-navy-900 mb-4">💰 Commission Overview</h2>
+                        <h2 className="text-lg font-bold text-navy-900 mb-4"> Commission Overview</h2>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <StatCard
                                 title="Total Earned"
                                 value={formatCurrency(stats.totalCommissionEarned)}
-                                icon="🏆"
+                                icon=""
                             />
                             <StatCard
                                 title="Pending"
                                 value={formatCurrency(stats.commissionPending)}
                                 subtitle="Awaiting project completion"
-                                icon="⏳"
+                                icon=""
                             />
                             <StatCard
                                 title="Paid Out"
                                 value={formatCurrency(stats.commissionPaid)}
-                                icon="✅"
+                                icon=""
                             />
                             <StatCard
                                 title="This Month"
                                 value={formatCurrency(stats.monthlyTrend[5]?.commission || 0)}
                                 trend={{ value: 18, label: 'vs last month' }}
-                                icon="📈"
+                                icon=""
                             />
                         </div>
                     </div>
 
                     {/* CLAIMS STATS */}
                     <div>
-                        <h2 className="text-lg font-bold text-navy-900 mb-4">📄 Claims Overview</h2>
+                        <h2 className="text-lg font-bold text-navy-900 mb-4"> Claims Overview</h2>
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <StatCard
                                 title="Total Billed"
                                 value={formatCurrency(stats.totalClaimed)}
-                                icon="📋"
+                                icon=""
                             />
                             <StatCard
                                 title="Collected"
                                 value={formatCurrency(stats.totalPaid)}
-                                icon="💵"
+                                icon=""
                             />
                             <StatCard
                                 title="Outstanding"
                                 value={formatCurrency(stats.totalOutstanding)}
                                 subtitle="Awaiting payment"
-                                icon="🔔"
+                                icon=""
                             />
                             <StatCard
                                 title="Collection Rate"
                                 value={`${Math.round((stats.totalPaid / stats.totalClaimed) * 100)}%`}
-                                icon="📊"
+                                icon=""
                             />
                         </div>
                     </div>
 
                     {/* PERFORMANCE BY JURISDICTION */}
                     <div>
-                        <h2 className="text-lg font-bold text-navy-900 mb-4">🌏 By Jurisdiction</h2>
+                        <h2 className="text-lg font-bold text-navy-900 mb-4"> By Jurisdiction</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-white border border-gray-200 rounded-lg p-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-2xl">🇸🇬</span>
+                                    <span className="text-2xl"></span>
                                     <h3 className="font-bold text-navy-900">Singapore</h3>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4 text-center">
@@ -416,7 +416,7 @@ export default function DesignerCommissionDashboard({
                             </div>
                             <div className="bg-white border border-gray-200 rounded-lg p-4">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <span className="text-2xl">🇲🇾</span>
+                                    <span className="text-2xl"></span>
                                     <h3 className="font-bold text-navy-900">Malaysia</h3>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4 text-center">
@@ -439,7 +439,7 @@ export default function DesignerCommissionDashboard({
 
                     {/* MONTHLY TREND */}
                     <div>
-                        <h2 className="text-lg font-bold text-navy-900 mb-4">📊 Monthly Trend</h2>
+                        <h2 className="text-lg font-bold text-navy-900 mb-4"> Monthly Trend</h2>
                         <div className="bg-white border border-gray-200 rounded-lg p-4">
                             <div className="flex items-end gap-2 h-40">
                                 {stats.monthlyTrend.map((month, i) => {
@@ -572,8 +572,8 @@ export default function DesignerCommissionDashboard({
                                         <td className="p-3 text-sm">{claim.paymentTermStage}</td>
                                         <td className="p-3 text-right font-semibold">{formatCurrency(claim.totalAmount)}</td>
                                         <td className="p-3 text-center"><ClaimStatusBadge status={claim.status} /></td>
-                                        <td className="p-3 text-sm text-gray-600">{claim.invoiceNumber || '—'}</td>
-                                        <td className="p-3 text-sm text-gray-600">{claim.paidAt || '—'}</td>
+                                        <td className="p-3 text-sm text-gray-600">{claim.invoiceNumber || ''}</td>
+                                        <td className="p-3 text-sm text-gray-600">{claim.paidAt || ''}</td>
                                     </tr>
                                 ))}
                             </tbody>

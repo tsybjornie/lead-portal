@@ -92,7 +92,7 @@ export default function PerformanceCharts() {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                📊 Performance Analytics
+                 Performance Analytics
             </h2>
 
             {/* TOP ROW: Key Metrics with Sparklines */}
@@ -102,7 +102,7 @@ export default function PerformanceCharts() {
                         <div>
                             <p className="text-xs text-blue-600 font-medium uppercase">Revenue (6M)</p>
                             <p className="text-2xl font-bold text-blue-900">$1.28M</p>
-                            <p className="text-xs text-green-600 mt-1">↑ 18% vs last period</p>
+                            <p className="text-xs text-green-600 mt-1"> 18% vs last period</p>
                         </div>
                         <Sparkline data={SPARKLINE_DATA.revenue} color="#3B82F6" />
                     </div>
@@ -113,7 +113,7 @@ export default function PerformanceCharts() {
                         <div>
                             <p className="text-xs text-green-600 font-medium uppercase">Avg Margin</p>
                             <p className="text-2xl font-bold text-green-900">32.4%</p>
-                            <p className="text-xs text-green-600 mt-1">↑ 2.1% vs target</p>
+                            <p className="text-xs text-green-600 mt-1"> 2.1% vs target</p>
                         </div>
                         <Sparkline data={SPARKLINE_DATA.margin} color="#10B981" />
                     </div>
@@ -124,7 +124,7 @@ export default function PerformanceCharts() {
                         <div>
                             <p className="text-xs text-amber-600 font-medium uppercase">Conversion</p>
                             <p className="text-2xl font-bold text-amber-900">68%</p>
-                            <p className="text-xs text-green-600 mt-1">↑ 5% vs last month</p>
+                            <p className="text-xs text-green-600 mt-1"> 5% vs last month</p>
                         </div>
                         <Sparkline data={SPARKLINE_DATA.conversion} color="#F59E0B" />
                     </div>
@@ -135,9 +135,9 @@ export default function PerformanceCharts() {
                         <div>
                             <p className="text-xs text-purple-600 font-medium uppercase">Active Projects</p>
                             <p className="text-2xl font-bold text-purple-900">42</p>
-                            <p className="text-xs text-gray-500 mt-1">12 SG • 30 MY</p>
+                            <p className="text-xs text-gray-500 mt-1">12 SG  30 MY</p>
                         </div>
-                        <div className="text-3xl">📋</div>
+                        <div className="text-3xl"></div>
                     </div>
                 </div>
             </div>

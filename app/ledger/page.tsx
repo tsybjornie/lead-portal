@@ -1,450 +1,508 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import AppDock from "../components/AppDock";
-import { loadProject, updateLedgerData, type OSTransaction } from "../lib/project-store";
+import { useState, useMemo } from "react";
 
-interface Transaction {
+// ============================================================
+// TYPES
+// ============================================================
+
+interface LedgerEntry {
     id: string;
     date: string;
     description: string;
     category: string;
-    amount: number;
     type: "income" | "expense";
-    status: "paid" | "pending" | "overdue";
+    status: "paid" | "pending" | "overdue" | "scheduled";
+    amount: number;         // Before GST
+    gstAmount: number;      // GST component (9%)
+    totalAmount: number;    // Amount + GST
+    vendorCode?: string;    // Vendor fingerprint e.g. "WW-001"
+    vendorName?: string;
+    tradeCategory?: string; // carpentry, tiling, etc.
+    invoiceRef?: string;    // Invoice reference for IRAS
+    paymentMethod?: string; // bank transfer, cash, cheque
+    claimRef?: string;      // Links to PO/claim
+    isGstRegistered?: boolean; // Vendor GST status
+    duty?: "homeowner" | "id" | "vendor"; // Who's responsible
+    supplyType?: "supply" | "install" | "supply_and_install"; // Split tracking
 }
 
+type TabView = "transactions" | "summary" | "gst" | "vendors";
+
+// ============================================================
+// CONSTANTS
+// ============================================================
+
+const GST_RATE = 0.09; // Singapore 9% GST
+
 const EXPENSE_CATEGORIES = [
-    "Materials",
-    "Labour",
-    "Subcontractor",
-    "Transport",
-    "Equipment Rental",
-    "Permits",
-    "Design Fee",
-    "Contingency",
+    "Materials", "Labour", "Subcontractor", "Transport",
+    "Equipment Rental", "Permits & Submissions", "Design Fee",
+    "Contingency", "Site Protection", "Temporary Services",
 ];
 
 const INCOME_CATEGORIES = [
-    "Deposit",
-    "Progress Payment",
-    "Final Payment",
-    "Variation Order",
+    "Deposit (10%)", "Progress Payment 1", "Progress Payment 2",
+    "Progress Payment 3", "Final Payment", "Variation Order",
     "Retention Release",
 ];
 
-let nextTxId = 1;
+// ============================================================
+// DEMO DATA
+// ============================================================
+
+const DEMO_TRANSACTIONS: LedgerEntry[] = [
+    // INCOME
+    { id: "tx-001", date: "2026-02-15", description: "Client deposit — 10% of quoted $85,000", category: "Deposit (10%)", type: "income", status: "paid", amount: 8500, gstAmount: 765, totalAmount: 9265, paymentMethod: "bank transfer", invoiceRef: "INV-2026-001", duty: "homeowner" },
+    { id: "tx-002", date: "2026-03-01", description: "Progress Payment 1 — Demolition + Hacking complete", category: "Progress Payment 1", type: "income", status: "paid", amount: 17000, gstAmount: 1530, totalAmount: 18530, paymentMethod: "bank transfer", invoiceRef: "INV-2026-002", duty: "homeowner" },
+    { id: "tx-003", date: "2026-03-15", description: "Progress Payment 2 — Masonry + Waterproofing", category: "Progress Payment 2", type: "income", status: "pending", amount: 21250, gstAmount: 1912.50, totalAmount: 23162.50, paymentMethod: "bank transfer", invoiceRef: "INV-2026-003", duty: "homeowner" },
+    // EXPENSES - Materials (supply)
+    { id: "tx-010", date: "2026-02-20", description: "Marine plywood 18mm × 40 sheets", category: "Materials", type: "expense", status: "paid", amount: 3400, gstAmount: 306, totalAmount: 3706, vendorCode: "SL-001", vendorName: "SinLec Hardware", tradeCategory: "carpentry", invoiceRef: "SL-INV-8821", isGstRegistered: true, duty: "vendor", supplyType: "supply" },
+    { id: "tx-011", date: "2026-02-22", description: "Niro Granite GHQ03 — 600×600mm floor tiles (96 sqft kitchen)", category: "Materials", type: "expense", status: "paid", amount: 403, gstAmount: 36.27, totalAmount: 439.27, vendorCode: "HF-001", vendorName: "Hafary Gallery", tradeCategory: "tiling", invoiceRef: "HF-INV-11234", isGstRegistered: true, duty: "vendor", supplyType: "supply" },
+    { id: "tx-012", date: "2026-02-25", description: "Blum Aventos HK-S soft-close × 8 sets", category: "Materials", type: "expense", status: "paid", amount: 360, gstAmount: 32.40, totalAmount: 392.40, vendorCode: "BL-001", vendorName: "Blum SG", tradeCategory: "carpentry", invoiceRef: "BL-INV-5561", isGstRegistered: true, duty: "vendor", supplyType: "supply" },
+    { id: "tx-013", date: "2026-03-01", description: "SIKA waterproofing membrane — master bath + common bath", category: "Materials", type: "expense", status: "paid", amount: 580, gstAmount: 52.20, totalAmount: 632.20, vendorCode: "NP-001", vendorName: "Nippon SG", tradeCategory: "waterproofing", invoiceRef: "NP-INV-3302", isGstRegistered: true, duty: "vendor", supplyType: "supply" },
+    // EXPENSES - Labour (install)
+    { id: "tx-020", date: "2026-02-28", description: "Demolition works — whole unit hacking + disposal", category: "Labour", type: "expense", status: "paid", amount: 5100, gstAmount: 0, totalAmount: 5100, vendorCode: "WW-001", vendorName: "WoodWork SG (Ahmad)", tradeCategory: "demolition", isGstRegistered: false, duty: "vendor", supplyType: "install" },
+    { id: "tx-021", date: "2026-03-05", description: "Tiling labour — kitchen floor + backsplash (herringbone)", category: "Labour", type: "expense", status: "pending", amount: 2880, gstAmount: 0, totalAmount: 2880, vendorCode: "WW-001", vendorName: "WoodWork SG (Ahmad)", tradeCategory: "tiling", invoiceRef: "WW-CLM-042", isGstRegistered: false, duty: "vendor", supplyType: "install" },
+    { id: "tx-022", date: "2026-03-08", description: "Carpentry — kitchen cabinets fabrication & install", category: "Labour", type: "expense", status: "scheduled", amount: 8500, gstAmount: 0, totalAmount: 8500, vendorCode: "WW-001", vendorName: "WoodWork SG (Ahmad)", tradeCategory: "carpentry", isGstRegistered: false, duty: "vendor", supplyType: "install" },
+    { id: "tx-023", date: "2026-03-10", description: "Electrical rewiring — 32 points incl. DB upgrade", category: "Labour", type: "expense", status: "scheduled", amount: 3200, gstAmount: 0, totalAmount: 3200, vendorCode: "SP-001", vendorName: "Sparks Electrical (Leong)", tradeCategory: "electrical", isGstRegistered: false, duty: "vendor", supplyType: "install" },
+    // EXPENSES - Admin
+    { id: "tx-030", date: "2026-02-18", description: "HDB renovation permit — BCA submission", category: "Permits & Submissions", type: "expense", status: "paid", amount: 300, gstAmount: 0, totalAmount: 300, duty: "id" },
+    { id: "tx-031", date: "2026-02-17", description: "Site protection — corridor & lift lobby", category: "Site Protection", type: "expense", status: "paid", amount: 450, gstAmount: 0, totalAmount: 450, vendorCode: "WW-001", vendorName: "WoodWork SG (Ahmad)", duty: "vendor" },
+];
+
+// ============================================================
+// COMPONENT
+// ============================================================
 
 export default function LedgerPage() {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
-    const [showAdd, setShowAdd] = useState(false);
-    const [txType, setTxType] = useState<"income" | "expense">("expense");
-    const [quoteBudget, setQuoteBudget] = useState(0);
-    const [synced, setSynced] = useState(false);
-    const [form, setForm] = useState({
-        description: "",
-        category: "",
-        amount: "",
-        date: new Date().toISOString().split("T")[0],
-        status: "pending" as "paid" | "pending" | "overdue",
-    });
+    const [entries, setEntries] = useState<LedgerEntry[]>(DEMO_TRANSACTIONS);
+    const [tab, setTab] = useState<TabView>("transactions");
+    const [filterType, setFilterType] = useState<"all" | "income" | "expense">("all");
+    const [filterStatus, setFilterStatus] = useState<"all" | "paid" | "pending" | "overdue" | "scheduled">("all");
+    const [showAddForm, setShowAddForm] = useState(false);
 
-    // Load from project store
-    useEffect(() => {
-        const project = loadProject();
-        if (project) {
-            if (project.transactions.length > 0) {
-                setTransactions(project.transactions.map(t => ({
-                    id: t.id,
-                    date: t.date,
-                    description: t.description,
-                    category: t.category,
-                    amount: t.amount,
-                    type: t.type,
-                    status: t.status,
-                })));
-            }
-            if (project.quoteTotalAmount > 0) {
-                setQuoteBudget(project.quoteTotalAmount);
-            }
-        }
-    }, []);
+    // ============================================================
+    // CALCULATIONS
+    // ============================================================
 
-    // Sync to project store
-    useEffect(() => {
-        if (transactions.length > 0 || synced) {
-            const osTx: OSTransaction[] = transactions.map(t => ({
-                id: t.id,
-                date: t.date,
-                description: t.description,
-                category: t.category,
-                amount: t.amount,
-                type: t.type,
-                status: t.status,
-            }));
-            updateLedgerData(osTx);
-            setSynced(true);
-        }
-    }, [transactions, synced]);
+    const totals = useMemo(() => {
+        const income = entries.filter(e => e.type === "income");
+        const expenses = entries.filter(e => e.type === "expense");
 
-    const addTransaction = () => {
-        if (!form.description.trim() || !form.amount || !form.category) return;
-        setTransactions((prev) => [
-            ...prev,
-            {
-                id: `tx_${nextTxId++}`,
-                date: form.date,
-                description: form.description.trim(),
-                category: form.category,
-                amount: parseFloat(form.amount),
-                type: txType,
-                status: form.status,
-            },
-        ]);
-        setForm({
-            description: "",
-            category: "",
-            amount: "",
-            date: new Date().toISOString().split("T")[0],
-            status: "pending",
+        const totalIncome = income.reduce((s, e) => s + e.amount, 0);
+        const totalIncomeGst = income.reduce((s, e) => s + e.gstAmount, 0);
+        const totalExpense = expenses.reduce((s, e) => s + e.amount, 0);
+        const totalExpenseGst = expenses.reduce((s, e) => s + e.gstAmount, 0);
+
+        const paidIncome = income.filter(e => e.status === "paid").reduce((s, e) => s + e.totalAmount, 0);
+        const pendingIncome = income.filter(e => e.status !== "paid").reduce((s, e) => s + e.totalAmount, 0);
+        const paidExpense = expenses.filter(e => e.status === "paid").reduce((s, e) => s + e.totalAmount, 0);
+        const pendingExpense = expenses.filter(e => e.status !== "paid").reduce((s, e) => s + e.totalAmount, 0);
+
+        // IRAS GST: Output tax (collected from client) - Input tax (paid to vendors)
+        const outputTax = totalIncomeGst; // GST collected
+        const inputTax = totalExpenseGst; // GST paid (claimable)
+        const gstPayable = outputTax - inputTax; // Net to IRAS
+
+        return {
+            totalIncome, totalIncomeGst, totalExpense, totalExpenseGst,
+            netCashFlow: totalIncome - totalExpense,
+            paidIncome, pendingIncome, paidExpense, pendingExpense,
+            outputTax, inputTax, gstPayable,
+            cashInHand: paidIncome - paidExpense,
+        };
+    }, [entries]);
+
+    // Vendor summary
+    const vendorSummary = useMemo(() => {
+        const map = new Map<string, { code: string; name: string; total: number; paid: number; pending: number; trades: Set<string>; count: number }>();
+        entries.filter(e => e.type === "expense" && e.vendorCode).forEach(e => {
+            const key = e.vendorCode!;
+            const existing = map.get(key) || { code: key, name: e.vendorName || key, total: 0, paid: 0, pending: 0, trades: new Set<string>(), count: 0 };
+            existing.total += e.totalAmount;
+            existing.count++;
+            if (e.status === "paid") existing.paid += e.totalAmount;
+            else existing.pending += e.totalAmount;
+            if (e.tradeCategory) existing.trades.add(e.tradeCategory);
+            map.set(key, existing);
         });
-        setShowAdd(false);
+        return Array.from(map.values()).sort((a, b) => b.total - a.total);
+    }, [entries]);
+
+    // Filtered entries
+    const filtered = useMemo(() => {
+        return entries.filter(e => {
+            if (filterType !== "all" && e.type !== filterType) return false;
+            if (filterStatus !== "all" && e.status !== filterStatus) return false;
+            return true;
+        }).sort((a, b) => b.date.localeCompare(a.date));
+    }, [entries, filterType, filterStatus]);
+
+    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+
+    const statusColor = (s: string) => {
+        switch (s) {
+            case "paid": return { bg: "#F0FDF4", text: "#16A34A" };
+            case "pending": return { bg: "#FEF9C3", text: "#CA8A04" };
+            case "overdue": return { bg: "#FEF2F2", text: "#DC2626" };
+            case "scheduled": return { bg: "#F0F9FF", text: "#2563EB" };
+            default: return { bg: "#F5F5F4", text: "#78716C" };
+        }
     };
+
+    const fmt = (n: number) => `$${n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
     const toggleStatus = (id: string) => {
-        setTransactions((prev) =>
-            prev.map((t) =>
-                t.id === id
-                    ? { ...t, status: t.status === "paid" ? "pending" : "paid" }
-                    : t
-            )
-        );
+        setEntries(prev => prev.map(e =>
+            e.id === id ? { ...e, status: e.status === "paid" ? "pending" : "paid" } : e
+        ));
     };
-
-    const removeTransaction = (id: string) => {
-        setTransactions((prev) => prev.filter((t) => t.id !== id));
-    };
-
-    const totalIncome = transactions
-        .filter((t) => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0);
-    const totalExpense = transactions
-        .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0);
-    const netCashFlow = totalIncome - totalExpense;
-    const pendingAmount = transactions
-        .filter((t) => t.status === "pending" || t.status === "overdue")
-        .reduce((sum, t) => sum + (t.type === "income" ? t.amount : -t.amount), 0);
-
-    const categories = txType === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
 
     return (
-        <div
-            className="min-h-screen bg-[#fafafa] text-[#111] relative"
-            style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}
-        >
-            {/* Top bar */}
-            <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-10 py-8 bg-[#fafafa]/80 backdrop-blur-sm">
-                <Link
-                    href="/hub"
-                    className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
-                >
-                    ← Command Center
-                </Link>
-                <div className="flex items-center gap-4">
-                    {quoteBudget > 0 && (
-                        <div className="text-[11px] tracking-[0.15em] font-medium text-[#bbb]">
-                            Quote: ${quoteBudget.toLocaleString()}
-                        </div>
-                    )}
-                    <span className="text-[#ddd]">|</span>
-                    <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
-                        Ledger
+        <div style={{ fontFamily: f, minHeight: "100vh", background: "#FAFAF9" }}>
+            {/* HEADER */}
+            <div style={{
+                position: "sticky", top: 0, zIndex: 50,
+                background: "rgba(250,250,249,0.92)", backdropFilter: "blur(12px)",
+                borderBottom: "1px solid #E9E9E7", padding: "12px 24px",
+            }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <a href="/hub" style={{ fontSize: 18, fontWeight: 800, color: "#37352F", textDecoration: "none" }}>Roof</a>
+                        <span style={{ color: "#E9E9E7" }}>|</span>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#37352F" }}>Project Ledger</span>
+                        <span style={{ fontSize: 10, fontWeight: 500, color: "#9B9A97", background: "#F7F6F3", padding: "3px 8px", borderRadius: 4 }}>
+                            Holland V Condo · QO1
+                        </span>
+                    </div>
+                    <div style={{ display: "flex", gap: 8 }}>
+                        <button style={{
+                            fontSize: 11, fontWeight: 600, padding: "6px 14px", borderRadius: 6,
+                            border: "1px solid #E9E9E7", background: "white", cursor: "pointer",
+                        }}>Export CSV</button>
+                        <button style={{
+                            fontSize: 11, fontWeight: 600, padding: "6px 14px", borderRadius: 6,
+                            border: "none", background: "#37352F", color: "white", cursor: "pointer",
+                        }}>+ Add Entry</button>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            <div className="max-w-4xl mx-auto px-10 md:px-20 pt-32 pb-20">
-                {/* Hero */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.25, 0.1, 0, 1] }}
-                    className="mb-20"
-                >
-                    <h1 className="text-[clamp(2.5rem,6vw,5rem)] font-extralight leading-[0.95] tracking-[-0.04em] mb-4">
-                        Project
-                        <br />
-                        <span className="italic font-light text-[#bbb]">finance.</span>
-                    </h1>
-                    <p className="text-[#999] text-sm tracking-wide max-w-md mt-6">
-                        Track every dollar in and out. Know your cash position in real time.
-                    </p>
-                </motion.div>
-
-                {/* Summary cards */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="grid grid-cols-4 gap-px bg-[#e5e5e5] mb-16"
-                >
+            <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px 24px 80px" }}>
+                {/* SUMMARY CARDS */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 24 }}>
                     {[
-                        { label: "Income", value: `$${totalIncome.toLocaleString()}` },
-                        { label: "Expenses", value: `$${totalExpense.toLocaleString()}` },
-                        {
-                            label: "Net Cash Flow",
-                            value: `${netCashFlow >= 0 ? "" : "-"}$${Math.abs(netCashFlow).toLocaleString()}`,
-                        },
-                        {
-                            label: "Pending",
-                            value: `$${Math.abs(pendingAmount).toLocaleString()}`,
-                        },
-                    ].map((stat) => (
-                        <div key={stat.label} className="bg-[#fafafa] p-6 md:p-8">
-                            <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-2">
-                                {stat.label}
+                        { label: "Cash In Hand", value: fmt(totals.cashInHand), color: totals.cashInHand >= 0 ? "#16A34A" : "#DC2626" },
+                        { label: "Total Income", value: fmt(totals.totalIncome), color: "#37352F" },
+                        { label: "Total Expenses", value: fmt(totals.totalExpense), color: "#37352F" },
+                        { label: "Pending Claims", value: fmt(totals.pendingIncome), color: "#CA8A04" },
+                        { label: "GST Payable (IRAS)", value: fmt(totals.gstPayable), color: totals.gstPayable > 0 ? "#DC2626" : "#16A34A" },
+                    ].map(card => (
+                        <div key={card.label} style={{
+                            background: "white", borderRadius: 10, padding: "16px 18px",
+                            border: "1px solid #E9E9E7",
+                        }}>
+                            <div style={{ fontSize: 10, fontWeight: 600, color: "#9B9A97", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
+                                {card.label}
                             </div>
-                            <div className="text-xl md:text-2xl font-extralight tracking-tight">
-                                {stat.value}
+                            <div style={{ fontSize: 22, fontWeight: 800, color: card.color, fontFamily: "'SF Mono', monospace" }}>
+                                {card.value}
                             </div>
                         </div>
                     ))}
-                </motion.div>
+                </div>
 
-                {/* Transaction list */}
-                <div className="mb-12">
-                    <AnimatePresence>
-                        {transactions.map((tx, i) => (
-                            <motion.div
-                                key={tx.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, height: 0, overflow: "hidden" }}
-                                transition={{ duration: 0.4 }}
-                                onMouseEnter={() => setHoveredId(tx.id)}
-                                onMouseLeave={() => setHoveredId(null)}
-                                className="border-t py-6 transition-all duration-300"
-                                style={{
-                                    borderColor: hoveredId === tx.id ? "#111" : "#e5e5e5",
-                                }}
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-start gap-4 flex-1">
-                                        <span className="text-[11px] tracking-[0.2em] font-medium text-[#ccc] mt-1 w-8">
-                                            {String(i + 1).padStart(2, "0")}
-                                        </span>
-                                        <div className="flex-1">
-                                            <div className="flex items-baseline gap-4">
-                                                <span className="text-base font-extralight tracking-tight">
-                                                    {tx.description}
-                                                </span>
-                                            </div>
-                                            <div className="flex gap-4 mt-1">
-                                                <span className="text-[10px] tracking-[0.15em] uppercase font-medium text-[#bbb]">
-                                                    {tx.date}
-                                                </span>
-                                                <span className="text-[10px] tracking-[0.15em] uppercase font-medium text-[#bbb]">
-                                                    {tx.category}
-                                                </span>
-                                                <button
-                                                    onClick={() => toggleStatus(tx.id)}
-                                                    className={`text-[10px] tracking-[0.15em] uppercase font-medium transition-colors cursor-pointer ${tx.status === "paid"
-                                                        ? "text-[#999]"
-                                                        : tx.status === "overdue"
-                                                            ? "text-[#111]"
-                                                            : "text-[#bbb]"
-                                                        }`}
-                                                >
-                                                    {tx.status}
-                                                </button>
-                                            </div>
+                {/* TABS */}
+                <div style={{ display: "flex", gap: 2, marginBottom: 20, background: "#F7F6F3", borderRadius: 8, padding: 3 }}>
+                    {(["transactions", "summary", "gst", "vendors"] as TabView[]).map(t => (
+                        <button
+                            key={t}
+                            onClick={() => setTab(t)}
+                            style={{
+                                flex: 1, padding: "8px 0", fontSize: 12, fontWeight: 600, borderRadius: 6,
+                                border: "none", cursor: "pointer", textTransform: "capitalize",
+                                background: tab === t ? "white" : "transparent",
+                                color: tab === t ? "#37352F" : "#9B9A97",
+                                boxShadow: tab === t ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
+                            }}
+                        >
+                            {t === "gst" ? "GST / IRAS" : t}
+                        </button>
+                    ))}
+                </div>
+
+                {/* ==================== TRANSACTIONS TAB ==================== */}
+                {tab === "transactions" && (
+                    <>
+                        {/* Filters */}
+                        <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                            {(["all", "income", "expense"] as const).map(f => (
+                                <button key={f} onClick={() => setFilterType(f)} style={{
+                                    fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 6,
+                                    border: filterType === f ? "1.5px solid #37352F" : "1px solid #E9E9E7",
+                                    background: filterType === f ? "#37352F" : "white",
+                                    color: filterType === f ? "white" : "#6B6A67", cursor: "pointer",
+                                    textTransform: "capitalize",
+                                }}>{f}</button>
+                            ))}
+                            <div style={{ width: 1, background: "#E9E9E7", margin: "0 4px" }} />
+                            {(["all", "paid", "pending", "scheduled"] as const).map(s => (
+                                <button key={s} onClick={() => setFilterStatus(s)} style={{
+                                    fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 6,
+                                    border: filterStatus === s ? "1.5px solid #37352F" : "1px solid #E9E9E7",
+                                    background: filterStatus === s ? "#37352F" : "white",
+                                    color: filterStatus === s ? "white" : "#6B6A67", cursor: "pointer",
+                                    textTransform: "capitalize",
+                                }}>{s}</button>
+                            ))}
+                        </div>
+
+                        {/* Table */}
+                        <div style={{ background: "white", borderRadius: 10, border: "1px solid #E9E9E7", overflow: "hidden" }}>
+                            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                                <thead>
+                                    <tr style={{ borderBottom: "1px solid #E9E9E7", background: "#FAFAF9" }}>
+                                        {["Date", "Description", "Vendor", "Category", "Duty", "Status", "Amount"].map(h => (
+                                            <th key={h} style={{
+                                                padding: "10px 14px", textAlign: h === "Amount" ? "right" : "left",
+                                                fontSize: 10, fontWeight: 700, color: "#9B9A97",
+                                                textTransform: "uppercase", letterSpacing: "0.06em",
+                                            }}>{h}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filtered.map(entry => {
+                                        const sc = statusColor(entry.status);
+                                        return (
+                                            <tr
+                                                key={entry.id}
+                                                onClick={() => toggleStatus(entry.id)}
+                                                style={{ borderBottom: "1px solid #F5F5F3", cursor: "pointer", transition: "background 0.1s" }}
+                                                onMouseEnter={e => (e.currentTarget.style.background = "#FAFAF9")}
+                                                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                                            >
+                                                <td style={{ padding: "10px 14px", fontSize: 12, color: "#9B9A97", fontFamily: "monospace", whiteSpace: "nowrap" }}>
+                                                    {entry.date}
+                                                </td>
+                                                <td style={{ padding: "10px 14px", maxWidth: 300 }}>
+                                                    <div style={{ fontWeight: 500, color: "#37352F", fontSize: 12.5 }}>{entry.description}</div>
+                                                    {entry.invoiceRef && (
+                                                        <div style={{ fontSize: 10, color: "#C8C7C3", marginTop: 2, fontFamily: "monospace" }}>{entry.invoiceRef}</div>
+                                                    )}
+                                                </td>
+                                                <td style={{ padding: "10px 14px" }}>
+                                                    {entry.vendorCode ? (
+                                                        <div>
+                                                            <span style={{ fontSize: 10, fontWeight: 700, color: "#37352F", background: "#F7F6F3", padding: "2px 6px", borderRadius: 3, fontFamily: "monospace" }}>
+                                                                {entry.vendorCode}
+                                                            </span>
+                                                            <div style={{ fontSize: 10, color: "#9B9A97", marginTop: 2 }}>{entry.vendorName}</div>
+                                                        </div>
+                                                    ) : (
+                                                        <span style={{ fontSize: 11, color: "#D1D0CD" }}>—</span>
+                                                    )}
+                                                </td>
+                                                <td style={{ padding: "10px 14px" }}>
+                                                    <span style={{ fontSize: 11, color: "#6B6A67" }}>{entry.category}</span>
+                                                    {entry.supplyType && (
+                                                        <div style={{
+                                                            fontSize: 9, fontWeight: 700, color: entry.supplyType === "supply" ? "#2563EB" : "#16A34A",
+                                                            textTransform: "uppercase", marginTop: 2,
+                                                        }}>
+                                                            {entry.supplyType.replace("_", " + ")}
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                <td style={{ padding: "10px 14px" }}>
+                                                    {entry.duty && (
+                                                        <span style={{
+                                                            fontSize: 9, fontWeight: 700, textTransform: "uppercase", padding: "2px 6px", borderRadius: 3,
+                                                            background: entry.duty === "homeowner" ? "#EDE9FE" : entry.duty === "id" ? "#DBEAFE" : "#FEF3C7",
+                                                            color: entry.duty === "homeowner" ? "#7C3AED" : entry.duty === "id" ? "#2563EB" : "#D97706",
+                                                        }}>{entry.duty}</span>
+                                                    )}
+                                                </td>
+                                                <td style={{ padding: "10px 14px" }}>
+                                                    <span style={{
+                                                        fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 99,
+                                                        background: sc.bg, color: sc.text, textTransform: "uppercase",
+                                                    }}>{entry.status}</span>
+                                                </td>
+                                                <td style={{
+                                                    padding: "10px 14px", textAlign: "right", fontFamily: "'SF Mono', monospace",
+                                                    fontWeight: 700, fontSize: 13,
+                                                    color: entry.type === "income" ? "#16A34A" : "#37352F",
+                                                }}>
+                                                    {entry.type === "income" ? "+" : "−"}{fmt(entry.totalAmount)}
+                                                    {entry.gstAmount > 0 && (
+                                                        <div style={{ fontSize: 9, color: "#9B9A97", fontWeight: 500 }}>
+                                                            incl. GST {fmt(entry.gstAmount)}
+                                                        </div>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
+                )}
+
+                {/* ==================== SUMMARY TAB ==================== */}
+                {tab === "summary" && (
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                        {/* Income Breakdown */}
+                        <div style={{ background: "white", borderRadius: 10, border: "1px solid #E9E9E7", padding: 20 }}>
+                            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#37352F", marginBottom: 16 }}>Income Breakdown</h3>
+                            {INCOME_CATEGORIES.map(cat => {
+                                const catEntries = entries.filter(e => e.type === "income" && e.category === cat);
+                                const total = catEntries.reduce((s, e) => s + e.totalAmount, 0);
+                                if (total === 0) return null;
+                                const paidAmt = catEntries.filter(e => e.status === "paid").reduce((s, e) => s + e.totalAmount, 0);
+                                return (
+                                    <div key={cat} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid #F5F5F3" }}>
+                                        <div>
+                                            <div style={{ fontSize: 12, fontWeight: 500, color: "#37352F" }}>{cat}</div>
+                                            <div style={{ fontSize: 10, color: "#9B9A97" }}>{catEntries.length} entries · {fmt(paidAmt)} collected</div>
+                                        </div>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: "#16A34A", fontFamily: "monospace" }}>
+                                            {fmt(total)}
                                         </div>
                                     </div>
-
-                                    <div className="flex items-baseline gap-6">
-                                        <span
-                                            className={`text-lg font-extralight tracking-tight ${tx.type === "income" ? "text-[#111]" : "text-[#999]"
-                                                }`}
-                                        >
-                                            {tx.type === "income" ? "+" : "-"}$
-                                            {tx.amount.toLocaleString()}
-                                        </span>
-                                        <button
-                                            onClick={() => removeTransaction(tx.id)}
-                                            className="text-[11px] tracking-[0.15em] uppercase font-medium text-[#ccc] hover:text-[#111] transition-colors"
-                                        >
-                                            Remove
-                                        </button>
+                                );
+                            })}
+                        </div>
+                        {/* Expense Breakdown */}
+                        <div style={{ background: "white", borderRadius: 10, border: "1px solid #E9E9E7", padding: 20 }}>
+                            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#37352F", marginBottom: 16 }}>Expense Breakdown</h3>
+                            {EXPENSE_CATEGORIES.map(cat => {
+                                const catEntries = entries.filter(e => e.type === "expense" && e.category === cat);
+                                const total = catEntries.reduce((s, e) => s + e.totalAmount, 0);
+                                if (total === 0) return null;
+                                const supplyAmt = catEntries.filter(e => e.supplyType === "supply").reduce((s, e) => s + e.totalAmount, 0);
+                                const installAmt = catEntries.filter(e => e.supplyType === "install").reduce((s, e) => s + e.totalAmount, 0);
+                                return (
+                                    <div key={cat} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid #F5F5F3" }}>
+                                        <div>
+                                            <div style={{ fontSize: 12, fontWeight: 500, color: "#37352F" }}>{cat}</div>
+                                            <div style={{ fontSize: 10, color: "#9B9A97" }}>
+                                                {supplyAmt > 0 && <span style={{ color: "#2563EB" }}>Supply: {fmt(supplyAmt)}</span>}
+                                                {supplyAmt > 0 && installAmt > 0 && " · "}
+                                                {installAmt > 0 && <span style={{ color: "#16A34A" }}>Install: {fmt(installAmt)}</span>}
+                                            </div>
+                                        </div>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: "#37352F", fontFamily: "monospace" }}>
+                                            {fmt(total)}
+                                        </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
 
-                    {transactions.length > 0 && (
-                        <div className="border-t border-[#e5e5e5]" />
-                    )}
-                </div>
-
-                {/* Add transaction */}
-                <AnimatePresence>
-                    {showAdd ? (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className="mb-12"
-                        >
-                            {/* Type toggle */}
-                            <div className="flex gap-1 mb-8">
-                                {(["income", "expense"] as const).map((type) => (
-                                    <button
-                                        key={type}
-                                        onClick={() => {
-                                            setTxType(type);
-                                            setForm({ ...form, category: "" });
-                                        }}
-                                        className={`flex-1 py-4 text-center border-t-2 text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-300 ${txType === type
-                                            ? "border-[#111] text-[#111]"
-                                            : "border-[#e5e5e5] text-[#bbb]"
-                                            }`}
-                                    >
-                                        {type}
-                                    </button>
-                                ))}
+                {/* ==================== GST / IRAS TAB ==================== */}
+                {tab === "gst" && (
+                    <div style={{ background: "white", borderRadius: 10, border: "1px solid #E9E9E7", padding: 24 }}>
+                        <h3 style={{ fontSize: 15, fontWeight: 700, color: "#37352F", marginBottom: 20 }}>GST Summary — IRAS F5 Ready</h3>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
+                            <div style={{ padding: 16, background: "#F0FDF4", borderRadius: 8, textAlign: "center" }}>
+                                <div style={{ fontSize: 10, fontWeight: 600, color: "#16A34A", textTransform: "uppercase", marginBottom: 6 }}>Output Tax (Collected)</div>
+                                <div style={{ fontSize: 24, fontWeight: 800, color: "#16A34A", fontFamily: "monospace" }}>{fmt(totals.outputTax)}</div>
+                                <div style={{ fontSize: 10, color: "#86EFAC", marginTop: 4 }}>GST charged to client on invoices</div>
                             </div>
-
-                            {/* Category */}
-                            <div className="mb-8">
-                                <div className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">
-                                    Category
+                            <div style={{ padding: 16, background: "#FEF2F2", borderRadius: 8, textAlign: "center" }}>
+                                <div style={{ fontSize: 10, fontWeight: 600, color: "#DC2626", textTransform: "uppercase", marginBottom: 6 }}>Input Tax (Claimable)</div>
+                                <div style={{ fontSize: 24, fontWeight: 800, color: "#DC2626", fontFamily: "monospace" }}>{fmt(totals.inputTax)}</div>
+                                <div style={{ fontSize: 10, color: "#FCA5A5", marginTop: 4 }}>GST paid to GST-registered vendors</div>
+                            </div>
+                            <div style={{ padding: 16, background: totals.gstPayable > 0 ? "#FEF9C3" : "#F0FDF4", borderRadius: 8, textAlign: "center" }}>
+                                <div style={{ fontSize: 10, fontWeight: 600, color: totals.gstPayable > 0 ? "#CA8A04" : "#16A34A", textTransform: "uppercase", marginBottom: 6 }}>
+                                    Net {totals.gstPayable > 0 ? "Payable to IRAS" : "Refund from IRAS"}
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {categories.map((cat) => (
-                                        <button
-                                            key={cat}
-                                            onClick={() => setForm({ ...form, category: cat })}
-                                            className={`px-5 py-3 border text-sm font-extralight tracking-wide transition-all duration-300 ${form.category === cat
-                                                ? "bg-[#111] text-white border-[#111]"
-                                                : "border-[#e5e5e5] hover:border-[#111]"
-                                                }`}
-                                        >
-                                            {cat}
-                                        </button>
+                                <div style={{ fontSize: 24, fontWeight: 800, color: totals.gstPayable > 0 ? "#CA8A04" : "#16A34A", fontFamily: "monospace" }}>{fmt(Math.abs(totals.gstPayable))}</div>
+                                <div style={{ fontSize: 10, color: "#9B9A97", marginTop: 4 }}>Output − Input = Net GST</div>
+                            </div>
+                        </div>
+
+                        <h4 style={{ fontSize: 12, fontWeight: 700, color: "#37352F", marginBottom: 12 }}>GST-Registered Vendors (Input Tax Claimable)</h4>
+                        <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
+                            <thead>
+                                <tr style={{ borderBottom: "1px solid #E9E9E7" }}>
+                                    {["Vendor Code", "Vendor Name", "Invoice", "Amount (excl GST)", "GST (9%)", "Total"].map(h => (
+                                        <th key={h} style={{ padding: "8px 12px", textAlign: "left", fontSize: 10, fontWeight: 700, color: "#9B9A97", textTransform: "uppercase" }}>{h}</th>
                                     ))}
-                                </div>
-                            </div>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {entries.filter(e => e.type === "expense" && e.isGstRegistered && e.gstAmount > 0).map(e => (
+                                    <tr key={e.id} style={{ borderBottom: "1px solid #F5F5F3" }}>
+                                        <td style={{ padding: "8px 12px", fontFamily: "monospace", fontWeight: 700, fontSize: 11 }}>{e.vendorCode}</td>
+                                        <td style={{ padding: "8px 12px", fontSize: 12 }}>{e.vendorName}</td>
+                                        <td style={{ padding: "8px 12px", fontFamily: "monospace", fontSize: 10, color: "#9B9A97" }}>{e.invoiceRef}</td>
+                                        <td style={{ padding: "8px 12px", fontFamily: "monospace" }}>{fmt(e.amount)}</td>
+                                        <td style={{ padding: "8px 12px", fontFamily: "monospace", color: "#DC2626" }}>{fmt(e.gstAmount)}</td>
+                                        <td style={{ padding: "8px 12px", fontFamily: "monospace", fontWeight: 700 }}>{fmt(e.totalAmount)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
 
-                            {/* Form fields */}
-                            <div className="grid grid-cols-3 gap-8 mb-8">
-                                <div className="col-span-2">
-                                    <label className="block text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-2">
-                                        Description
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={form.description}
-                                        onChange={(e) =>
-                                            setForm({ ...form, description: e.target.value })
-                                        }
-                                        className="w-full bg-transparent border-b border-[#e5e5e5] focus:border-[#111] outline-none py-2 text-lg font-extralight tracking-tight transition-colors"
-                                        placeholder="e.g. Carpentry milestone 2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-2">
-                                        Amount ($)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={form.amount}
-                                        onChange={(e) =>
-                                            setForm({ ...form, amount: e.target.value })
-                                        }
-                                        className="w-full bg-transparent border-b border-[#e5e5e5] focus:border-[#111] outline-none py-2 text-lg font-extralight tracking-tight transition-colors"
-                                        placeholder="0"
-                                    />
-                                </div>
-                            </div>
+                        <div style={{ marginTop: 16, padding: 12, background: "#FEF9C3", borderRadius: 6, fontSize: 11, color: "#92400E" }}>
+                            <strong>⚠️ Note:</strong> Non-GST-registered vendors (e.g. sole proprietor contractors) — their invoices do NOT have claimable input tax. Ensure vendor GST registration numbers are verified before claiming.
+                        </div>
+                    </div>
+                )}
 
-                            <div className="grid grid-cols-2 gap-8 mb-8">
-                                <div>
-                                    <label className="block text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-2">
-                                        Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={form.date}
-                                        onChange={(e) =>
-                                            setForm({ ...form, date: e.target.value })
-                                        }
-                                        className="w-full bg-transparent border-b border-[#e5e5e5] focus:border-[#111] outline-none py-2 text-lg font-extralight tracking-tight transition-colors"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[10px] tracking-[0.2em] uppercase font-medium text-[#bbb] mb-4">
-                                        Status
-                                    </label>
-                                    <div className="flex gap-2">
-                                        {(["pending", "paid", "overdue"] as const).map((s) => (
-                                            <button
-                                                key={s}
-                                                onClick={() => setForm({ ...form, status: s })}
-                                                className={`px-4 py-2 border text-[11px] tracking-[0.15em] uppercase font-medium transition-all duration-300 ${form.status === s
-                                                    ? "bg-[#111] text-white border-[#111]"
-                                                    : "border-[#e5e5e5] hover:border-[#111]"
-                                                    }`}
-                                            >
-                                                {s}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={addTransaction}
-                                    className="px-8 py-4 bg-[#111] text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#333] transition-colors"
-                                >
-                                    Add Transaction
-                                </button>
-                                <button
-                                    onClick={() => setShowAdd(false)}
-                                    className="px-6 py-4 text-[11px] tracking-[0.15em] uppercase font-medium text-[#999] hover:text-[#111] transition-colors"
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        </motion.div>
-                    ) : (
-                        <motion.button
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            onClick={() => setShowAdd(true)}
-                            className="w-full py-6 border border-dashed border-[#ddd] hover:border-[#111] text-[11px] tracking-[0.2em] uppercase font-medium text-[#bbb] hover:text-[#111] transition-all duration-300"
-                        >
-                            + Add Transaction
-                        </motion.button>
-                    )}
-                </AnimatePresence>
+                {/* ==================== VENDORS TAB ==================== */}
+                {tab === "vendors" && (
+                    <div style={{ background: "white", borderRadius: 10, border: "1px solid #E9E9E7", overflow: "hidden" }}>
+                        <div style={{ padding: "16px 20px", borderBottom: "1px solid #E9E9E7" }}>
+                            <h3 style={{ fontSize: 13, fontWeight: 700, color: "#37352F" }}>Vendor Payment Summary</h3>
+                            <p style={{ fontSize: 11, color: "#9B9A97", marginTop: 2 }}>All vendors with fingerprint codes and payment status</p>
+                        </div>
+                        <table style={{ width: "100%", fontSize: 12, borderCollapse: "collapse" }}>
+                            <thead>
+                                <tr style={{ borderBottom: "1px solid #E9E9E7", background: "#FAFAF9" }}>
+                                    {["Code", "Vendor", "Trades", "# Entries", "Total", "Paid", "Outstanding"].map(h => (
+                                        <th key={h} style={{
+                                            padding: "10px 14px", textAlign: h === "Total" || h === "Paid" || h === "Outstanding" ? "right" : "left",
+                                            fontSize: 10, fontWeight: 700, color: "#9B9A97", textTransform: "uppercase",
+                                        }}>{h}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {vendorSummary.map(v => (
+                                    <tr key={v.code} style={{ borderBottom: "1px solid #F5F5F3" }}>
+                                        <td style={{ padding: "10px 14px", fontFamily: "monospace", fontWeight: 700, fontSize: 12 }}>{v.code}</td>
+                                        <td style={{ padding: "10px 14px", fontWeight: 500 }}>{v.name}</td>
+                                        <td style={{ padding: "10px 14px" }}>
+                                            <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+                                                {Array.from(v.trades).map(t => (
+                                                    <span key={t} style={{
+                                                        fontSize: 9, fontWeight: 600, padding: "2px 6px", borderRadius: 3,
+                                                        background: "#F7F6F3", color: "#6B6A67", textTransform: "capitalize",
+                                                    }}>{t}</span>
+                                                ))}
+                                            </div>
+                                        </td>
+                                        <td style={{ padding: "10px 14px", textAlign: "center", fontSize: 12, color: "#9B9A97" }}>{v.count}</td>
+                                        <td style={{ padding: "10px 14px", textAlign: "right", fontFamily: "monospace", fontWeight: 700 }}>{fmt(v.total)}</td>
+                                        <td style={{ padding: "10px 14px", textAlign: "right", fontFamily: "monospace", color: "#16A34A" }}>{fmt(v.paid)}</td>
+                                        <td style={{ padding: "10px 14px", textAlign: "right", fontFamily: "monospace", fontWeight: 700, color: v.pending > 0 ? "#DC2626" : "#9B9A97" }}>
+                                            {v.pending > 0 ? fmt(v.pending) : "—"}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
-
-            {/* Bottom bar */}
-            <footer className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-between px-10 py-6 bg-[#fafafa]/80 backdrop-blur-sm border-t border-[#f0f0f0]">
-                <div className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#ccc]">
-                    {transactions.length} transaction{transactions.length !== 1 ? "s" : ""}
-                </div>
-                <div className="text-[10px] tracking-[0.3em] uppercase font-medium text-[#ccc]">
-                    Net {netCashFlow >= 0 ? "+" : "-"}${Math.abs(netCashFlow).toLocaleString()}
-                </div>
-            </footer>
-
-            <AppDock />
         </div>
     );
 }

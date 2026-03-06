@@ -3,12 +3,16 @@
 import { useState } from 'react';
 import QuoteBuilder from './QuoteBuilder';
 import DesignerCommissionDashboard from './DesignerCommissionDashboard';
+import ProspectKanban from './ProspectKanban';
+import ProjectScheduleTimeline from './ProjectScheduleTimeline';
 
-type ViewType = 'DASHBOARD' | 'QUOTE_BUILDER' | 'COMMISSION';
+import Link from 'next/link';
+
+type ViewType = 'DASHBOARD' | 'QUOTE_BUILDER' | 'COMMISSION' | 'PIPELINE' | 'SCHEDULE';
 
 export default function DashboardDesigner() {
     const [view, setView] = useState<ViewType>('DASHBOARD');
-    const designerName = 'Sarah Chen';
+    const designerName = 'Bjorn Teo';
     const designerId = 'designer-001';
 
     if (view === 'QUOTE_BUILDER') {
@@ -19,7 +23,7 @@ export default function DashboardDesigner() {
                         onClick={() => setView('DASHBOARD')}
                         className="text-white font-bold text-xs uppercase hover:text-blue-400 px-4 py-2 flex items-center gap-2"
                     >
-                        ← Return to Dashboard
+                        Return to Dashboard
                     </button>
                 </div>
                 <QuoteBuilder />
@@ -35,7 +39,7 @@ export default function DashboardDesigner() {
                         onClick={() => setView('DASHBOARD')}
                         className="text-white font-bold text-xs uppercase hover:text-blue-400 px-4 py-2 flex items-center gap-2"
                     >
-                        ← Return to Dashboard
+                        Return to Dashboard
                     </button>
                 </div>
                 <DesignerCommissionDashboard
@@ -46,263 +50,235 @@ export default function DashboardDesigner() {
         );
     }
 
+    if (view === 'PIPELINE') {
+        return (
+            <div className="">
+                <div className="bg-slate-900/90 backdrop-blur border-b border-white/10 p-2">
+                    <button
+                        onClick={() => setView('DASHBOARD')}
+                        className="text-white font-bold text-xs uppercase hover:text-blue-400 px-4 py-2 flex items-center gap-2"
+                    >
+                        Return to Dashboard
+                    </button>
+                </div>
+                <ProspectKanban />
+            </div>
+        );
+    }
+
+    if (view === 'SCHEDULE') {
+        return (
+            <div className="">
+                <div className="bg-slate-900/90 backdrop-blur border-b border-white/10 p-2 flex justify-between items-center">
+                    <button
+                        onClick={() => setView('DASHBOARD')}
+                        className="text-white font-bold text-xs uppercase hover:text-blue-400 px-4 py-2 flex items-center gap-2"
+                    >
+                        Return to Dashboard
+                    </button>
+                    <span className="text-white/50 text-xs">Roof  PROJECT MANAGEMENT</span>
+                </div>
+                <ProjectScheduleTimeline />
+            </div>
+        );
+    }
+
     return (
-        <div className="p-8 font-sans max-w-[1600px] mx-auto">
-            {/* HEADER */}
-            <div className="flex justify-between items-end mb-8 bg-white/70 backdrop-blur-md p-6 rounded-2xl border border-white/50 shadow-sm relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-100 rounded-full blur-3xl -mr-32 -mt-32 opacity-50 pointer-events-none group-hover:opacity-80 transition-opacity" />
-
-                <div className="relative">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">Welcome, {designerName}.</h1>
-                    <p className="text-slate-500 text-sm mt-1 font-medium flex items-center gap-2">
-                        System Status
-                        <span className="w-1 h-1 rounded-full bg-slate-400" />
-                        <span className="text-green-600 font-bold flex items-center gap-1">
-                            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                            OPTIMAL
-                        </span>
-                    </p>
-                </div>
-                <div className="flex gap-3 relative">
-                    <button
-                        onClick={() => setView('COMMISSION')}
-                        className="bg-white/80 backdrop-blur border border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold hover:bg-white hover:shadow-md transition-all active:scale-95"
-                    >
-                        💰 Commission & Claims
-                    </button>
-                    <button
-                        onClick={() => setView('QUOTE_BUILDER')}
-                        className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/20 transition-all active:scale-95 flex items-center gap-2"
-                    >
-                        <span>+</span> New Quotation
-                    </button>
-                </div>
-            </div>
-
-            {/* QUICK STATS BAR */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-4 rounded-lg">
-                    <p className="text-xs uppercase opacity-80">Commission Earned</p>
-                    <p className="text-2xl font-bold mt-1">$14,875</p>
-                    <p className="text-xs mt-1 opacity-80">↑ 18% this month</p>
-                </div>
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-4 rounded-lg">
-                    <p className="text-xs uppercase opacity-80">Active Quotes</p>
-                    <p className="text-2xl font-bold mt-1">3</p>
-                    <p className="text-xs mt-1 opacity-80">2 pending approval</p>
-                </div>
-                <div className="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-4 rounded-lg">
-                    <p className="text-xs uppercase opacity-80">Outstanding Claims</p>
-                    <p className="text-2xl font-bold mt-1">$23,000</p>
-                    <p className="text-xs mt-1 opacity-80">3 invoices pending</p>
-                </div>
-                <div className="bg-gradient-to-br from-purple-500 to-pink-600 text-white p-4 rounded-lg">
-                    <p className="text-xs uppercase opacity-80">Avg Margin</p>
-                    <p className="text-2xl font-bold mt-1">35%</p>
-                    <p className="text-xs mt-1 opacity-80">Above target ✓</p>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                {/* LEFT COLUMN: ACTIVE PROJECTS */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                        <h2 className="text-lg font-bold text-navy-900 mb-4 border-b pb-2">Active Projects</h2>
-                        <table className="w-full text-left">
-                            <thead>
-                                <tr className="text-xs text-gray-400 uppercase tracking-wider">
-                                    <th className="pb-3">Project</th>
-                                    <th className="pb-3">Status</th>
-                                    <th className="pb-3">Value</th>
-                                    <th className="pb-3">Commission</th>
-                                    <th className="pb-3">Claims</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-sm">
-                                <tr className="border-b border-gray-100 group hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setView('COMMISSION')}>
-                                    <td className="py-4">
-                                        <p className="font-bold text-navy-900">322C Tengah Drive</p>
-                                        <p className="text-xs text-gray-500">Tan Wei Ming</p>
-                                    </td>
-                                    <td className="py-4"><span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-bold">IN PROGRESS</span></td>
-                                    <td className="py-4 text-gray-600">$45,000</td>
-                                    <td className="py-4">
-                                        <span className="text-green-600 font-semibold">$1,575</span>
-                                        <span className="ml-1 text-xs text-gray-400">earned</span>
-                                    </td>
-                                    <td className="py-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div className="h-full bg-green-500" style={{ width: '20%' }} />
-                                            </div>
-                                            <span className="text-xs text-gray-500">20%</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr className="border-b border-gray-100 group hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setView('COMMISSION')}>
-                                    <td className="py-4">
-                                        <p className="font-bold text-navy-900">456 Clementi Ave 3</p>
-                                        <p className="text-xs text-gray-500">Lim Mei Ling</p>
-                                    </td>
-                                    <td className="py-4"><span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">ACCEPTED</span></td>
-                                    <td className="py-4 text-gray-600">$78,000</td>
-                                    <td className="py-4">
-                                        <span className="text-amber-600 font-semibold">$2,730</span>
-                                        <span className="ml-1 text-xs text-gray-400">pending</span>
-                                    </td>
-                                    <td className="py-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div className="h-full bg-green-500" style={{ width: '0%' }} />
-                                            </div>
-                                            <span className="text-xs text-gray-500">0%</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr className="border-b border-gray-100 group hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setView('COMMISSION')}>
-                                    <td className="py-4">
-                                        <p className="font-bold text-navy-900">Setia Alam Unit 12-3</p>
-                                        <p className="text-xs text-gray-500">Ahmad bin Yusof</p>
-                                    </td>
-                                    <td className="py-4"><span className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-bold">COMPLETED</span></td>
-                                    <td className="py-4 text-gray-600">RM 32,000</td>
-                                    <td className="py-4">
-                                        <span className="text-emerald-600 font-semibold">$1,152</span>
-                                        <span className="ml-1 text-xs text-gray-400">paid</span>
-                                    </td>
-                                    <td className="py-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                                <div className="h-full bg-green-500" style={{ width: '100%' }} />
-                                            </div>
-                                            <span className="text-xs text-gray-500">100%</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div className="mt-4 pt-4 border-t text-center">
-                            <button
-                                onClick={() => setView('COMMISSION')}
-                                className="text-blue-600 hover:text-blue-800 text-sm font-semibold"
-                            >
-                                View Full Commission Dashboard →
+        <div className="min-h-screen bg-[#F7F6F3]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+            {/* TOP BAR */}
+            <div className="bg-white border-b border-gray-200">
+                <div className="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-sm font-bold text-gray-900">Roof</h1>
+                        <span className="text-gray-200">|</span>
+                        <span className="text-sm text-gray-500">{designerName}</span>
+                        <span className="text-[9px] px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-full font-bold uppercase tracking-wider">Online</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button onClick={() => setView('PIPELINE')} className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all">Pipeline</button>
+                        <button onClick={() => setView('SCHEDULE')} className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all">Schedule</button>
+                        <Link href="/vendor-rates"><button className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all">Vendors</button></Link>
+                        <button onClick={() => setView('COMMISSION')} className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all">Commission</button>
+                        <div className="w-px h-5 bg-gray-200 mx-1" />
+                        <Link href="/quote-builder">
+                            <button className="px-4 py-1.5 text-xs font-bold text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-all">
+                                + New Quote
                             </button>
-                        </div>
+                        </Link>
                     </div>
+                </div>
+            </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                        <h2 className="text-lg font-bold text-navy-900 mb-4 border-b pb-2">Recent Claims Activity</h2>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-green-500 text-lg">✓</span>
-                                    <div>
-                                        <p className="font-semibold text-sm">PC-001 Paid</p>
-                                        <p className="text-xs text-gray-500">322C Tengah Drive</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold text-green-600">$9,000</p>
-                                    <p className="text-xs text-gray-400">Jan 25</p>
-                                </div>
-                            </div>
-                            <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-blue-500 text-lg">✓</span>
-                                    <div>
-                                        <p className="font-semibold text-sm">PC-002 Approved</p>
-                                        <p className="text-xs text-gray-500">322C Tengah Drive</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold text-blue-600">$17,100</p>
-                                    <p className="text-xs text-gray-400">Jan 27</p>
-                                </div>
-                            </div>
-                            <div className="flex justify-between items-center p-3 bg-amber-50 rounded-lg">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-amber-500 text-lg">⏳</span>
-                                    <div>
-                                        <p className="font-semibold text-sm">PC-001 Submitted</p>
-                                        <p className="text-xs text-gray-500">456 Clementi Ave 3</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold text-amber-600">$15,600</p>
-                                    <p className="text-xs text-gray-400">Pending</p>
-                                </div>
-                            </div>
+            <div className="max-w-[1400px] mx-auto px-8 py-8">
+                {/* METRIC ROW */}
+                <div className="grid grid-cols-4 gap-4 mb-8">
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Commission Earned</p>
+                        <p className="text-2xl font-black text-gray-900 mt-2">$14,875</p>
+                        <p className="text-xs text-emerald-600 font-medium mt-1">+18% this month</p>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Active Quotes</p>
+                        <p className="text-2xl font-black text-gray-900 mt-2">3</p>
+                        <p className="text-xs text-amber-600 font-medium mt-1">2 pending approval</p>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Outstanding Claims</p>
+                        <p className="text-2xl font-black text-gray-900 mt-2">$23,000</p>
+                        <p className="text-xs text-gray-500 font-medium mt-1">3 invoices pending</p>
+                    </div>
+                    <div className="bg-white rounded-xl border border-gray-200 p-5">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Average Margin</p>
+                        <p className="text-2xl font-black text-gray-900 mt-2">35%</p>
+                        <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: '70%' }} />
                         </div>
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: THINGS TO KNOW */}
-                <div className="space-y-6">
-                    <div className="bg-navy-900 text-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-gold-500 font-bold uppercase tracking-widest text-xs mb-4">Things To Know</h2>
-                        <ul className="space-y-4 text-sm">
-                            <li className="flex items-start gap-3">
-                                <span className="text-gold-400 font-bold">💰</span>
-                                <span className="text-gray-300">You have <strong className="text-white">$4,305</strong> in pending commission awaiting project completion.</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                                <span className="text-red-400 font-bold">!</span>
-                                <span className="text-gray-300">Supplier <strong className="text-white">WoodWorks MY</strong> has increased plywood base cost by 8% effective today.</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                                <span className="text-blue-400 font-bold">i</span>
-                                <span className="text-gray-300">New <strong>Town Council (SG)</strong> compliance module added. Please use for all condo projects.</span>
-                            </li>
-                            <li className="flex items-start gap-3">
-                                <span className="text-green-400 font-bold">✓</span>
-                                <span className="text-gray-300">Your average margin (35%) is above target. Keep it up!</span>
-                            </li>
-                        </ul>
+                <div className="grid grid-cols-3 gap-6">
+                    {/* LEFT: PROJECTS */}
+                    <div className="col-span-2 space-y-6">
+                        {/* Active Projects */}
+                        <div className="bg-white rounded-xl border border-gray-200">
+                            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                                <h2 className="text-sm font-bold text-gray-900">Active Projects</h2>
+                                <span className="text-[10px] text-gray-400">3 projects</span>
+                            </div>
+                            <div className="divide-y divide-gray-50">
+                                {[
+                                    { name: '322C Tengah Drive', client: 'Tan Wei Ming', status: 'In Progress', statusColor: 'bg-amber-50 text-amber-700', value: '$45,000', commission: '$1,575', commLabel: 'earned', progress: 20 },
+                                    { name: '456 Clementi Ave 3', client: 'Lim Mei Ling', status: 'Accepted', statusColor: 'bg-emerald-50 text-emerald-700', value: '$78,000', commission: '$2,730', commLabel: 'pending', progress: 0 },
+                                    { name: 'Setia Alam Unit 12-3', client: 'Ahmad bin Yusof', status: 'Completed', statusColor: 'bg-gray-100 text-gray-600', value: 'RM 32,000', commission: '$1,152', commLabel: 'paid', progress: 100 },
+                                ].map((p, i) => (
+                                    <div key={i} className="px-5 py-4 flex items-center justify-between hover:bg-gray-50/50 cursor-pointer transition-colors" onClick={() => setView('COMMISSION')}>
+                                        <div className="flex items-center gap-4 min-w-0">
+                                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center text-[10px] font-bold text-gray-400">
+                                                {i + 1}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-semibold text-gray-900">{p.name}</p>
+                                                <p className="text-[11px] text-gray-400 mt-0.5">{p.client}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-6">
+                                            <span className={`text-[10px] px-2 py-1 rounded-full font-bold ${p.statusColor}`}>{p.status}</span>
+                                            <span className="text-sm font-medium text-gray-700 w-20 text-right">{p.value}</span>
+                                            <div className="text-right w-24">
+                                                <span className="text-sm font-bold text-gray-900">{p.commission}</span>
+                                                <p className="text-[10px] text-gray-400">{p.commLabel}</p>
+                                            </div>
+                                            <div className="w-16">
+                                                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${p.progress}%` }} />
+                                                </div>
+                                                <p className="text-[9px] text-gray-400 text-right mt-1">{p.progress}%</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Recent Activity */}
+                        <div className="bg-white rounded-xl border border-gray-200">
+                            <div className="px-5 py-4 border-b border-gray-100">
+                                <h2 className="text-sm font-bold text-gray-900">Recent Activity</h2>
+                            </div>
+                            <div className="divide-y divide-gray-50">
+                                {[
+                                    { label: 'PC-001 Paid', project: '322C Tengah Drive', amount: '$9,000', date: 'Jan 25', type: 'paid' },
+                                    { label: 'PC-002 Approved', project: '322C Tengah Drive', amount: '$17,100', date: 'Jan 27', type: 'approved' },
+                                    { label: 'PC-001 Submitted', project: '456 Clementi Ave 3', amount: '$15,600', date: 'Pending', type: 'pending' },
+                                ].map((a, i) => (
+                                    <div key={i} className="px-5 py-3 flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-2 h-2 rounded-full ${a.type === 'paid' ? 'bg-emerald-500' : a.type === 'approved' ? 'bg-blue-500' : 'bg-amber-400'}`} />
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-800">{a.label}</p>
+                                                <p className="text-[11px] text-gray-400">{a.project}</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-bold text-gray-900">{a.amount}</p>
+                                            <p className="text-[10px] text-gray-400">{a.date}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                        <h2 className="text-sm font-bold text-gray-500 mb-4 uppercase">Commission Summary</h2>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-navy-900">This Month</span>
-                                <span className="font-bold text-green-600">$3,500</span>
+                    {/* RIGHT COLUMN */}
+                    <div className="space-y-6">
+                        {/* Alerts */}
+                        <div className="bg-white rounded-xl border border-gray-200">
+                            <div className="px-5 py-4 border-b border-gray-100">
+                                <h2 className="text-sm font-bold text-gray-900">Alerts</h2>
                             </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-navy-900">Last Month</span>
-                                <span className="font-semibold text-gray-600">$2,975</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm text-navy-900">YTD Total</span>
-                                <span className="font-bold text-navy-900">$14,875</span>
-                            </div>
-                            <div className="pt-3 border-t mt-3">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-sm text-gray-500">Pending Payout</span>
-                                    <span className="font-semibold text-amber-600">$4,305</span>
+                            <div className="p-4 space-y-3">
+                                <div className="p-3 bg-amber-50 rounded-lg border border-amber-100">
+                                    <p className="text-xs font-semibold text-amber-800">Price Change</p>
+                                    <p className="text-[11px] text-amber-700 mt-1">WoodWorks MY plywood base cost +8% today</p>
+                                </div>
+                                <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                    <p className="text-xs font-semibold text-blue-800">Compliance Update</p>
+                                    <p className="text-[11px] text-blue-700 mt-1">New Town Council (SG) module — use for all condo projects</p>
+                                </div>
+                                <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                                    <p className="text-xs font-semibold text-emerald-800">Pending Commission</p>
+                                    <p className="text-[11px] text-emerald-700 mt-1">$4,305 awaiting project completion</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                        <h2 className="text-sm font-bold text-gray-500 mb-4 uppercase">System Health</h2>
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm text-navy-900 font-bold">Margin Guard</span>
-                            <span className="text-green-500 text-xs font-bold">ACTIVE</span>
+                        {/* Commission Summary */}
+                        <div className="bg-white rounded-xl border border-gray-200">
+                            <div className="px-5 py-4 border-b border-gray-100">
+                                <h2 className="text-sm font-bold text-gray-900">Commission</h2>
+                            </div>
+                            <div className="p-5 space-y-0">
+                                {[
+                                    { label: 'This Month', value: '$3,500', bold: true },
+                                    { label: 'Last Month', value: '$2,975', bold: false },
+                                    { label: 'YTD Total', value: '$14,875', bold: true },
+                                ].map((r, i) => (
+                                    <div key={i} className="flex items-center justify-between py-2.5 border-b border-gray-50 last:border-0">
+                                        <span className="text-xs text-gray-500">{r.label}</span>
+                                        <span className={`text-sm ${r.bold ? 'font-bold text-gray-900' : 'font-medium text-gray-600'}`}>{r.value}</span>
+                                    </div>
+                                ))}
+                                <div className="pt-3 mt-2 border-t border-gray-100 flex justify-between">
+                                    <span className="text-xs text-gray-400">Pending Payout</span>
+                                    <span className="text-sm font-bold text-amber-600">$4,305</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm text-navy-900 font-bold">Geo-Engine</span>
-                            <span className="text-green-500 text-xs font-bold">ONLINE</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-navy-900 font-bold">Commission Tracker</span>
-                            <span className="text-green-500 text-xs font-bold">SYNCED</span>
+
+                        {/* System Status */}
+                        <div className="bg-white rounded-xl border border-gray-200">
+                            <div className="px-5 py-4 border-b border-gray-100">
+                                <h2 className="text-sm font-bold text-gray-900">System</h2>
+                            </div>
+                            <div className="p-5 space-y-0">
+                                {[
+                                    { name: 'Margin Guard', status: 'Active' },
+                                    { name: 'Geo-Engine', status: 'Online' },
+                                    { name: 'Commission Tracker', status: 'Synced' },
+                                    { name: 'Price Index', status: 'Live' },
+                                ].map((s, i) => (
+                                    <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                                        <span className="text-xs text-gray-600">{s.name}</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                                            <span className="text-[10px] font-medium text-emerald-600">{s.status}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );

@@ -17,8 +17,18 @@ import {
 } from '@/types/quote';
 import QuoteDocument from './QuoteDocument';
 import { TERMS_TEMPLATES, ProjectType } from '@/data/terms-templates';
-import { ChevronDown, ChevronUp, Plus, Trash2, GripVertical, FileText, AlertTriangle, Info, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, Trash2, GripVertical, FileText, AlertTriangle, Info, X, DollarSign, Send, CheckCircle, Lock } from 'lucide-react';
 import { runSmartAlerts, checkMarginAlerts, SmartAlert } from '@/lib/smart-alerts';
+import { analyzeBudget, getBudgetMessage, BudgetAnalysis } from '@/lib/budget-tracker';
+
+export type QuoteWorkflowStatus = 'DRAFT' | 'SENT' | 'SIGNED' | 'PAID';
+
+const WORKFLOW_CONFIG: Record<QuoteWorkflowStatus, { label: string; color: string; bgColor: string; icon: React.ReactNode }> = {
+    DRAFT: { label: 'Draft', color: 'text-slate-400', bgColor: 'bg-slate-700', icon: <FileText className="w-3 h-3" /> },
+    SENT: { label: 'Sent to Client', color: 'text-blue-400', bgColor: 'bg-blue-900/50', icon: <Send className="w-3 h-3" /> },
+    SIGNED: { label: 'Signed', color: 'text-emerald-400', bgColor: 'bg-emerald-900/50', icon: <CheckCircle className="w-3 h-3" /> },
+    PAID: { label: 'Paid', color: 'text-amber-400', bgColor: 'bg-amber-900/50', icon: <Lock className="w-3 h-3" /> },
+};
 
 export default function QuoteBuilder() {
     const { clients, suppliers } = useData();
@@ -27,11 +37,14 @@ export default function QuoteBuilder() {
     const [projectName, setProjectName] = useState('');
     const [selectedClientId, setSelectedClientId] = useState('');
     const [prospectName, setProspectName] = useState(''); // For estimates without formal client
-    const [quoteStatus, setQuoteStatus] = useState<'ESTIMATE' | 'DRAFT' | 'SENT'>('ESTIMATE');
+    const [workflowStatus, setWorkflowStatus] = useState<QuoteWorkflowStatus>('DRAFT');
     const [areaSize, setAreaSize] = useState(1000);
     const [jurisdiction, setJurisdiction] = useState<Jurisdiction>('SG');
     const [projectType, setProjectType] = useState<ProjectType>('HDB');
     const [showPreview, setShowPreview] = useState(false);
+    const [clientBudget, setClientBudget] = useState<number>(0);
+
+    const isLocked = workflowStatus === 'SIGNED' || workflowStatus === 'PAID';
 
     // --- LINE ITEMS STATE ---
     const [lines, setLines] = useState<UniversalQuoteLine[]>([]);
@@ -53,6 +66,12 @@ export default function QuoteBuilder() {
         const margin = totalPrice > 0 ? (totalPrice - totalCost) / totalPrice : 0;
         return { totalCost, totalPrice, margin, lineCount: lines.filter(l => l.type === 'ITEM').length };
     }, [lines]);
+
+    // --- BUDGET ANALYSIS ---
+    const budgetAnalysis = useMemo<BudgetAnalysis | null>(() => {
+        if (clientBudget <= 0) return null;
+        return analyzeBudget(clientBudget, quoteSummary.totalPrice);
+    }, [clientBudget, quoteSummary.totalPrice]);
 
     // --- SMART ALERTS ---
     const activeAlerts = useMemo(() => {
@@ -149,26 +168,41 @@ export default function QuoteBuilder() {
     return (
         <div className="flex flex-col h-full">
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* OVERALL BAR (Sticky Header) */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <div className="sticky top-0 z-20 bg-slate-900/95 backdrop-blur-lg border-b border-white/10 p-4">
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-6">
                         <div>
-                            <input
-                                value={projectName}
-                                onChange={e => setProjectName(e.target.value)}
-                                placeholder="Project Name..."
-                                className="bg-transparent text-xl font-bold text-white border-b border-transparent hover:border-white/30 focus:border-blue-400 focus:outline-none transition-colors"
-                            />
+                            <div className="flex items-center gap-3">
+                                <input
+                                    value={projectName}
+                                    onChange={e => setProjectName(e.target.value)}
+                                    placeholder="Project Name..."
+                                    disabled={isLocked}
+                                    className="bg-transparent text-xl font-bold text-white border-b border-transparent hover:border-white/30 focus:border-blue-400 focus:outline-none transition-colors disabled:opacity-50"
+                                />
+                                {/* Workflow Status Badge */}
+                                <select
+                                    value={workflowStatus}
+                                    onChange={e => setWorkflowStatus(e.target.value as QuoteWorkflowStatus)}
+                                    className={`text-xs font-bold px-3 py-1 rounded-full border-0 cursor-pointer ${WORKFLOW_CONFIG[workflowStatus].bgColor} ${WORKFLOW_CONFIG[workflowStatus].color}`}
+                                >
+                                    <option value="DRAFT"> Draft</option>
+                                    <option value="SENT"> Sent</option>
+                                    <option value="SIGNED"> Signed</option>
+                                    <option value="PAID"> Paid</option>
+                                </select>
+                            </div>
                             <p className="text-xs text-slate-400 mt-1">
                                 {clients.find(c => c.id === selectedClientId)?.name || 'No Client Selected'}
+                                {isLocked && '   Quote locked  changes require Variation Order'}
                             </p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-6">
                         {/* Line Count */}
                         <div className="text-center">
                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Items</p>
@@ -180,6 +214,19 @@ export default function QuoteBuilder() {
                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total ({jurisdiction === 'SG' ? 'SGD' : 'MYR'})</p>
                             <p className="text-2xl font-black text-emerald-400">${quoteSummary.totalPrice.toLocaleString()}</p>
                         </div>
+
+                        {/* Budget vs Actual */}
+                        {budgetAnalysis && (
+                            <div className="text-center">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Budget</p>
+                                <p className={`text-lg font-black ${budgetAnalysis.status === 'under' || budgetAnalysis.status === 'on_target' ? 'text-green-400' :
+                                        budgetAnalysis.status === 'over_10' ? 'text-amber-400' :
+                                            'text-red-400'
+                                    }`}>
+                                    {budgetAnalysis.statusEmoji} {budgetAnalysis.percentOver > 0 ? '+' : ''}{budgetAnalysis.percentOver}%
+                                </p>
+                            </div>
+                        )}
 
                         {/* Margin */}
                         <div className="text-center">
@@ -202,9 +249,29 @@ export default function QuoteBuilder() {
                 </div>
             </div>
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
+            {/* BUDGET ALERT BAR */}
+            {/*  */}
+            {budgetAnalysis && budgetAnalysis.status !== 'under' && budgetAnalysis.status !== 'on_target' && (
+                <div className={`px-6 py-3 border-b ${budgetAnalysis.status === 'over_10' ? 'bg-amber-50 border-amber-200' :
+                        budgetAnalysis.status === 'over_25' ? 'bg-orange-50 border-orange-200' :
+                            'bg-red-50 border-red-200'
+                    }`}>
+                    <div className="max-w-6xl mx-auto flex items-center gap-3">
+                        <DollarSign className={`w-5 h-5 flex-shrink-0 ${budgetAnalysis.status === 'over_10' ? 'text-amber-600' :
+                                budgetAnalysis.status === 'over_25' ? 'text-orange-600' :
+                                    'text-red-600'
+                            }`} />
+                        <p className="text-sm font-medium text-slate-700">
+                            {getBudgetMessage(budgetAnalysis)}
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/*  */}
             {/* SMART ALERTS PANEL */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {activeAlerts.length > 0 && (
                 <div className="bg-amber-50 border-b border-amber-200 px-6 py-3">
                     <div className="max-w-6xl mx-auto space-y-2">
@@ -231,7 +298,7 @@ export default function QuoteBuilder() {
                                     </p>
                                     <p className="text-xs text-slate-600 mt-0.5">{alert.message}</p>
                                     {alert.suggestedAction && (
-                                        <p className="text-xs text-slate-500 mt-1 italic">💡 {alert.suggestedAction}</p>
+                                        <p className="text-xs text-slate-500 mt-1 italic"> {alert.suggestedAction}</p>
                                     )}
                                 </div>
                                 {alert.dismissable && (
@@ -249,21 +316,22 @@ export default function QuoteBuilder() {
                 </div>
             )}
 
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             {/* MAIN CONTENT AREA */}
-            {/* ═══════════════════════════════════════════════════════════════ */}
+            {/*  */}
             <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
                 <div className="max-w-6xl mx-auto space-y-4">
 
                     {/* Project Settings Row */}
                     <div className="bg-white rounded-xl border border-slate-200 p-4 mb-6">
-                        <div className="grid grid-cols-4 gap-4">
+                        <div className="grid grid-cols-5 gap-4">
                             <div>
                                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Client</label>
                                 <select
                                     value={selectedClientId}
                                     onChange={e => setSelectedClientId(e.target.value)}
-                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    disabled={isLocked}
+                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-slate-50 disabled:opacity-60"
                                 >
                                     <option value="">Select Client...</option>
                                     {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -274,7 +342,8 @@ export default function QuoteBuilder() {
                                 <select
                                     value={projectType}
                                     onChange={e => setProjectType(e.target.value as ProjectType)}
-                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    disabled={isLocked}
+                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-slate-50 disabled:opacity-60"
                                 >
                                     <option value="HDB">HDB Residential</option>
                                     <option value="Condo">Condominium</option>
@@ -288,21 +357,37 @@ export default function QuoteBuilder() {
                                     type="number"
                                     value={areaSize}
                                     onChange={e => setAreaSize(Number(e.target.value))}
-                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    disabled={isLocked}
+                                    className="w-full p-2 text-sm border border-slate-200 rounded-lg font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-slate-50 disabled:opacity-60"
                                 />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Client Budget ({jurisdiction === 'SG' ? 'SGD' : 'MYR'})</label>
+                                <div className="relative">
+                                    <span className="absolute left-2 top-2 text-xs text-slate-400">$</span>
+                                    <input
+                                        type="number"
+                                        value={clientBudget || ''}
+                                        onChange={e => setClientBudget(Number(e.target.value))}
+                                        placeholder="e.g. 50000"
+                                        className="w-full pl-6 p-2 text-sm border border-slate-200 rounded-lg font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Jurisdiction</label>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => setJurisdiction('SG')}
-                                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${jurisdiction === 'SG' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                                        disabled={isLocked}
+                                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${jurisdiction === 'SG' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} disabled:opacity-60`}
                                     >
                                         SG
                                     </button>
                                     <button
                                         onClick={() => setJurisdiction('MY')}
-                                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${jurisdiction === 'MY' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                                        disabled={isLocked}
+                                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors ${jurisdiction === 'MY' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} disabled:opacity-60`}
                                     >
                                         MY
                                     </button>
@@ -311,9 +396,9 @@ export default function QuoteBuilder() {
                         </div>
                     </div>
 
-                    {/* ═══════════════════════════════════════════════════════════════ */}
+                    {/*  */}
                     {/* LINE ITEMS */}
-                    {/* ═══════════════════════════════════════════════════════════════ */}
+                    {/*  */}
                     {lines.map((line, index) => (
                         <div
                             key={line.id}

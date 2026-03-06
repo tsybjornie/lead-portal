@@ -54,9 +54,9 @@ export interface VariationOrder {
     notes?: string;
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // HELPER FUNCTIONS
-// ═══════════════════════════════════════════════════════════════
+// 
 
 export function generateVONumber(existingVOs: VariationOrder[]): string {
     const count = existingVOs.length + 1;
@@ -112,11 +112,11 @@ export function createVOItem(
     };
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 // STORAGE HELPERS
-// ═══════════════════════════════════════════════════════════════
+// 
 
-const VO_STORAGE_KEY = 'paddleduck_variation_orders';
+const VO_STORAGE_KEY = 'Roof_variation_orders';
 
 export function saveVariationOrders(vos: VariationOrder[]): boolean {
     if (typeof window === 'undefined') return false;
