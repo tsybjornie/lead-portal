@@ -12,56 +12,20 @@ export default function Navigation() {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
-  // Toggle solid nav on scroll or if not home
   useEffect(() => {
     const handleScroll = () => {
-      // Threshold: 90vh for home (past hero), or 0 for pages
-      // User said: "Once hero section is fully passed"
-      const threshold = isHome ? window.innerHeight * 0.9 : 10;
-      setIsScrolled(window.scrollY > threshold);
+      setIsScrolled(window.scrollY > 40);
     };
-
-    // If not home, always considered "scrolled" style (solid) or just solid base?
-    // User: "Base state (hero visible): Transparent". Internal pages don't have hero usually.
-    // We will default internal pages to Solid White immediately for readability.
-    if (!isHome) {
-      setIsScrolled(true);
-    } else {
-      window.addEventListener('scroll', handleScroll);
-      handleScroll(); // Check initial
-    }
-
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isHome]);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Styles
-  const navStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    zIndex: 1000,
-    transition: 'background-color 0.3s ease, border-bottom 0.3s ease',
-    backgroundColor: isScrolled ? 'rgba(255, 255, 255, 1)' : 'transparent',
-    borderBottom: isScrolled ? '1px solid #f0f0f0' : 'none',
-  };
-
-  const textStyle = {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-    color: '#1a1a1a', // Always dark for visibility on cream background
-    textDecoration: 'none',
-    fontWeight: 500,
-    fontSize: '0.95rem',
-    opacity: isScrolled ? 1 : 0.8,
-    transition: 'color 0.3s ease, opacity 0.2s ease-in-out',
-    cursor: 'pointer'
-  };
-
   const navLinks = [
     { name: 'Get Matched', path: '/assessment' },
-    { name: 'Guides & References', path: '/guides' },
+    { name: 'Guides', path: '/guides' },
     { name: 'FAQ', path: '/faq' },
     { name: 'For Firms', path: '/contractor-application' },
     { name: 'For Builders', path: 'https://roof-builder.vercel.app/landing', external: true },
@@ -69,143 +33,278 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="nav-container" style={navStyle}>
-        <div className="container" style={{
+      {/* ═══════ FLOATING PILL NAV ═══════ */}
+      <div style={{
+        position: 'fixed',
+        top: isScrolled ? 16 : 24,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000,
+        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+      }}>
+        <nav style={{
+          background: 'rgba(18, 18, 18, 0.92)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          borderRadius: '60px',
+          padding: '0 8px',
+          height: '52px',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          height: '90px', // Generous padding
-          transition: 'height 0.3s ease'
+          gap: '0',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 4px 30px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2)',
+          transition: 'all 0.4s ease',
         }}>
-
-          {/* LEFT: Logo Wordmark */}
+          {/* Brand */}
           <Link href="/" style={{
-            fontFamily: 'Playfair Display, serif', // Keeping Brand Font
-            fontSize: '1.5rem',
-            color: '#1a1a1a', // Always dark
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontSize: '0.95rem',
+            fontWeight: 600,
+            color: '#ffffff',
             textDecoration: 'none',
-            fontWeight: 400,
-            letterSpacing: '0.02em',
-            zIndex: 1001,
-            position: 'relative',
-            transition: 'color 0.3s ease'
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            padding: '0 20px 0 24px',
+            whiteSpace: 'nowrap',
           }}>
-            roof
+            ROOF
           </Link>
 
-          {/* RIGHT: Desktop Links */}
-          <div className="desktop-nav" style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
-            {navLinks.map((link) => (
-              link.external ? (
-                <a
-                  key={link.name}
-                  href={link.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ ...textStyle, color: '#cccccc', background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', padding: '8px 18px', borderRadius: '8px', color: '#fff', fontWeight: 600, fontSize: '0.85rem' }}
-                  onMouseEnter={(e) => e.target.style.opacity = '0.9'}
-                  onMouseLeave={(e) => e.target.style.opacity = '1'}
-                >
-                  {link.name} ↗
-                </a>
-              ) : (
+          {/* Divider */}
+          <div style={{
+            width: '1px',
+            height: '20px',
+            background: 'rgba(255,255,255,0.12)',
+            flexShrink: 0,
+          }} />
+
+          {/* Desktop Links */}
+          <div className="desktop-nav" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0',
+            padding: '0 4px',
+          }}>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.path;
+              const isExternal = link.external;
+
+              if (isExternal) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      fontSize: '0.82rem',
+                      fontWeight: 500,
+                      color: '#a78bfa',
+                      textDecoration: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '40px',
+                      transition: 'all 0.25s ease',
+                      whiteSpace: 'nowrap',
+                      background: 'rgba(139, 92, 246, 0.12)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.background = 'rgba(139, 92, 246, 0.25)';
+                      e.target.style.color = '#c4b5fd';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.background = 'rgba(139, 92, 246, 0.12)';
+                      e.target.style.color = '#a78bfa';
+                    }}
+                  >
+                    {link.name} ↗
+                  </a>
+                );
+              }
+
+              return (
                 <Link
                   key={link.name}
                   href={link.path}
-                  style={{ ...textStyle, color: '#cccccc' }}
-                  onMouseEnter={(e) => e.target.style.opacity = '1'}
-                  onMouseLeave={(e) => e.target.style.opacity = '1'}
+                  style={{
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    fontSize: '0.82rem',
+                    fontWeight: isActive ? 600 : 400,
+                    color: isActive ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                    textDecoration: isActive ? 'underline' : 'none',
+                    textUnderlineOffset: '4px',
+                    textDecorationThickness: '1.5px',
+                    padding: '8px 16px',
+                    borderRadius: '40px',
+                    transition: 'all 0.25s ease',
+                    whiteSpace: 'nowrap',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.target.style.color = 'rgba(255,255,255,0.85)';
+                      e.target.style.background = 'rgba(255,255,255,0.06)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.target.style.color = 'rgba(255,255,255,0.5)';
+                      e.target.style.background = 'transparent';
+                    }
+                  }}
                 >
                   {link.name}
                 </Link>
-              )
-            ))}
-
-
-
-            {/* Desktop Market Toggle (Text Based) */}
-            <button
-              onClick={() => switchMarket(market === 'SG' ? 'JB' : 'SG')}
-              style={{
-                background: isScrolled ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.05)',
-                border: isScrolled ? '1px solid #777' : '1px solid rgba(255,255,255,0.2)',
-                padding: '8px 16px',
-                borderRadius: '50px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.2s ease',
-                color: '#cccccc', // Light grey
-                backdropFilter: 'blur(4px)',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                fontSize: '0.85rem'
-              }}
-              onMouseEnter={(e) => e.target.style.transform = 'scale(1.02)'}
-              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-            >
-              <span style={{ fontWeight: market === 'SG' ? '700' : '400', opacity: market === 'SG' ? 1 : 0.5 }}>SG</span>
-              <span style={{ opacity: 0.3 }}>|</span>
-              <span style={{ fontWeight: market !== 'SG' ? '700' : '400', opacity: market !== 'SG' ? 1 : 0.5 }}>MY</span>
-            </button>
+              );
+            })}
           </div>
 
-          {/* Hamburger Mobile */}
+          {/* Divider */}
+          <div style={{
+            width: '1px',
+            height: '20px',
+            background: 'rgba(255,255,255,0.12)',
+            flexShrink: 0,
+          }} />
+
+          {/* Market Toggle */}
           <button
-            onClick={toggleMenu}
-            className="mobile-menu-btn"
+            onClick={() => switchMarket(market === 'SG' ? 'JB' : 'SG')}
             style={{
-              display: 'none',
-              background: 'none',
+              background: 'rgba(255,255,255,0.06)',
               border: 'none',
+              padding: '6px 16px',
+              borderRadius: '40px',
               cursor: 'pointer',
-              flexDirection: 'column',
+              display: 'flex',
+              alignItems: 'center',
               gap: '6px',
-              zIndex: 1002,
-              padding: '10px'
+              transition: 'all 0.25s ease',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+              fontSize: '0.78rem',
+              margin: '0 8px 0 4px',
             }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
           >
-            <span style={{ display: 'block', width: '24px', height: '2px', background: '#1a1a1a', transition: '0.3s', transform: isMenuOpen ? 'rotate(45deg) translate(5px, 6px)' : 'none' }}></span>
-            <span style={{ display: 'block', width: '24px', height: '2px', background: '#1a1a1a', transition: '0.3s', opacity: isMenuOpen ? 0 : 1 }}></span>
-            <span style={{ display: 'block', width: '24px', height: '2px', background: '#1a1a1a', transition: '0.3s', transform: isMenuOpen ? 'rotate(-45deg) translate(5px, -6px)' : 'none' }}></span>
-
+            <span style={{ fontWeight: market === 'SG' ? '700' : '400', color: market === 'SG' ? '#fff' : 'rgba(255,255,255,0.35)' }}>SG</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+            <span style={{ fontWeight: market !== 'SG' ? '700' : '400', color: market !== 'SG' ? '#fff' : 'rgba(255,255,255,0.35)' }}>MY</span>
           </button>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
-      {/* MOBILE OVERLAY */}
+      {/* ═══════ MOBILE HAMBURGER (outside pill on mobile) ═══════ */}
+      <button
+        onClick={toggleMenu}
+        className="mobile-menu-btn"
+        style={{
+          display: 'none',
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 1002,
+          background: 'rgba(18, 18, 18, 0.92)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '50%',
+          width: '48px',
+          height: '48px',
+          cursor: 'pointer',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '5px',
+          padding: '0',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+        }}
+      >
+        <span style={{ display: 'block', width: '18px', height: '2px', background: '#fff', transition: '0.3s', transform: isMenuOpen ? 'rotate(45deg) translate(4px, 5px)' : 'none' }}></span>
+        <span style={{ display: 'block', width: '18px', height: '2px', background: '#fff', transition: '0.3s', opacity: isMenuOpen ? 0 : 1 }}></span>
+        <span style={{ display: 'block', width: '18px', height: '2px', background: '#fff', transition: '0.3s', transform: isMenuOpen ? 'rotate(-45deg) translate(4px, -5px)' : 'none' }}></span>
+      </button>
+
+      {/* ═══════ MOBILE BRAND (outside pill on mobile) ═══════ */}
+      <div className="mobile-brand" style={{
+        display: 'none',
+        position: 'fixed',
+        top: 20,
+        left: 20,
+        zIndex: 1001,
+      }}>
+        <Link href="/" style={{
+          fontFamily: "'Playfair Display', Georgia, serif",
+          fontSize: '1.1rem',
+          fontWeight: 600,
+          color: isHome ? '#fff' : '#1a1a1a',
+          textDecoration: 'none',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          background: 'rgba(18, 18, 18, 0.92)',
+          backdropFilter: 'blur(20px)',
+          padding: '12px 20px',
+          borderRadius: '50px',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+        }}>
+          ROOF
+        </Link>
+      </div>
+
+      {/* ═══════ MOBILE OVERLAY ═══════ */}
       <div style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100vh',
-        background: 'white',
+        background: 'rgba(10, 10, 10, 0.97)',
+        backdropFilter: 'blur(30px)',
         zIndex: 1000,
         display: isMenuOpen ? 'flex' : 'none',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '2rem',
+        gap: '1.5rem',
         opacity: isMenuOpen ? 1 : 0,
         transition: 'opacity 0.3s ease',
         pointerEvents: isMenuOpen ? 'all' : 'none'
       }}>
         {navLinks.map((link) => (
-          <Link
-            key={link.name}
-            href={link.path}
-            onClick={() => setIsMenuOpen(false)}
-            style={{
-              fontSize: '1.5rem',
-              color: '#1a1a1a',
-              textDecoration: 'none',
-              fontWeight: 500,
-              fontFamily: 'sans-serif'
-            }}
-          >
-            {link.name}
-          </Link>
+          link.external ? (
+            <a
+              key={link.name}
+              href={link.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                fontSize: '1.4rem',
+                color: '#a78bfa',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontFamily: '-apple-system, sans-serif',
+              }}
+            >
+              {link.name} ↗
+            </a>
+          ) : (
+            <Link
+              key={link.name}
+              href={link.path}
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                fontSize: '1.4rem',
+                color: pathname === link.path ? '#ffffff' : 'rgba(255,255,255,0.5)',
+                textDecoration: pathname === link.path ? 'underline' : 'none',
+                textUnderlineOffset: '6px',
+                fontWeight: pathname === link.path ? 600 : 400,
+                fontFamily: '-apple-system, sans-serif',
+              }}
+            >
+              {link.name}
+            </Link>
+          )
         ))}
 
         {/* Mobile Market Toggle */}
@@ -215,32 +314,33 @@ export default function Navigation() {
             setIsMenuOpen(false);
           }}
           style={{
-            background: 'none',
-            border: '2px solid #eee',
-            padding: '12px 24px',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            padding: '12px 28px',
             borderRadius: '50px',
-            fontSize: '1.1rem',
+            fontSize: '1rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             marginTop: '1rem',
-            color: '#1a1a1a'
+            color: '#fff'
           }}
         >
-          <span style={{ fontWeight: market === 'SG' ? '700' : '400', opacity: market === 'SG' ? 1 : 0.5 }}>SG</span>
-          <span style={{ opacity: 0.3 }}>|</span>
-          <span style={{ fontWeight: market !== 'SG' ? '700' : '400', opacity: market !== 'SG' ? 1 : 0.5 }}>MY</span>
+          <span style={{ fontWeight: market === 'SG' ? '700' : '400', opacity: market === 'SG' ? 1 : 0.4 }}>SG</span>
+          <span style={{ opacity: 0.2 }}>|</span>
+          <span style={{ fontWeight: market !== 'SG' ? '700' : '400', opacity: market !== 'SG' ? 1 : 0.4 }}>MY</span>
         </button>
       </div>
 
-      {/* Spacer for non-home pages to prevent content hiding behind fixed nav */}
+      {/* Spacer for non-home pages */}
       {!isHome && <div style={{ height: '90px' }} />}
 
       <style jsx>{`
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
+          .mobile-brand { display: block !important; }
         }
       `}</style>
     </>
