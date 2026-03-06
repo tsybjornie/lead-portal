@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 const TRADE_TYPES = [
     'General Renovation', 'Painting', 'Plumbing', 'Electrical (LEW)',
@@ -14,8 +15,43 @@ const COVERAGE = ['Island-wide SG', 'Central', 'East', 'West', 'North', 'JB / Is
 
 export default function ContractorSignup() {
     const [form, setForm] = useState({ company: '', uen: '', contact: '', email: '', phone: '', bca: '', hdb: '', trades: [] as string[], size: '', coverage: [] as string[], rate: '', notes: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success');
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
+
+    const handleSubmit = async () => {
+        if (!form.company || !form.contact) return;
+        setIsSubmitting(true);
+        setMessage('');
+        try {
+            const { error } = await supabase.from('contractor_applications').insert({
+                company_name: form.company,
+                uen: form.uen,
+                contact_person: form.contact,
+                email: form.email,
+                phone: form.phone,
+                bca_license: form.bca,
+                hdb_license: form.hdb,
+                trades: form.trades,
+                team_size: form.size,
+                coverage: form.coverage,
+                day_rate: form.rate,
+            });
+            if (error) {
+                setMessage(error.message);
+                setMessageType('error');
+            } else {
+                setMessage('Application submitted! We will review within 48 hours.');
+                setMessageType('success');
+            }
+        } catch {
+            setMessage('Something went wrong. Please try again.');
+            setMessageType('error');
+        }
+        setIsSubmitting(false);
+    };
 
     const inputStyle = {
         width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
@@ -185,16 +221,28 @@ export default function ContractorSignup() {
                 </div>
 
                 {/* Submit */}
-                <button style={{
-                    width: '100%', padding: '14px', fontSize: 13, fontWeight: 600, fontFamily: f,
-                    color: '#fff', background: '#111', border: 'none', borderRadius: 6,
-                    cursor: 'pointer', transition: 'background 0.2s',
-                }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#333'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#111'}
+                <button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting || !form.company || !form.contact}
+                    style={{
+                        width: '100%', padding: '14px', fontSize: 13, fontWeight: 600, fontFamily: f,
+                        color: '#fff', background: isSubmitting ? 'rgba(0,0,0,0.3)' : '#111',
+                        border: 'none', borderRadius: 6,
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer', transition: 'background 0.2s',
+                    }}
                 >
-                    Submit Contractor Application →
+                    {isSubmitting ? 'Submitting...' : 'Submit Contractor Application →'}
                 </button>
+
+                {message && (
+                    <div style={{
+                        marginTop: 16, padding: '10px 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                        background: messageType === 'success' ? 'rgba(16,185,129,0.08)' : 'rgba(220,38,38,0.06)',
+                        color: messageType === 'success' ? '#059669' : 'rgba(220,38,38,0.8)',
+                        border: `1px solid ${messageType === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(220,38,38,0.1)'}`,
+                    }}>{message}</div>
+                )}
+
                 <p style={{
                     fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.4)', textAlign: 'center',
                     marginTop: 16, letterSpacing: '0.03em',

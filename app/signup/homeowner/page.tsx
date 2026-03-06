@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
 
 const PROPERTY_TYPES = ['HDB 3-Room', 'HDB 4-Room', 'HDB 5-Room', 'HDB Executive', 'Condo', 'Landed — Terrace', 'Landed — Semi-D', 'Landed — Bungalow', 'Commercial'];
 const BUDGET_RANGES = ['Below $30k', '$30k – $50k', '$50k – $80k', '$80k – $120k', '$120k – $200k', 'Above $200k'];
@@ -10,8 +11,42 @@ const TIMELINES = ['ASAP (keys received)', 'Within 3 months', '3–6 months', '6
 
 export default function HomeownerSignup() {
     const [form, setForm] = useState({ name: '', email: '', phone: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success');
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
+
+    const handleSubmit = async () => {
+        if (!form.name || !form.phone) return;
+        setIsSubmitting(true);
+        setMessage('');
+        try {
+            const { error } = await supabase.from('homeowner_leads').insert({
+                full_name: form.name,
+                email: form.email,
+                phone: form.phone,
+                property_type: form.property,
+                property_address: form.address,
+                budget: form.budget,
+                timeline: form.timeline,
+                preferred_style: form.style,
+                notes: form.notes,
+            });
+            if (error) {
+                setMessage(error.message);
+                setMessageType('error');
+            } else {
+                setMessage('Submitted! We will match you with 3 designers within 24 hours.');
+                setMessageType('success');
+                setForm({ name: '', email: '', phone: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '' });
+            }
+        } catch {
+            setMessage('Something went wrong. Please try again.');
+            setMessageType('error');
+        }
+        setIsSubmitting(false);
+    };
 
     const inputStyle = {
         width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
@@ -164,16 +199,28 @@ export default function HomeownerSignup() {
                 </div>
 
                 {/* SUBMIT */}
-                <button style={{
-                    width: '100%', padding: '14px', fontSize: 13, fontWeight: 600, fontFamily: f,
-                    color: '#fff', background: '#111', border: 'none', borderRadius: 6,
-                    cursor: 'pointer', transition: 'background 0.2s',
-                }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#333'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#111'}
+                <button
+                    onClick={handleSubmit}
+                    disabled={isSubmitting || !form.name || !form.phone}
+                    style={{
+                        width: '100%', padding: '14px', fontSize: 13, fontWeight: 600, fontFamily: f,
+                        color: '#fff', background: isSubmitting ? 'rgba(0,0,0,0.3)' : '#111',
+                        border: 'none', borderRadius: 6,
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer', transition: 'background 0.2s',
+                    }}
                 >
-                    Get My 3 Matches →
+                    {isSubmitting ? 'Submitting...' : 'Get My 3 Matches →'}
                 </button>
+
+                {message && (
+                    <div style={{
+                        marginTop: 16, padding: '10px 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                        background: messageType === 'success' ? 'rgba(16,185,129,0.08)' : 'rgba(220,38,38,0.06)',
+                        color: messageType === 'success' ? '#059669' : 'rgba(220,38,38,0.8)',
+                        border: `1px solid ${messageType === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(220,38,38,0.1)'}`,
+                    }}>{message}</div>
+                )}
+
                 <p style={{
                     fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.4)', textAlign: 'center',
                     marginTop: 16, letterSpacing: '0.03em',

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 const TIERS = [
     { projects: '1–25', rate: '2.0%', label: 'Starting rate' },
@@ -15,14 +16,55 @@ export default function SignupPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({ name: '', email: '', firmName: '', role: '', phone: '', password: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!formData.name || !formData.email || !formData.password) return;
         setIsSubmitting(true);
-        setTimeout(() => { router.push('/login'); }, 1200);
+        setMessage('');
+
+        try {
+            // 1. Create auth user
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: { full_name: formData.name, role: 'designer' },
+                },
+            });
+
+            if (authError) {
+                setMessage(authError.message);
+                setMessageType('error');
+                setIsSubmitting(false);
+                return;
+            }
+
+            // 2. Create profile record
+            if (authData.user) {
+                await supabase.from('profiles').insert({
+                    id: authData.user.id,
+                    email: formData.email,
+                    full_name: formData.name,
+                    phone: formData.phone,
+                    role: 'designer',
+                    firm_name: formData.firmName,
+                    job_title: formData.role,
+                });
+            }
+
+            setMessage('Account created! Check your email to verify, then log in.');
+            setMessageType('success');
+            setTimeout(() => { router.push('/login'); }, 2500);
+        } catch (err) {
+            setMessage('Something went wrong. Please try again.');
+            setMessageType('error');
+            setIsSubmitting(false);
+        }
     };
 
     const inputStyle = {
@@ -154,6 +196,15 @@ export default function SignupPage() {
                     >
                         {isSubmitting ? 'Creating account...' : 'Create Account'}
                     </button>
+
+                    {message && (
+                        <div style={{
+                            marginTop: 16, padding: '10px 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+                            background: messageType === 'success' ? 'rgba(16,185,129,0.08)' : 'rgba(220,38,38,0.06)',
+                            color: messageType === 'success' ? '#059669' : 'rgba(220,38,38,0.8)',
+                            border: `1px solid ${messageType === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(220,38,38,0.1)'}`,
+                        }}>{message}</div>
+                    )}
 
                     <p style={{
                         fontSize: 10, color: 'rgba(0,0,0,0.45)', textAlign: 'center',
