@@ -64,6 +64,7 @@ export default function Navigation() {
     { name: 'Guides & References', path: '/guides' },
     { name: 'FAQ', path: '/faq' },
     { name: 'For Firms', path: '/contractor-application' },
+    { name: 'For Builders', path: 'https://lead-portal.vercel.app/landing', external: true },
   ];
 
   return (
@@ -95,15 +96,29 @@ export default function Navigation() {
           {/* RIGHT: Desktop Links */}
           <div className="desktop-nav" style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
             {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.path}
-                style={{ ...textStyle, color: '#cccccc' }} // Override with light grey
-                onMouseEnter={(e) => e.target.style.opacity = '1'}
-                onMouseLeave={(e) => e.target.style.opacity = '1'}
-              >
-                {link.name}
-              </Link>
+              link.external ? (
+                <a
+                  key={link.name}
+                  href={link.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ ...textStyle, color: '#cccccc', background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', padding: '8px 18px', borderRadius: '8px', color: '#fff', fontWeight: 600, fontSize: '0.85rem' }}
+                  onMouseEnter={(e) => e.target.style.opacity = '0.9'}
+                  onMouseLeave={(e) => e.target.style.opacity = '1'}
+                >
+                  {link.name} ↗
+                </a>
+              ) : (
+                <Link
+                  key={link.name}
+                  href={link.path}
+                  style={{ ...textStyle, color: '#cccccc' }}
+                  onMouseEnter={(e) => e.target.style.opacity = '1'}
+                  onMouseLeave={(e) => e.target.style.opacity = '1'}
+                >
+                  {link.name}
+                </Link>
+              )
             ))}
 
 
