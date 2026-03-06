@@ -19,21 +19,21 @@ export default function ContractorSignup() {
 
     const inputStyle = {
         width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
-        border: '1px solid rgba(0,0,0,0.1)', borderRadius: 6,
+        border: '1px solid rgba(0,0,0,0.15)', borderRadius: 6,
         background: 'transparent', color: '#111', outline: 'none',
         transition: 'border-color 0.2s', boxSizing: 'border-box' as const,
     };
     const labelStyle = {
-        fontFamily: mono, fontSize: 9, fontWeight: 500 as const,
-        color: 'rgba(0,0,0,0.3)', letterSpacing: '0.12em',
+        fontFamily: mono, fontSize: 9, fontWeight: 600 as const,
+        color: 'rgba(0,0,0,0.55)', letterSpacing: '0.12em',
         textTransform: 'uppercase' as const,
         display: 'block' as const, marginBottom: 8,
     };
     const chipStyle = (active: boolean) => ({
         fontSize: 11, padding: '6px 14px', borderRadius: 4, cursor: 'pointer' as const,
-        border: `1px solid ${active ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.08)'}`,
+        border: `1px solid ${active ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.15)'}`,
         background: active ? '#111' : 'transparent',
-        color: active ? '#fff' : 'rgba(0,0,0,0.4)',
+        color: active ? '#fff' : 'rgba(0,0,0,0.6)',
         fontWeight: active ? 600 : 400 as const,
         transition: 'all 0.2s',
         fontFamily: f,
@@ -49,8 +49,8 @@ export default function ContractorSignup() {
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
             <style>{`
-                input:focus, select:focus { border-color: rgba(0,0,0,0.4) !important; }
-                input::placeholder { color: rgba(0,0,0,0.2); }
+                input:focus, select:focus { border-color: rgba(0,0,0,0.5) !important; }
+                input::placeholder { color: rgba(0,0,0,0.35); }
             `}</style>
 
             {/* ═══════ TOP BAR ═══════ */}
@@ -61,11 +61,11 @@ export default function ContractorSignup() {
             }}>
                 <Link href="/landing" style={{
                     fontFamily: mono, fontSize: 11, fontWeight: 500,
-                    color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
+                    color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
                 }}>ORDINANCE SYSTEMS</Link>
                 <Link href="/join" style={{
-                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none',
+                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none',
                 }}>
                     ← Back to role selection
                 </Link>
@@ -75,7 +75,7 @@ export default function ContractorSignup() {
             <div style={{ maxWidth: 560, margin: '0 auto', padding: '80px 48px 80px' }}>
                 <div style={{
                     fontFamily: mono, fontSize: 10, fontWeight: 500,
-                    color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                    color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
                     textTransform: 'uppercase' as const, marginBottom: 24,
                 }}>CONTRACTOR APPLICATION</div>
 
@@ -86,7 +86,7 @@ export default function ContractorSignup() {
                     Join as<br />
                     <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>Contractor.</span>
                 </h1>
-                <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.3)', margin: '0 0 48px', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', margin: '0 0 48px', lineHeight: 1.6 }}>
                     Get dispatched to verified renovation projects from ID firms on Roof.
                 </p>
 
@@ -94,9 +94,9 @@ export default function ContractorSignup() {
                 <div style={{ marginBottom: 32 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 9, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
                         textTransform: 'uppercase' as const, marginBottom: 20,
-                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
                     }}>COMPANY DETAILS</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
@@ -129,9 +129,9 @@ export default function ContractorSignup() {
                 <div style={{ marginBottom: 32 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 9, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
                         textTransform: 'uppercase' as const, marginBottom: 20,
-                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
                     }}>LICENSES</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -150,9 +150,9 @@ export default function ContractorSignup() {
                 <div style={{ marginBottom: 32 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 9, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.15)', letterSpacing: '0.12em',
+                        color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
                         textTransform: 'uppercase' as const, marginBottom: 20,
-                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.06)',
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
                     }}>TRADES & CAPACITY</div>
 
                     <label style={labelStyle}>Trades You Cover (select all)</label>
@@ -196,7 +196,7 @@ export default function ContractorSignup() {
                     Submit Contractor Application →
                 </button>
                 <p style={{
-                    fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.2)', textAlign: 'center',
+                    fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.4)', textAlign: 'center',
                     marginTop: 16, letterSpacing: '0.03em',
                 }}>
                     BCA-registered firms get priority matching · Applications reviewed within 48hrs
@@ -208,7 +208,7 @@ export default function ContractorSignup() {
                 padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.05em' }}>
                     © 2026 ORDINANCE SYSTEMS · SINGAPORE
                 </span>
                 <div style={{ display: 'flex', gap: 24 }}>
@@ -218,7 +218,7 @@ export default function ContractorSignup() {
                         { label: 'All Roles', href: '/join' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
-                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
                         >{link.label}</Link>

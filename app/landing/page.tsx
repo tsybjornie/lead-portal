@@ -137,7 +137,7 @@ export default function LandingPage() {
                         { name: 'Price Index', path: '/price-index' },
                     ].map(link => (
                         <Link key={link.name} href={link.path} style={{
-                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
+                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)',
                             textDecoration: 'none', transition: 'color 0.2s',
                         }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.8)'}
@@ -167,7 +167,7 @@ export default function LandingPage() {
                 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500, letterSpacing: '0.2em',
-                        color: 'rgba(0,0,0,0.25)', textTransform: 'uppercase', marginBottom: 48,
+                        color: 'rgba(0,0,0,0.4)', textTransform: 'uppercase', marginBottom: 48,
                     }}>
                         ORDINANCE SYSTEMS · SINGAPORE
                     </div>
@@ -179,7 +179,7 @@ export default function LandingPage() {
                         The operating<br />system for<br />
                         <span style={{ display: 'inline-block', position: 'relative', minWidth: 300 }}>
                             <span key={wordIdx} style={{
-                                color: 'rgba(0,0,0,0.2)',
+                                color: 'rgba(0,0,0,0.45)',
                                 fontStyle: 'italic',
                                 animation: 'word-slide 2.2s ease-in-out',
                                 display: 'inline-block',
@@ -190,7 +190,7 @@ export default function LandingPage() {
                     </h1>
 
                     <p style={{
-                        fontSize: 15, color: 'rgba(0,0,0,0.35)', lineHeight: 1.8,
+                        fontSize: 15, color: 'rgba(0,0,0,0.5)', lineHeight: 1.8,
                         maxWidth: 460, margin: '40px auto 16px', fontWeight: 400,
                     }}>
                         From first lead to final handover. Track prospects,<br />
@@ -198,11 +198,11 @@ export default function LandingPage() {
                     </p>
 
                     <p style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, marginBottom: 48, letterSpacing: '0.05em' }}>
-                        <span style={{ color: 'rgba(0,0,0,0.3)' }}>Free to use</span>
+                        <span style={{ color: 'rgba(0,0,0,0.5)' }}>Free to use</span>
                         <span style={{ color: 'rgba(0,0,0,0.1)', margin: '0 16px' }}>—</span>
-                        <span style={{ color: 'rgba(0,0,0,0.25)' }}>Commission only when you close</span>
+                        <span style={{ color: 'rgba(0,0,0,0.4)' }}>Commission only when you close</span>
                         <span style={{ color: 'rgba(0,0,0,0.1)', margin: '0 16px' }}>—</span>
-                        <span style={{ color: 'rgba(0,0,0,0.25)' }}>Starts at 2%</span>
+                        <span style={{ color: 'rgba(0,0,0,0.4)' }}>Starts at 2%</span>
                     </p>
 
                     <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
@@ -248,7 +248,7 @@ export default function LandingPage() {
                             {s.display || <AnimatedCounter target={s.value} suffix={s.suffix} />}
                         </div>
                         <div style={{
-                            fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.25)', fontWeight: 500,
+                            fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.4)', fontWeight: 500,
                             marginTop: 8, letterSpacing: '0.1em', textTransform: 'uppercase',
                         }}>{s.label}</div>
                     </div>
@@ -262,14 +262,14 @@ export default function LandingPage() {
                 <div style={{ marginBottom: 48 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em',
+                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em',
                         textTransform: 'uppercase', marginBottom: 16,
                     }}>THE PLATFORM</div>
                     <h2 style={{
                         fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 300, color: '#111',
                         letterSpacing: '-0.04em', margin: '0 0 12px', lineHeight: 1.05,
                     }}>
-                        Every <em style={{ fontWeight: 300, color: 'rgba(0,0,0,0.2)' }}>tool.</em><br />
+                        Every <em style={{ fontWeight: 300, color: 'rgba(0,0,0,0.45)' }}>tool.</em><br />
                         One place.
                     </h2>
                 </div>
@@ -284,7 +284,7 @@ export default function LandingPage() {
                         }}>
                             <span style={{
                                 fontFamily: mono, fontSize: 11, fontWeight: 400,
-                                color: 'rgba(0,0,0,0.15)', letterSpacing: '0.05em',
+                                color: 'rgba(0,0,0,0.5)', letterSpacing: '0.05em',
                             }}>{e.num}</span>
                             <div>
                                 <span className="engine-title" style={{
@@ -292,16 +292,16 @@ export default function LandingPage() {
                                     letterSpacing: '-0.02em', transition: 'color 0.3s',
                                 }}>{e.title}</span>
                                 <span style={{
-                                    fontSize: 13, color: 'rgba(0,0,0,0.25)', marginLeft: 20, fontWeight: 400,
+                                    fontSize: 13, color: 'rgba(0,0,0,0.4)', marginLeft: 20, fontWeight: 400,
                                 }}>{e.desc}</span>
                             </div>
                             <span style={{
                                 fontFamily: mono, fontSize: 9, fontWeight: 500,
-                                color: 'rgba(0,0,0,0.12)', letterSpacing: '0.1em',
+                                color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em',
                                 textTransform: 'uppercase', textAlign: 'right',
                             }}>{e.tag}</span>
                             <span className="engine-arrow" style={{
-                                color: 'rgba(0,0,0,0.3)', fontSize: 16, textAlign: 'right',
+                                color: 'rgba(0,0,0,0.5)', fontSize: 16, textAlign: 'right',
                                 opacity: 0, transform: 'translateX(-8px)', transition: 'all 0.3s',
                             }}>→</span>
                         </Link>
@@ -314,18 +314,18 @@ export default function LandingPage() {
                 maxWidth: 700, margin: '0 auto', padding: '0 48px 120px',
             }}>
                 <div style={{ marginBottom: 48 }}>
-                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>DIFFERENTIATION</div>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>DIFFERENTIATION</div>
                     <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 300, color: '#111', letterSpacing: '-0.03em', margin: 0 }}>
                         They match.<br />
-                        <span style={{ color: 'rgba(0,0,0,0.2)' }}>We manage.</span>
+                        <span style={{ color: 'rgba(0,0,0,0.45)' }}>We manage.</span>
                     </h2>
                 </div>
 
                 <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px 80px', padding: '14px 0', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
-                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Feature</span>
+                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Feature</span>
                         <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.5)', textAlign: 'center', letterSpacing: '0.12em' }}>ROOF</span>
-                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.15)', textAlign: 'center', letterSpacing: '0.12em' }}>OTHERS</span>
+                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.5)', textAlign: 'center', letterSpacing: '0.12em' }}>OTHERS</span>
                     </div>
                     {COMPARISON.map((row, i) => (
                         <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 80px 80px', padding: '12px 0', borderBottom: i < COMPARISON.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
@@ -339,15 +339,15 @@ export default function LandingPage() {
 
             {/* ═══════ TRUST ═══════ */}
             <section ref={section4.ref} className={`reveal ${section4.visible ? 'visible' : ''}`} style={{ maxWidth: 900, margin: '0 auto', padding: '0 48px 120px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>VERIFICATION</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>VERIFICATION</div>
                 <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 300, color: '#111', letterSpacing: '-0.03em', margin: '0 0 32px' }}>
-                    Every partner. <span style={{ color: 'rgba(0,0,0,0.2)' }}>Verified.</span>
+                    Every partner. <span style={{ color: 'rgba(0,0,0,0.45)' }}>Verified.</span>
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'rgba(0,0,0,0.06)' }}>
                     {TRUST_SIGNALS.map((s, i) => (
                         <div key={i} style={{ padding: '32px 24px', background: '#fafafa' }}>
                             <h3 style={{ fontSize: 13, fontWeight: 600, color: '#111', margin: '0 0 8px' }}>{s.title}</h3>
-                            <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
+                            <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -355,9 +355,9 @@ export default function LandingPage() {
 
             {/* ═══════ PROCESS ═══════ */}
             <section ref={section5.ref} className={`reveal ${section5.visible ? 'visible' : ''}`} style={{ maxWidth: 800, margin: '0 auto', padding: '0 48px 120px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>PROCESS</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 16 }}>PROCESS</div>
                 <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 300, color: '#111', letterSpacing: '-0.03em', margin: '0 0 40px' }}>
-                    Three steps. <span style={{ color: 'rgba(0,0,0,0.2)' }}>Zero friction.</span>
+                    Three steps. <span style={{ color: 'rgba(0,0,0,0.45)' }}>Zero friction.</span>
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
                     {[
@@ -366,9 +366,9 @@ export default function LandingPage() {
                         { step: '03', title: 'Compare & sign on-platform', desc: 'Review proposals, chat, and sign contracts — everything stays in Roof through handover.' },
                     ].map((item, i) => (
                         <div key={i}>
-                            <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 400, color: 'rgba(0,0,0,0.15)', letterSpacing: '0.1em', marginBottom: 16 }}>{item.step}</div>
+                            <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 400, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.1em', marginBottom: 16 }}>{item.step}</div>
                             <h3 style={{ fontSize: 15, fontWeight: 600, color: '#111', margin: '0 0 10px', letterSpacing: '-0.01em' }}>{item.title}</h3>
-                            <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                            <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
                         </div>
                     ))}
                 </div>
@@ -378,9 +378,9 @@ export default function LandingPage() {
             <section style={{ maxWidth: 700, margin: '0 auto 80px', padding: '60px 48px', textAlign: 'center', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
                 <h2 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 12px', lineHeight: 1.1 }}>
                     Ready to run your firm<br />
-                    <span style={{ color: 'rgba(0,0,0,0.2)' }}>like a system?</span>
+                    <span style={{ color: 'rgba(0,0,0,0.45)' }}>like a system?</span>
                 </h2>
-                <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)', margin: '0 0 36px', letterSpacing: '0.03em' }}>
+                <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.4)', margin: '0 0 36px', letterSpacing: '0.03em' }}>
                     Free to use · Pay only when you close · Founding 20 get 0.5% rates
                 </p>
                 <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
@@ -404,11 +404,11 @@ export default function LandingPage() {
 
             {/* ═══════ FOOTER ═══════ */}
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {['Login', 'Sign Up', 'Founding 20', 'Price Index'].map(label => (
                         <Link key={label} href={`/${label.toLowerCase().replace(/ /g, '-').replace('sign-up', 'signup')}`}
-                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
                         >{label}</Link>

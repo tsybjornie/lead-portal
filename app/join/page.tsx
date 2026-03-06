@@ -76,7 +76,7 @@ export default function SignupLanding() {
                     textTransform: 'uppercase' as const, textDecoration: 'none',
                 }}>ORDINANCE SYSTEMS</Link>
                 <Link href="/login" style={{
-                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
+                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)',
                     textDecoration: 'none', transition: 'color 0.2s',
                 }}>
                     Already have an account? <span style={{ fontWeight: 600, color: '#111' }}>Log in</span>
@@ -88,7 +88,7 @@ export default function SignupLanding() {
                 <div style={{ textAlign: 'center', marginBottom: 80 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
                         textTransform: 'uppercase' as const, marginBottom: 40,
                     }}>SELECT YOUR ROLE</div>
 
@@ -97,11 +97,11 @@ export default function SignupLanding() {
                         letterSpacing: '-0.04em', margin: '0 0 16px',
                     }}>
                         Join the<br />
-                        <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>platform.</span>
+                        <span style={{ color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' }}>platform.</span>
                     </h1>
 
                     <p style={{
-                        fontSize: 14, color: 'rgba(0,0,0,0.35)', lineHeight: 1.7, margin: 0,
+                        fontSize: 14, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7, margin: 0,
                     }}>
                         Everyone builds a home. Pick your role.
                     </p>
@@ -125,7 +125,7 @@ export default function SignupLanding() {
                         >
                             <span style={{
                                 fontFamily: mono, fontSize: 10, fontWeight: 400,
-                                color: 'rgba(0,0,0,0.12)', letterSpacing: '0.05em',
+                                color: 'rgba(0,0,0,0.4)', letterSpacing: '0.05em',
                             }}>{role.num}</span>
                             <div>
                                 <span className="role-title" style={{
@@ -134,18 +134,18 @@ export default function SignupLanding() {
                                 }}>{role.title}</span>
                                 {hovered === role.id && (
                                     <div style={{
-                                        fontSize: 12, color: 'rgba(0,0,0,0.3)',
+                                        fontSize: 12, color: 'rgba(0,0,0,0.5)',
                                         marginTop: 4, lineHeight: 1.6,
                                     }}>{role.desc}</div>
                                 )}
                             </div>
                             <span style={{
                                 fontFamily: mono, fontSize: 9, fontWeight: 500,
-                                color: 'rgba(0,0,0,0.12)', letterSpacing: '0.1em',
+                                color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em',
                                 textTransform: 'uppercase' as const,
                             }}>{role.subtitle}</span>
                             <span className="role-arrow" style={{
-                                color: 'rgba(0,0,0,0.3)', fontSize: 16, textAlign: 'right',
+                                color: 'rgba(0,0,0,0.5)', fontSize: 16, textAlign: 'right',
                                 opacity: 0, transform: 'translateX(-8px)', transition: 'all 0.3s',
                             }}>→</span>
                         </Link>
@@ -157,7 +157,7 @@ export default function SignupLanding() {
                     textAlign: 'center', marginTop: 60,
                     padding: '0 40px',
                 }}>
-                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.2)', lineHeight: 1.8, fontStyle: 'italic' }}>
+                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)', lineHeight: 1.8, fontStyle: 'italic' }}>
                         Roof is an open platform. Everyone is welcome — your credentials, certifications,
                         and track record speak for you. We don&apos;t gatekeep. We show the truth.
                     </p>
@@ -169,7 +169,7 @@ export default function SignupLanding() {
                 padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>
                     © 2026 ORDINANCE SYSTEMS · SINGAPORE
                 </span>
                 <div style={{ display: 'flex', gap: 24 }}>
@@ -179,7 +179,7 @@ export default function SignupLanding() {
                         { label: 'Founding 20', href: '/founding' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
-                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
                         >{link.label}</Link>

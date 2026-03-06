@@ -135,7 +135,7 @@ export default function PriceIndexPage() {
                         { name: 'Landing', path: '/landing' },
                     ].map(link => (
                         <Link key={link.name} href={link.path} style={{
-                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
+                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)',
                             textDecoration: 'none', transition: 'color 0.2s',
                         }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.8)'}
@@ -158,7 +158,7 @@ export default function PriceIndexPage() {
                 <div style={{ marginBottom: 60 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
                         textTransform: 'uppercase' as const, marginBottom: 40,
                     }}>PRICE INDEX · MARCH 2026</div>
 
@@ -167,10 +167,10 @@ export default function PriceIndexPage() {
                         letterSpacing: '-0.04em', margin: '0 0 16px',
                     }}>
                         Renovation costs.<br />
-                        <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>Real data.</span>
+                        <span style={{ color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' }}>Real data.</span>
                     </h1>
 
-                    <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.35)', margin: '0 0 32px', lineHeight: 1.7, maxWidth: 460 }}>
+                    <p style={{ fontSize: 14, color: 'rgba(0,0,0,0.5)', margin: '0 0 32px', lineHeight: 1.7, maxWidth: 460 }}>
                         From actual projects. Updated monthly.<br />Singapore and Johor Bahru.
                     </p>
 
@@ -204,7 +204,7 @@ export default function PriceIndexPage() {
                 {CATEGORIES.map((cat, catIdx) => (
                     <div key={cat.category} style={{ marginBottom: 48 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 400, color: 'rgba(0,0,0,0.12)', letterSpacing: '0.05em' }}>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 400, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.05em' }}>
                                 {String(catIdx + 1).padStart(2, '0')}
                             </span>
                             <h2 style={{ fontSize: 15, fontWeight: 600, color: '#111', margin: 0, letterSpacing: '-0.01em' }}>
@@ -218,16 +218,16 @@ export default function PriceIndexPage() {
                             gridTemplateColumns: market === 'both' ? '1fr 60px 100px 100px 80px' : '1fr 60px 100px',
                             padding: '12px 0', borderBottom: '1px solid rgba(0,0,0,0.08)', marginTop: 12,
                         }}>
-                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ITEM</span>
-                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.15)', letterSpacing: '0.1em', textAlign: 'center' }}>UNIT</span>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ITEM</span>
+                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.1em', textAlign: 'center' }}>UNIT</span>
                             {(market === 'both' || market === 'sg') && (
-                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', textAlign: 'right' }}>SG (S$)</span>
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.1em', textAlign: 'right' }}>SG (S$)</span>
                             )}
                             {(market === 'both' || market === 'my') && (
-                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', textAlign: 'right' }}>JB (RM)</span>
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.1em', textAlign: 'right' }}>JB (RM)</span>
                             )}
                             {market === 'both' && (
-                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textAlign: 'right' }}>DELTA</span>
+                                <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.1em', textAlign: 'right' }}>DELTA</span>
                             )}
                         </div>
 
@@ -243,7 +243,7 @@ export default function PriceIndexPage() {
                                     alignItems: 'center',
                                 }}>
                                     <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.6)', fontWeight: 400 }}>{item.name}</span>
-                                    <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.15)', textAlign: 'center' }}>/{item.unit}</span>
+                                    <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.5)', textAlign: 'center' }}>/{item.unit}</span>
                                     {(market === 'both' || market === 'sg') && (
                                         <span style={{ fontFamily: mono, fontSize: 12, color: '#111', textAlign: 'right', fontWeight: 500 }}>{fmt(item.sg, 'S$')}</span>
                                     )}
@@ -267,15 +267,15 @@ export default function PriceIndexPage() {
 
                 {/* ═══════ DATA SOURCE ═══════ */}
                 <div style={{ padding: '20px 0', marginBottom: 60, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: 12 }}>DATA SOURCE</div>
-                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', lineHeight: 1.8 }}>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: 12 }}>DATA SOURCE</div>
+                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', lineHeight: 1.8 }}>
                         Prices based on actual purchase orders and quotations processed through Roof-managed renovation projects in Singapore and Johor Bahru. SG prices reflect current market rates inclusive of labor and materials. JB prices in Malaysian Ringgit (RM). Conversion: 1 SGD = 3.07 MYR. Last updated March 2026.
                     </div>
                 </div>
 
                 {/* ═══════ FAQ ═══════ */}
                 <div style={{ marginBottom: 60 }}>
-                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>FREQUENTLY ASKED</div>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>FREQUENTLY ASKED</div>
 
                     <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                         {FAQS.map((faq, i) => (
@@ -290,14 +290,14 @@ export default function PriceIndexPage() {
                                         transition: 'color 0.2s',
                                     }}>{faq.question}</span>
                                     <span style={{
-                                        color: 'rgba(0,0,0,0.25)', fontSize: 14,
+                                        color: 'rgba(0,0,0,0.4)', fontSize: 14,
                                         transition: 'transform 0.2s',
                                         transform: openFaq === i ? 'rotate(45deg)' : 'none',
                                         flexShrink: 0, marginLeft: 16,
                                     }}>+</span>
                                 </div>
                                 {openFaq === i && (
-                                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', lineHeight: 1.8, marginTop: 12, paddingRight: 40 }}>
+                                    <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', lineHeight: 1.8, marginTop: 12, paddingRight: 40 }}>
                                         {faq.answer}
                                     </div>
                                 )}
@@ -310,9 +310,9 @@ export default function PriceIndexPage() {
                 <div style={{ textAlign: 'center', padding: '60px 0 80px', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
                     <h2 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 8px' }}>
                         Get your quote.<br />
-                        <span style={{ color: 'rgba(0,0,0,0.15)' }}>Know your numbers.</span>
+                        <span style={{ color: 'rgba(0,0,0,0.5)' }}>Know your numbers.</span>
                     </h2>
-                    <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)', margin: '0 0 32px', letterSpacing: '0.05em' }}>
+                    <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.4)', margin: '0 0 32px', letterSpacing: '0.05em' }}>
                         Matched with 3 designers in 24 hours · No obligation
                     </p>
                     <Link href="/signup/homeowner" style={{
@@ -327,7 +327,7 @@ export default function PriceIndexPage() {
 
             {/* ═══════ FOOTER ═══════ */}
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {[
                         { label: 'Landing', href: '/landing' },
@@ -335,7 +335,7 @@ export default function PriceIndexPage() {
                         { label: 'Founding 20', href: '/founding' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
-                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
                         >{link.label}</Link>

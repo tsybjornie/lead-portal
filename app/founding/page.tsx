@@ -61,7 +61,7 @@ export default function Founding20() {
                         { name: 'Price Index', path: '/price-index' },
                     ].map(link => (
                         <Link key={link.name} href={link.path} style={{
-                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
+                            fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)',
                             textDecoration: 'none', transition: 'color 0.2s',
                         }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.8)'}
@@ -83,7 +83,7 @@ export default function Founding20() {
             <section style={{ padding: '100px 48px 80px', maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
                 <div style={{
                     fontFamily: mono, fontSize: 10, fontWeight: 500,
-                    color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                    color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
                     textTransform: 'uppercase' as const, marginBottom: 40,
                 }}>FOUNDING PROGRAM</div>
 
@@ -92,11 +92,11 @@ export default function Founding20() {
                     letterSpacing: '-0.04em', margin: '0 0 20px',
                 }}>
                     Founding<br />
-                    <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>Twenty.</span>
+                    <span style={{ color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' }}>Twenty.</span>
                 </h1>
 
                 <p style={{
-                    fontSize: 15, color: 'rgba(0,0,0,0.35)', lineHeight: 1.8,
+                    fontSize: 15, color: 'rgba(0,0,0,0.5)', lineHeight: 1.8,
                     maxWidth: 420, margin: '0 auto 48px',
                 }}>
                     We are selecting 20 design firms to build Roof with us.
@@ -129,14 +129,14 @@ export default function Founding20() {
                         );
                     })}
                 </div>
-                <div style={{ fontFamily: mono, fontSize: 11, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.05em' }}>
+                <div style={{ fontFamily: mono, fontSize: 11, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.05em' }}>
                     {TAKEN_SLOTS} claimed · {remaining} remaining
                 </div>
             </section>
 
             {/* ═══════ THE DEAL ═══════ */}
             <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 48px 80px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>THE DEAL</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>THE DEAL</div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 20 }}>
                     {[
@@ -147,12 +147,12 @@ export default function Founding20() {
                         <div key={i} style={{ textAlign: 'center', padding: '36px 20px', background: '#fafafa' }}>
                             <div style={{ fontSize: 32, fontWeight: 300, color: '#111', letterSpacing: '-0.03em' }}>{item.value}</div>
                             <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', fontWeight: 600, marginTop: 8 }}>{item.label}</div>
-                            <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.2)', marginTop: 6, letterSpacing: '0.03em' }}>{item.sub}</div>
+                            <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.45)', marginTop: 6, letterSpacing: '0.03em' }}>{item.sub}</div>
                         </div>
                     ))}
                 </div>
 
-                <div style={{ padding: '16px 0', fontSize: 12, color: 'rgba(0,0,0,0.3)', lineHeight: 1.8, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <div style={{ padding: '16px 0', fontSize: 12, color: 'rgba(0,0,0,0.5)', lineHeight: 1.8, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                     We only make money when you make money. Commission applies only to leads we bring you through Roof.
                     Your warm referrals, repeat clients, and self-sourced leads cost you 0%. Commission drops to 0.5% at volume.
                 </div>
@@ -160,7 +160,7 @@ export default function Founding20() {
 
             {/* ═══════ WHAT YOU GET ═══════ */}
             <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 48px 80px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>WHAT YOU GET</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>WHAT YOU GET</div>
 
                 <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                     {BENEFITS.map(b => (
@@ -169,10 +169,10 @@ export default function Founding20() {
                             alignItems: 'start', padding: '20px 0',
                             borderBottom: '1px solid rgba(0,0,0,0.06)',
                         }}>
-                            <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 400, color: 'rgba(0,0,0,0.12)', letterSpacing: '0.05em', paddingTop: 2 }}>{b.num}</span>
+                            <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 400, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.05em', paddingTop: 2 }}>{b.num}</span>
                             <div>
                                 <div className="b-title" style={{ fontSize: 15, fontWeight: 500, color: 'rgba(0,0,0,0.6)', marginBottom: 4, transition: 'color 0.3s' }}>{b.title}</div>
-                                <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', lineHeight: 1.7 }}>{b.desc}</div>
+                                <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', lineHeight: 1.7 }}>{b.desc}</div>
                             </div>
                         </div>
                     ))}
@@ -181,12 +181,12 @@ export default function Founding20() {
 
             {/* ═══════ COMPARISON TABLE ═══════ */}
             <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 48px 80px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>FOUNDING vs STANDARD</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>FOUNDING vs STANDARD</div>
 
                 <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 140px 140px', padding: '14px 0', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
                         <span></span>
-                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.2)', textAlign: 'center', letterSpacing: '0.1em' }}>STANDARD</span>
+                        <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.45)', textAlign: 'center', letterSpacing: '0.1em' }}>STANDARD</span>
                         <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.6)', textAlign: 'center', letterSpacing: '0.1em' }}>FOUNDING 20</span>
                     </div>
                     {COMPARISON.map((row, i) => (
@@ -195,7 +195,7 @@ export default function Founding20() {
                             padding: '12px 0', borderBottom: i < COMPARISON.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
                         }}>
                             <span style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', fontWeight: 400 }}>{row.metric}</span>
-                            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.2)', textAlign: 'center', fontFamily: mono }}>{row.others}</span>
+                            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)', textAlign: 'center', fontFamily: mono }}>{row.others}</span>
                             <span style={{ fontSize: 12, color: '#111', textAlign: 'center', fontWeight: 600, fontFamily: mono }}>{row.founding}</span>
                         </div>
                     ))}
@@ -204,12 +204,12 @@ export default function Founding20() {
 
             {/* ═══════ WHO WE'RE LOOKING FOR ═══════ */}
             <section style={{ maxWidth: 700, margin: '0 auto', padding: '0 48px 80px' }}>
-                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>WHO WE&apos;RE LOOKING FOR</div>
+                <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 16 }}>WHO WE&apos;RE LOOKING FOR</div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: 28 }}>
                     <div>
                         <div style={{ fontSize: 14, fontWeight: 600, color: '#111', marginBottom: 16 }}>Ideal fit</div>
-                        <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', lineHeight: 2.0 }}>
+                        <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', lineHeight: 2.0 }}>
                             Active ID firms (2+ projects running)<br />
                             Based in Singapore or Johor Bahru<br />
                             Willing to give honest feedback<br />
@@ -218,7 +218,7 @@ export default function Founding20() {
                     </div>
                     <div>
                         <div style={{ fontSize: 14, fontWeight: 600, color: '#111', marginBottom: 16 }}>Not a fit</div>
-                        <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', lineHeight: 2.0 }}>
+                        <div style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', lineHeight: 2.0 }}>
                             Firms that only want leads<br />
                             One-person operations<br />
                             Fewer than 3 projects per year
@@ -231,9 +231,9 @@ export default function Founding20() {
             <section style={{ maxWidth: 700, margin: '0 auto', padding: '60px 48px 80px', textAlign: 'center', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
                 <h2 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 12px', lineHeight: 1.1 }}>
                     Claim your spot.<br />
-                    <span style={{ color: 'rgba(0,0,0,0.15)' }}>Build with us.</span>
+                    <span style={{ color: 'rgba(0,0,0,0.5)' }}>Build with us.</span>
                 </h2>
-                <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)', margin: '0 0 36px', letterSpacing: '0.03em' }}>
+                <p style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.4)', margin: '0 0 36px', letterSpacing: '0.03em' }}>
                     {remaining} of {TOTAL_SLOTS} spots remaining · Pricing locked forever
                 </p>
                 <Link href="/signup/contractor" style={{
@@ -247,7 +247,7 @@ export default function Founding20() {
 
             {/* ═══════ FOOTER ═══════ */}
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {[
                         { label: 'Landing', href: '/landing' },
@@ -255,7 +255,7 @@ export default function Founding20() {
                         { label: 'Sign Up', href: '/signup' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
-                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.2)', textDecoration: 'none', transition: 'color 0.2s' }}
+                            style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.color = 'rgba(0,0,0,0.6)'}
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.2)'}
                         >{link.label}</Link>

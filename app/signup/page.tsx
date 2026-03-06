@@ -33,7 +33,7 @@ export default function SignupPage() {
     };
     const labelStyle = {
         fontFamily: mono, fontSize: 9, fontWeight: 500 as const,
-        color: 'rgba(0,0,0,0.3)', letterSpacing: '0.12em',
+        color: 'rgba(0,0,0,0.5)', letterSpacing: '0.12em',
         textTransform: 'uppercase' as const,
         display: 'block' as const, marginBottom: 8,
     };
@@ -61,7 +61,7 @@ export default function SignupPage() {
                     textTransform: 'uppercase' as const, textDecoration: 'none',
                 }}>ORDINANCE SYSTEMS</Link>
                 <Link href="/login" style={{
-                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none',
+                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none',
                 }}>
                     Already have an account? <span style={{ fontWeight: 600, color: '#111' }}>Log in</span>
                 </Link>
@@ -76,7 +76,7 @@ export default function SignupPage() {
                 <div style={{ flex: 1, maxWidth: 380 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.2em',
+                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
                         textTransform: 'uppercase' as const, marginBottom: 24,
                     }}>CREATE ACCOUNT</div>
 
@@ -85,14 +85,14 @@ export default function SignupPage() {
                         margin: '0 0 8px', color: '#111',
                     }}>
                         Create your<br />
-                        <span style={{ color: 'rgba(0,0,0,0.15)', fontStyle: 'italic' }}>account.</span>
+                        <span style={{ color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' }}>account.</span>
                     </h1>
 
-                    <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.3)', margin: '0 0 8px', lineHeight: 1.6 }}>
+                    <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', margin: '0 0 8px', lineHeight: 1.6 }}>
                         All tools free. No subscription.
                     </p>
                     <p style={{
-                        fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.25)',
+                        fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.4)',
                         margin: '0 0 40px', letterSpacing: '0.03em',
                     }}>
                         Start at 2% · Close more, rate drops automatically
@@ -156,7 +156,7 @@ export default function SignupPage() {
                     </button>
 
                     <p style={{
-                        fontSize: 10, color: 'rgba(0,0,0,0.2)', textAlign: 'center',
+                        fontSize: 10, color: 'rgba(0,0,0,0.45)', textAlign: 'center',
                         marginTop: 16, lineHeight: 1.6,
                     }}>
                         By creating an account, you agree to Roof&apos;s Terms of Service and Privacy Policy.
@@ -167,14 +167,14 @@ export default function SignupPage() {
                 <div style={{ flex: 1, maxWidth: 400, paddingTop: 80 }}>
                     <div style={{
                         fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.2)', letterSpacing: '0.15em',
+                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em',
                         textTransform: 'uppercase' as const, marginBottom: 16,
                     }}>PRICING MODEL</div>
 
                     <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111', margin: '0 0 8px' }}>
                         How Roof pricing works
                     </h3>
-                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.3)', margin: '0 0 28px', lineHeight: 1.7 }}>
+                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', margin: '0 0 28px', lineHeight: 1.7 }}>
                         Commission only on signed project value. More volume = lower rate. Resets annually.
                     </p>
 
@@ -188,7 +188,7 @@ export default function SignupPage() {
                             }}>
                                 <div>
                                     <div style={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{tier.projects} projects</div>
-                                    <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.2)', letterSpacing: '0.05em' }}>{tier.label}</div>
+                                    <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>{tier.label}</div>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                                     <span style={{
@@ -213,7 +213,7 @@ export default function SignupPage() {
                     <div style={{ marginTop: 32 }}>
                         <div style={{
                             fontFamily: mono, fontSize: 9, fontWeight: 500,
-                            color: 'rgba(0,0,0,0.2)', letterSpacing: '0.12em',
+                            color: 'rgba(0,0,0,0.45)', letterSpacing: '0.12em',
                             textTransform: 'uppercase' as const, marginBottom: 12,
                         }}>ALL TIERS INCLUDE — FREE</div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -227,7 +227,7 @@ export default function SignupPage() {
                                     fontSize: 11, color: 'rgba(0,0,0,0.4)',
                                     display: 'flex', alignItems: 'center', gap: 6,
                                 }}>
-                                    <span style={{ color: 'rgba(0,0,0,0.15)', fontSize: 10 }}>●</span>{item}
+                                    <span style={{ color: 'rgba(0,0,0,0.5)', fontSize: 10 }}>●</span>{item}
                                 </div>
                             ))}
                         </div>
@@ -237,7 +237,7 @@ export default function SignupPage() {
                     <div style={{
                         marginTop: 28, padding: '16px 0',
                         borderTop: '1px solid rgba(0,0,0,0.06)',
-                        fontSize: 11, color: 'rgba(0,0,0,0.25)', lineHeight: 1.7,
+                        fontSize: 11, color: 'rgba(0,0,0,0.4)', lineHeight: 1.7,
                     }}>
                         <strong style={{ color: 'rgba(0,0,0,0.5)' }}>No subscription. No setup fees.</strong><br />
                         Commission is only charged when your client signs and pays through Roof. Your rate drops automatically as you close more projects each year.
