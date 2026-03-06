@@ -64,7 +64,7 @@ export default function Navigation() {
     { name: 'Guides & References', path: '/guides' },
     { name: 'FAQ', path: '/faq' },
     { name: 'For Firms', path: '/contractor-application' },
-    { name: 'For Builders', path: 'https://lead-portal.vercel.app/landing', external: true },
+    { name: 'For Builders', path: 'https://roof-builder.vercel.app/landing', external: true },
   ];
 
   return (
