@@ -19,7 +19,6 @@ const products: Product[] = [
         tagline: "Capture and convert every lead",
         index: "01",
         href: "/follow-up",
-        external: false,
     },
     {
         id: "numbers",
@@ -27,7 +26,6 @@ const products: Product[] = [
         tagline: "Build quotes that protect your margin",
         index: "02",
         href: "/",
-        external: false,
     },
     {
         id: "dispatch",
@@ -35,7 +33,6 @@ const products: Product[] = [
         tagline: "Auto-price, source, and deploy",
         index: "03",
         href: "/dispatch",
-        external: false,
     },
     {
         id: "sequence",
@@ -43,7 +40,62 @@ const products: Product[] = [
         tagline: "Your design studio, codified",
         index: "04",
         href: "/sequence",
-        external: false,
+    },
+    {
+        id: "ledger",
+        name: "Roof Ledger",
+        tagline: "Track every dollar in and out",
+        index: "05",
+        href: "/ledger",
+    },
+    {
+        id: "pos",
+        name: "Hardware POS",
+        tagline: "Your renovation supply counter",
+        index: "06",
+        href: "/hardware-pos",
+    },
+    {
+        id: "forecast",
+        name: "Roof Forecast",
+        tagline: "Project pipeline and revenue projections",
+        index: "07",
+        href: "/forecast",
+    },
+    {
+        id: "chat",
+        name: "Roof Chat",
+        tagline: "Masked communication between parties",
+        index: "08",
+        href: "/chat",
+    },
+    {
+        id: "inspect",
+        name: "Roof Inspect",
+        tagline: "Site verification and defect tracking",
+        index: "09",
+        href: "/inspect",
+    },
+    {
+        id: "measure",
+        name: "Roof Measure",
+        tagline: "Site measurement and survey tool",
+        index: "10",
+        href: "/measure",
+    },
+    {
+        id: "price-index",
+        name: "Price Index",
+        tagline: "113 materials at SG market rates",
+        index: "11",
+        href: "/price-index",
+    },
+    {
+        id: "vendor-rates",
+        name: "Vendor Rates",
+        tagline: "Supplier pricing comparison engine",
+        index: "12",
+        href: "/vendor-rates",
     },
 ];
 

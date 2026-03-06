@@ -164,6 +164,9 @@ export default function LandingPage() {
                     <span style={{ fontSize: 17, fontWeight: 700, color: 'white', letterSpacing: '-0.02em' }}>Roof</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+                    <Link href="/hub" style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = 'white')}
+                        onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>Platform</Link>
                     <Link href="/founding" style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: 500, transition: 'color 0.2s' }}
                         onMouseEnter={e => (e.currentTarget.style.color = 'white')}
                         onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>Founding 20</Link>
