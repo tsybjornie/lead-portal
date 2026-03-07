@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 28 }}>
                             {[
                                 { label: 'Total GMV', value: `S$${(totalGMV / 1000).toFixed(0)}k`, sub: 'All-time', color: '#059669' },
-                                { label: 'Active Firms', value: `${FIRMS.length}/20`, sub: 'Founding slots', color: '#2563EB' },
+                                { label: 'Active Firms', value: `${FIRMS.length}/20`, sub: 'slots', color: '#2563EB' },
                                 { label: 'Homeowner Leads', value: `${HOMEOWNERS.length}`, sub: `${HOMEOWNERS.filter(h => h.status === 'Matched').length} matched`, color: '#D97706' },
                                 { label: 'Est. Platform Revenue', value: `S$${((escrowRevenue + commissionRevenue) / 1000).toFixed(1)}k`, sub: 'Escrow + commission', color: '#8B5CF6' },
                             ].map(kpi => (
