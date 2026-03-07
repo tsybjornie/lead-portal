@@ -177,6 +177,75 @@ const MATCH_BRIEFS = [
         avgDaysToClose: 3,
         closeRate: 38,
     },
+    {
+        leadId: 'L-002',
+        firm: 'Atelier K',
+        score: 78,
+        winReasons: [
+            'Mixed portfolio — strong condo work alongside landed',
+            'Avg condo project: $105k — competitive for Bukit Timah',
+            'Modern Luxury style with editorial-quality photography',
+            'Principal designer has 12 years of experience',
+        ],
+        risks: [
+            'Smaller team — may take longer to start',
+            'No Bukit Timah projects in last 12 months (mostly East)',
+            'Portfolio leans editorial — client may want more liveable aesthetic',
+        ],
+        approach: [
+            'Position as boutique alternative to larger firms',
+            'Offer a mood board within 72 hours as a differentiator',
+            'Highlight hands-on principal designer involvement',
+        ],
+        avgDaysToClose: 6,
+        closeRate: 28,
+    },
+    {
+        leadId: 'L-003',
+        firm: 'Hive Collective',
+        score: 72,
+        winReasons: [
+            'Strong HDB specialist — 80% of projects are HDB resale',
+            'Avg quote $38k — well within $45k budget',
+            'Scandinavian is primary style — consistent portfolio',
+            'Fast proposal turnaround (avg 2.5 weeks)',
+        ],
+        risks: [
+            'No Halal certification or Islamic-compliant renovation experience',
+            'Based in Central — Woodlands is outside core coverage',
+            'Smaller 5-room projects tend to be lower priority for them',
+        ],
+        approach: [
+            'Compete on price and Scandinavian expertise',
+            'Consider subcontracting Halal-compliant works if needed',
+            'Emphasise portfolio consistency — show 5-room case studies',
+        ],
+        avgDaysToClose: 4,
+        closeRate: 22,
+    },
+    {
+        leadId: 'L-003',
+        firm: 'Muji Living Pte Ltd',
+        score: 58,
+        winReasons: [
+            'Clean design aesthetic overlaps with Scandinavian',
+            'Award-winning firm adds credibility',
+            'Good client communication — avg 4.8 review score',
+        ],
+        risks: [
+            'Avg HDB quote is $68k — significantly over $45k budget',
+            'No Halal/Islamic-compliant renovation experience listed',
+            'Premium positioning may alienate budget-conscious client',
+            'Woodlands is furthest from their Central office',
+        ],
+        approach: [
+            'This is a weak match — only pursue if other firms decline',
+            'If pitching, offer a scaled-down package within budget',
+            'Be transparent about pricing expectations early',
+        ],
+        avgDaysToClose: 9,
+        closeRate: 10,
+    },
 ];
 
 type Lead = typeof HOMEOWNER_LEADS[0];
