@@ -45,7 +45,7 @@ export default function AppDock() {
                         {/* Header */}
                         <div className="px-5 py-4 border-b border-[#f0f0f0]">
                             <div className="text-[10px] tracking-[0.25em] uppercase font-medium text-[#bbb]">
-                                Ordinance Systems
+                                ROOF
                             </div>
                         </div>
 

@@ -5,13 +5,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-const TIERS = [
-    { projects: '1–25', rate: '2.0%', label: 'Starting rate' },
-    { projects: '26–50', rate: '1.5%', label: 'Earned at volume' },
-    { projects: '51–75', rate: '1.0%', label: 'Preferred partner' },
-    { projects: '76+', rate: '0.5%', label: 'Elite rate' },
-];
-
 export default function SignupPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({ name: '', email: '', firmName: '', role: '', phone: '', password: '' });
@@ -19,20 +12,15 @@ export default function SignupPage() {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
-    const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
-    const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
-
     const handleSubmit = async () => {
         if (!formData.name || !formData.email || !formData.password) return;
 
-        // Email format validation
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             setMessage('Please enter a valid email address.');
             setMessageType('error');
             return;
         }
 
-        // Password strength
         if (formData.password.length < 6) {
             setMessage('Password must be at least 6 characters.');
             setMessageType('error');
@@ -43,7 +31,6 @@ export default function SignupPage() {
         setMessage('');
 
         try {
-            // 1. Create auth user
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
@@ -59,9 +46,8 @@ export default function SignupPage() {
                 return;
             }
 
-            // 2. Create profile record
             if (authData.user) {
-                const { error: profileError } = await supabase.from('profiles').insert({
+                await supabase.from('profiles').insert({
                     id: authData.user.id,
                     email: formData.email,
                     full_name: formData.name,
@@ -69,19 +55,13 @@ export default function SignupPage() {
                     role: 'designer',
                     firm_name: formData.firmName,
                     job_title: formData.role,
+                    approved: false,  // Requires admin approval
                 });
-
-                if (profileError) {
-                    setMessage('Account created but profile save failed. Please contact support.');
-                    setMessageType('error');
-                    setIsSubmitting(false);
-                    return;
-                }
             }
 
-            setMessage('Account created! Check your email to verify, then log in.');
+            setMessage('Application submitted! We\'ll review and get back to you shortly.');
             setMessageType('success');
-            setTimeout(() => { router.push('/login'); }, 2500);
+            setTimeout(() => { router.push('/pending-approval'); }, 2000);
         } catch (err) {
             setMessage('Something went wrong. Please try again.');
             setMessageType('error');
@@ -89,232 +69,97 @@ export default function SignupPage() {
         }
     };
 
-    const inputStyle = {
-        width: '100%', padding: '12px 16px', fontSize: 13, fontFamily: f,
-        border: '1px solid rgba(0,0,0,0.1)', borderRadius: 6,
-        background: 'transparent', color: '#111', outline: 'none',
-        transition: 'border-color 0.2s', boxSizing: 'border-box' as const,
-    };
-    const labelStyle = {
-        fontFamily: mono, fontSize: 9, fontWeight: 500 as const,
-        color: 'rgba(0,0,0,0.5)', letterSpacing: '0.12em',
-        textTransform: 'uppercase' as const,
-        display: 'block' as const, marginBottom: 8,
-    };
-
     return (
-        <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
-            <style>{`
-                input:focus, select:focus { border-color: rgba(0,0,0,0.4) !important; }
-                input::placeholder { color: rgba(0,0,0,0.2); }
-            `}</style>
-
-            {/* ═══════ TOP BAR ═══════ */}
-            <nav style={{
-                padding: '0 48px', height: 56,
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                borderBottom: '1px solid rgba(0,0,0,0.06)',
-            }}>
-                <Link href="/landing" style={{
-                    fontFamily: mono, fontSize: 11, fontWeight: 500,
-                    color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
-                    textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ORDINANCE SYSTEMS</Link>
-                <Link href="/login" style={{
-                    fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none',
-                }}>
-                    Already have an account? <span style={{ fontWeight: 600, color: '#111' }}>Log in</span>
+        <div
+            className="min-h-screen bg-[#fafafa] text-[#111] flex flex-col"
+            style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}
+        >
+            {/* Top bar */}
+            <header className="flex items-center justify-between px-8 md:px-12 py-5 border-b border-[#f0f0f0]">
+                <Link href="/landing" className="text-[13px] font-semibold text-[#111] no-underline">
+                    Roof
                 </Link>
-            </nav>
+                <Link href="/login" className="text-[13px] text-[#888] no-underline hover:text-[#111] transition-colors">
+                    Already have an account? <span className="font-semibold text-[#111]">Log in</span>
+                </Link>
+            </header>
 
-            {/* ═══════ CONTENT ═══════ */}
-            <div style={{
-                display: 'flex', maxWidth: 940, margin: '0 auto',
-                padding: '80px 48px 80px', gap: 80, alignItems: 'flex-start',
-            }}>
-                {/* LEFT: Form */}
-                <div style={{ flex: 1, maxWidth: 380 }}>
-                    <div style={{
-                        fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.2em',
-                        textTransform: 'uppercase' as const, marginBottom: 24,
-                    }}>CREATE ACCOUNT</div>
-
-                    <h1 style={{
-                        fontSize: 32, fontWeight: 300, letterSpacing: '-0.03em',
-                        margin: '0 0 8px', color: '#111',
-                    }}>
-                        Create your<br />
-                        <span style={{ color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' }}>account.</span>
+            {/* Form — centered, clean, single column */}
+            <div className="flex-1 flex items-center justify-center px-8 py-16">
+                <div className="w-full max-w-[380px]">
+                    <h1 className="text-[28px] font-light tracking-[-0.02em] mb-2">
+                        Join Roof
                     </h1>
-
-                    <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', margin: '0 0 8px', lineHeight: 1.6 }}>
-                        All tools free. No subscription.
-                    </p>
-                    <p style={{
-                        fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.4)',
-                        margin: '0 0 40px', letterSpacing: '0.03em',
-                    }}>
-                        Start at 2% · Close more, rate drops automatically
+                    <p className="text-[14px] text-[#888] mb-8 leading-relaxed">
+                        Create your designer account. We&apos;ll review your
+                        application and get you set up.
                     </p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <div className="flex flex-col gap-4">
                         {[
-                            { key: 'name', label: 'Full Name', placeholder: 'Bjorn Teo', type: 'text' },
-                            { key: 'email', label: 'Email', placeholder: 'bjorn@vinterior.sg', type: 'email' },
-                            { key: 'firmName', label: 'Firm Name', placeholder: 'Vinterior Pte Ltd', type: 'text' },
-                            { key: 'role', label: 'Your Role / Title', placeholder: '', type: 'select' },
+                            { key: 'name', label: 'Your name', placeholder: 'Bjorn Teo', type: 'text' },
+                            { key: 'email', label: 'Work email', placeholder: 'bjorn@vinterior.sg', type: 'email' },
+                            { key: 'firmName', label: 'Firm name', placeholder: 'Vinterior Pte Ltd', type: 'text' },
                             { key: 'phone', label: 'Phone', placeholder: '+65 9123 4567', type: 'tel' },
                             { key: 'password', label: 'Password', placeholder: 'Choose a password', type: 'password' },
                         ].map(field => (
                             <div key={field.key}>
-                                <label style={labelStyle}>{field.label}</label>
-                                {field.type === 'select' ? (
-                                    <select
-                                        value={(formData as any)[field.key]}
-                                        onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
-                                        style={{
-                                            ...inputStyle, cursor: 'pointer', appearance: 'none' as const,
-                                            color: (formData as any)[field.key] ? '#111' : 'rgba(0,0,0,0.2)',
-                                        }}
-                                    >
-                                        <option value="" disabled>Select your role</option>
-                                        <option value="owner">Firm Owner / Director</option>
-                                        <option value="principal">Principal Designer</option>
-                                        <option value="senior">Senior Designer</option>
-                                        <option value="designer">Designer</option>
-                                        <option value="junior">Junior Designer</option>
-                                        <option value="coordinator">Design Coordinator</option>
-                                        <option value="pm">Project Manager</option>
-                                        <option value="drafter">Drafter / 3D Artist</option>
-                                        <option value="admin">Admin / Operations</option>
-                                    </select>
-                                ) : (
-                                    <input
-                                        type={field.type}
-                                        placeholder={field.placeholder}
-                                        value={(formData as any)[field.key]}
-                                        onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
-                                        style={inputStyle}
-                                    />
-                                )}
+                                <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                    {field.label}
+                                </label>
+                                <input
+                                    type={field.type}
+                                    placeholder={field.placeholder}
+                                    value={(formData as any)[field.key]}
+                                    onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
+                                    className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors placeholder:text-[#ccc]"
+                                />
                             </div>
                         ))}
+
+                        {/* Role select */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Your role
+                            </label>
+                            <select
+                                value={formData.role}
+                                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                                className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors appearance-none cursor-pointer"
+                                style={{ color: formData.role ? '#111' : '#ccc' }}
+                            >
+                                <option value="" disabled>Select your role</option>
+                                <option value="owner">Firm Owner / Director</option>
+                                <option value="principal">Principal Designer</option>
+                                <option value="senior">Senior Designer</option>
+                                <option value="designer">Designer</option>
+                                <option value="pm">Project Manager</option>
+                                <option value="drafter">Drafter / 3D Artist</option>
+                                <option value="admin">Admin / Operations</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button
                         onClick={handleSubmit}
                         disabled={isSubmitting || !formData.name || !formData.email || !formData.password}
-                        style={{
-                            width: '100%', marginTop: 32, padding: '14px 0', fontSize: 13, fontWeight: 600,
-                            color: '#fff', background: isSubmitting ? 'rgba(0,0,0,0.3)' : '#111',
-                            border: 'none', borderRadius: 6, cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                            fontFamily: f, transition: 'all 0.2s',
-                        }}
+                        className="w-full mt-8 py-3.5 text-[14px] font-semibold text-white bg-[#111] rounded-xl hover:bg-[#333] disabled:bg-[#ccc] disabled:cursor-not-allowed transition-all"
                     >
-                        {isSubmitting ? 'Creating account...' : 'Create Account'}
+                        {isSubmitting ? 'Submitting...' : 'Apply to join Roof'}
                     </button>
 
                     {message && (
-                        <div style={{
-                            marginTop: 16, padding: '10px 14px', borderRadius: 6, fontSize: 12, fontWeight: 500,
-                            background: messageType === 'success' ? 'rgba(16,185,129,0.08)' : 'rgba(220,38,38,0.06)',
-                            color: messageType === 'success' ? '#059669' : 'rgba(220,38,38,0.8)',
-                            border: `1px solid ${messageType === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(220,38,38,0.1)'}`,
-                        }}>{message}</div>
+                        <div className={`mt-4 px-4 py-3 rounded-lg text-[12px] font-medium ${messageType === 'success'
+                                ? 'bg-green-50 text-green-700 border border-green-100'
+                                : 'bg-red-50 text-red-600 border border-red-100'
+                            }`}>
+                            {message}
+                        </div>
                     )}
 
-                    <p style={{
-                        fontSize: 10, color: 'rgba(0,0,0,0.45)', textAlign: 'center',
-                        marginTop: 16, lineHeight: 1.6,
-                    }}>
-                        By creating an account, you agree to Roof&apos;s Terms of Service and Privacy Policy.
+                    <p className="text-[11px] text-[#bbb] text-center mt-4 leading-relaxed">
+                        By applying, you agree to Roof&apos;s Terms and Privacy Policy.
                     </p>
-                </div>
-
-                {/* RIGHT: Commission Structure */}
-                <div style={{ flex: 1, maxWidth: 400, paddingTop: 80 }}>
-                    <div style={{
-                        fontFamily: mono, fontSize: 10, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.45)', letterSpacing: '0.15em',
-                        textTransform: 'uppercase' as const, marginBottom: 16,
-                    }}>PRICING MODEL</div>
-
-                    <h3 style={{ fontSize: 15, fontWeight: 500, color: '#111', margin: '0 0 8px' }}>
-                        How Roof pricing works
-                    </h3>
-                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', margin: '0 0 28px', lineHeight: 1.7 }}>
-                        Commission only on signed project value. More volume = lower rate. Resets annually.
-                    </p>
-
-                    {/* Tier rows */}
-                    <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-                        {TIERS.map((tier, i) => (
-                            <div key={i} style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                padding: '14px 0',
-                                borderBottom: '1px solid rgba(0,0,0,0.06)',
-                            }}>
-                                <div>
-                                    <div style={{ fontSize: 13, fontWeight: 500, color: '#111' }}>{tier.projects} projects</div>
-                                    <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>{tier.label}</div>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <span style={{
-                                        fontFamily: mono, fontSize: 18, fontWeight: 300,
-                                        color: i === 0 ? '#111' : 'rgba(0,0,0,0.5)',
-                                        letterSpacing: '-0.02em',
-                                    }}>{tier.rate}</span>
-                                    {i === 0 && (
-                                        <span style={{
-                                            fontFamily: mono, fontSize: 8, fontWeight: 600,
-                                            background: '#111', color: '#fff',
-                                            padding: '3px 8px', borderRadius: 3,
-                                            letterSpacing: '0.06em', textTransform: 'uppercase',
-                                        }}>START</span>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* What's included */}
-                    <div style={{ marginTop: 32 }}>
-                        <div style={{
-                            fontFamily: mono, fontSize: 9, fontWeight: 500,
-                            color: 'rgba(0,0,0,0.45)', letterSpacing: '0.12em',
-                            textTransform: 'uppercase' as const, marginBottom: 12,
-                        }}>ALL TIERS INCLUDE — FREE</div>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                            {[
-                                'Quote Builder + BOQ', 'Material Catalog',
-                                'Follow Up CRM', 'Dispatch & POs',
-                                'Sequence Scheduling', 'Client Dashboard',
-                                'Ledger & P&L', 'Staff Seats',
-                            ].map(item => (
-                                <div key={item} style={{
-                                    fontSize: 11, color: 'rgba(0,0,0,0.4)',
-                                    display: 'flex', alignItems: 'center', gap: 6,
-                                }}>
-                                    <span style={{ color: 'rgba(0,0,0,0.5)', fontSize: 10 }}>●</span>{item}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Reassurance */}
-                    <div style={{
-                        marginTop: 28, padding: '16px 0',
-                        borderTop: '1px solid rgba(0,0,0,0.06)',
-                        fontSize: 11, color: 'rgba(0,0,0,0.4)', lineHeight: 1.7,
-                    }}>
-                        <strong style={{ color: 'rgba(0,0,0,0.5)' }}>No subscription. No setup fees.</strong><br />
-                        Commission is only charged when your client signs and pays through Roof. Your rate drops automatically as you close more projects each year.
-                    </div>
                 </div>
             </div>
         </div>

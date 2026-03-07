@@ -172,7 +172,7 @@ export default function HubPage() {
                 className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-10 py-8"
             >
                 <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
-                    Ordinance Systems
+                    ROOF
                 </div>
                 <div className="text-[11px] tracking-[0.3em] uppercase font-medium text-[#999]">
                     Command Center

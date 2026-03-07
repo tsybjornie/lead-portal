@@ -102,7 +102,7 @@ export default function LoginPage() {
                     fontFamily: mono, fontSize: 11, fontWeight: 500,
                     color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ORDINANCE SYSTEMS</Link>
+                }}>ROOF</Link>
                 <Link href="/join" style={{
                     fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none',
                 }}>
@@ -211,7 +211,7 @@ export default function LoginPage() {
                 background: '#fafafa',
             }}>
                 <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.05em' }}>
-                    © 2026 ORDINANCE SYSTEMS · SINGAPORE
+                    © 2026 ROOF · SINGAPORE
                 </span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {[

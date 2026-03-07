@@ -74,7 +74,7 @@ export default function SignupLanding() {
                     fontFamily: mono, fontSize: 11, fontWeight: 500,
                     color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ORDINANCE SYSTEMS</Link>
+                }}>ROOF</Link>
                 <Link href="/login" style={{
                     fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)',
                     textDecoration: 'none', transition: 'color 0.2s',
@@ -170,7 +170,7 @@ export default function SignupLanding() {
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             }}>
                 <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>
-                    © 2026 ORDINANCE SYSTEMS · SINGAPORE
+                    © 2026 ROOF · SINGAPORE
                 </span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {[

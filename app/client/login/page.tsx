@@ -69,7 +69,7 @@ export default function ClientLoginPage() {
                 </p>
 
                 <div className="text-center mt-12">
-                    <p className="text-[10px] text-gray-200">Powered by Ordinance Systems</p>
+                    <p className="text-[10px] text-gray-200">Powered by ROOF</p>
                 </div>
             </div>
         </div>

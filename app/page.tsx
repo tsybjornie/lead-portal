@@ -5,17 +5,22 @@ import { useRouter } from 'next/navigation';
 import { useRoofAuth } from '@/context/RoofAuthContext';
 
 export default function Home() {
-  const { isLoggedIn, user, isLoading, defaultRoute } = useRoofAuth();
+  const { isLoggedIn, user, isLoading, isApproved, defaultRoute } = useRoofAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return; // Wait for auth to hydrate
+    if (isLoading) return;
+
     if (isLoggedIn && user) {
-      router.replace(defaultRoute);
+      if (!isApproved) {
+        router.replace('/pending-approval');
+      } else {
+        router.replace(defaultRoute);
+      }
     } else {
       router.replace('/landing');
     }
-  }, [isLoggedIn, user, isLoading, defaultRoute, router]);
+  }, [isLoggedIn, user, isLoading, isApproved, defaultRoute, router]);
 
   return null;
 }

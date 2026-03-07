@@ -127,7 +127,7 @@ export default function PriceIndexPage() {
                     fontFamily: mono, fontSize: 11, fontWeight: 500,
                     color: 'rgba(0,0,0,0.4)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ORDINANCE SYSTEMS</Link>
+                }}>ROOF</Link>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                     {[
                         { name: 'Platform', path: '/hub' },
@@ -327,7 +327,7 @@ export default function PriceIndexPage() {
 
             {/* ═══════ FOOTER ═══════ */}
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>© 2026 ORDINANCE SYSTEMS · SINGAPORE</span>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.45)', letterSpacing: '0.05em' }}>© 2026 ROOF · SINGAPORE</span>
                 <div style={{ display: 'flex', gap: 24 }}>
                     {[
                         { label: 'Landing', href: '/landing' },

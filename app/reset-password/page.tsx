@@ -74,7 +74,7 @@ export default function ResetPasswordPage() {
                     fontFamily: mono, fontSize: 11, fontWeight: 500,
                     color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ORDINANCE SYSTEMS</Link>
+                }}>ROOF</Link>
             </nav>
 
             <div style={{ maxWidth: 400, margin: '0 auto', padding: '120px 48px 80px' }}>

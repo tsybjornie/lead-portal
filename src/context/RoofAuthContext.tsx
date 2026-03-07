@@ -115,6 +115,7 @@ interface RoofAuthContextType {
     supabaseUser: User | null;
     isLoggedIn: boolean;
     isLoading: boolean;
+    isApproved: boolean;
     login: (role: UserRole) => void;
     loginByCode: (code: string) => { success: boolean; route: string };
     logout: () => Promise<void>;
@@ -144,6 +145,7 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<RoofUser | null>(null);
     const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isApproved, setIsApproved] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     // Hydrate user from Supabase session on mount
@@ -160,6 +162,7 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
                         .eq('id', session.user.id)
                         .single();
                     setUser(buildRoofUser(session.user, profile));
+                    setIsApproved(profile?.approved === true);
                 }
             } catch (err) {
                 console.error('Auth hydration failed:', err);
@@ -179,6 +182,7 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
                     .eq('id', session.user.id)
                     .single();
                 setUser(buildRoofUser(session.user, profile));
+                setIsApproved(profile?.approved === true);
             } else if (event === 'SIGNED_OUT') {
                 setUser(null);
                 setSupabaseUser(null);
@@ -219,7 +223,7 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
 
     return (
         <RoofAuthContext.Provider value={{
-            user, supabaseUser, isLoggedIn: !!user, isLoading,
+            user, supabaseUser, isLoggedIn: !!user, isLoading, isApproved,
             login, loginByCode, logout, switchRole,
             sidebarCollapsed, setSidebarCollapsed, defaultRoute,
         }}>
