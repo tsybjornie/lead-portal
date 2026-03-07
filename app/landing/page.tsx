@@ -7,15 +7,16 @@ import { motion } from 'framer-motion';
 
 const DEMAND = [
     { id: 'homeowner', label: 'Homeowner', sub: 'HDB, condo, landed', href: '/signup/homeowner', img: '/images/roles/homeowner.png' },
-    { id: 'retail', label: 'Retail', sub: 'Shops & showrooms', href: '/signup/homeowner', img: '/images/roles/retail.png' },
-    { id: 'fnb', label: 'F&B', sub: 'Cafes, restaurants, bars', href: '/signup/homeowner', img: '/images/roles/fnb.png' },
-    { id: 'office', label: 'Office', sub: 'Commercial workspace', href: '/signup/homeowner', img: '/images/roles/office.png' },
+    { id: 'business', label: 'Business Owner', sub: 'Retail, F&B, hotel, industrial', href: '/signup/homeowner', img: '/images/roles/business.png' },
+    { id: 'investor', label: 'Property Investor', sub: 'Shophouses, flips & portfolios', href: '/signup/homeowner', img: '/images/roles/investor.png' },
+    { id: 'developer', label: 'Property Developer', sub: 'New builds & conversions', href: '/signup/homeowner', img: '/images/roles/office.png' },
 ];
 
 const SUPPLY = [
     { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', img: '/images/roles/design-firm.png' },
     { id: 'contractor', label: 'Contractor', sub: 'Builders & tradesmen', href: '/signup/contractor', img: '/images/roles/contractor.png' },
-    { id: 'brand', label: 'Brand / Supplier', sub: 'Material brands & vendors', href: '/signup/brand', img: '/images/roles/brand.png' },
+    { id: 'worker', label: 'Worker', sub: 'Site crew & skilled trades', href: '/signup/worker', img: '/images/roles/worker.png' },
+    { id: 'brand', label: 'Brand Owner / Distributor', sub: 'Materials, equipment & plant', href: '/signup/brand', img: '/images/roles/brand.png' },
 ];
 
 export default function LandingPage() {
@@ -120,7 +121,7 @@ export default function LandingPage() {
                     <p className="text-[10px] tracking-[0.25em] uppercase font-medium text-[#bbb] mb-5">
                         I&apos;m a professional
                     </p>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {SUPPLY.map((role, i) => (
                             <motion.div
                                 key={role.id}
