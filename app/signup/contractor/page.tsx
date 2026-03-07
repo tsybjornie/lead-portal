@@ -18,6 +18,7 @@ export default function ContractorSignup() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
+    const [certFiles, setCertFiles] = useState<File[]>([]);
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
@@ -186,6 +187,52 @@ export default function ContractorSignup() {
                             <input style={inputStyle} value={form.hdb} onChange={e => setForm(p => ({ ...p, hdb: e.target.value }))} placeholder="HDB renovation permit" />
                         </div>
                     </div>
+                </div>
+
+                {/* Cert Upload */}
+                <div style={{ marginBottom: 32 }}>
+                    <div style={{
+                        fontFamily: mono, fontSize: 9, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
+                        textTransform: 'uppercase' as const, marginBottom: 20,
+                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
+                    }}>CERTIFICATIONS</div>
+                    <label style={labelStyle}>Upload certificates (PDF)</label>
+                    <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', margin: '0 0 12px', lineHeight: 1.4 }}>
+                        BCA license, HDB permit, insurance, safety certs — upload as PDF. Max 5 files, 10MB each.
+                    </p>
+                    <label style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                        padding: '20px', border: '2px dashed rgba(0,0,0,0.12)', borderRadius: 8,
+                        cursor: 'pointer', transition: 'border-color 0.2s', background: 'rgba(0,0,0,0.02)',
+                    }}>
+                        <span style={{ fontSize: 20 }}>📄</span>
+                        <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', fontWeight: 500 }}>
+                            {certFiles.length > 0 ? 'Add more files' : 'Click to upload PDF certificates'}
+                        </span>
+                        <input type="file" accept=".pdf" multiple style={{ display: 'none' }}
+                            onChange={e => {
+                                const files = Array.from(e.target.files || []);
+                                const pdfs = files.filter(f => f.type === 'application/pdf' && f.size <= 10 * 1024 * 1024);
+                                setCertFiles(prev => [...prev, ...pdfs].slice(0, 5));
+                                e.target.value = '';
+                            }}
+                        />
+                    </label>
+                    {certFiles.length > 0 && (
+                        <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            {certFiles.map((file, i) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'rgba(5,150,105,0.05)', borderRadius: 6, border: '1px solid rgba(5,150,105,0.15)' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <span style={{ fontSize: 14 }}>📋</span>
+                                        <span style={{ fontSize: 11, fontWeight: 500, color: '#059669' }}>{file.name}</span>
+                                        <span style={{ fontSize: 10, color: 'rgba(0,0,0,0.3)' }}>({(file.size / 1024).toFixed(0)} KB)</span>
+                                    </div>
+                                    <button type="button" onClick={() => setCertFiles(prev => prev.filter((_, j) => j !== i))} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: 4 }}>✕</button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Trades */}

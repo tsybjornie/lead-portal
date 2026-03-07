@@ -11,6 +11,7 @@ export default function SignupPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
+    const [certFiles, setCertFiles] = useState<File[]>([]);
 
     const handleSubmit = async () => {
         if (!formData.name || !formData.email || !formData.password) return;
@@ -230,6 +231,44 @@ export default function SignupPage() {
                                 <option value="OTHER">Other</option>
                             </select>
                         </div>
+                    </div>
+
+                    {/* Cert Upload */}
+                    <div className="mt-8">
+                        <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                            Upload certificates (PDF, optional)
+                        </label>
+                        <p className="text-[11px] text-[#bbb] mb-3 leading-relaxed">
+                            SIDAC, BOA, BCA license, portfolio deck — upload as PDF. Max 5 files, 10MB each.
+                        </p>
+                        <label className="flex items-center justify-center gap-2 p-5 border-2 border-dashed border-[#e5e5e5] rounded-lg cursor-pointer hover:border-[#999] transition-colors bg-[#fafafa]">
+                            <span className="text-[18px]">📄</span>
+                            <span className="text-[12px] text-[#999] font-medium">
+                                {certFiles.length > 0 ? 'Add more files' : 'Click to upload PDF certificates'}
+                            </span>
+                            <input type="file" accept=".pdf" multiple className="hidden"
+                                onChange={e => {
+                                    const files = Array.from(e.target.files || []);
+                                    const pdfs = files.filter(f => f.type === 'application/pdf' && f.size <= 10 * 1024 * 1024);
+                                    setCertFiles(prev => [...prev, ...pdfs].slice(0, 5));
+                                    e.target.value = '';
+                                }}
+                            />
+                        </label>
+                        {certFiles.length > 0 && (
+                            <div className="mt-2.5 flex flex-col gap-1.5">
+                                {certFiles.map((file, i) => (
+                                    <div key={i} className="flex items-center justify-between px-3 py-2 bg-green-50 rounded-md border border-green-100">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[13px]">📋</span>
+                                            <span className="text-[11px] font-medium text-green-700">{file.name}</span>
+                                            <span className="text-[10px] text-[#999]">({(file.size / 1024).toFixed(0)} KB)</span>
+                                        </div>
+                                        <button type="button" onClick={() => setCertFiles(prev => prev.filter((_, j) => j !== i))} className="text-[13px] text-[#ccc] hover:text-[#666] bg-transparent border-none cursor-pointer px-1.5">✕</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <button

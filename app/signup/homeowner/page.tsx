@@ -108,7 +108,7 @@ const ROOM_LAYOUTS: Record<string, string[]> = {
 };
 
 export default function HomeownerSignup() {
-    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '', cultural: [] as string[] });
+    const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '', cultural: [] as string[] });
     const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
@@ -158,7 +158,7 @@ export default function HomeownerSignup() {
             } else {
                 setMessage('Submitted! We will match you with 3 designers within 24 hours.');
                 setMessageType('success');
-                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {}, reason: '', cultural: [] });
+                setForm({ name: '', email: '', phone: '', password: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {}, reason: '', cultural: [] });
             }
         } catch {
             setMessage('Connection error. Please try again.');
@@ -263,9 +263,16 @@ export default function HomeownerSignup() {
                             <input style={inputStyle} value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} placeholder="+65 9xxx xxxx" />
                         </div>
                     </div>
-                    <div>
+                    <div style={{ marginBottom: 16 }}>
                         <label style={labelStyle}>Email</label>
                         <input style={inputStyle} type="email" value={form.email} onChange={e => setForm(p => ({ ...p, email: e.target.value }))} placeholder="david@email.com" />
+                    </div>
+                    <div>
+                        <label style={labelStyle}>Password</label>
+                        <input style={inputStyle} type="password" value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} placeholder="Min 6 characters" />
+                        <p style={{ fontSize: 10, color: 'rgba(0,0,0,0.3)', marginTop: 6, lineHeight: 1.4 }}>
+                            Create an account to track your project, chat with designers, and review quotes.
+                        </p>
                     </div>
                 </div>
 
