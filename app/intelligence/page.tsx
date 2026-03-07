@@ -232,7 +232,16 @@ export default function IntelligencePage() {
                     <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
                     <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em' }}>INTELLIGENCE</span>
                 </div>
-                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+                    {[
+                        { label: 'Dashboard', href: '/admin', active: false },
+                        { label: 'Autopilot', href: '/autopilot', active: false },
+                        { label: 'Intelligence', href: '/intelligence', active: true },
+                        { label: 'SketchUp', href: '/sketchup', active: false },
+                    ].map(link => (
+                        <Link key={link.label} href={link.href} style={{ fontSize: 12, fontWeight: link.active ? 600 : 400, color: link.active ? '#111' : 'rgba(0,0,0,0.35)', textDecoration: link.active ? 'underline' : 'none', textUnderlineOffset: '4px' }}>{link.label}</Link>
+                    ))}
+                    <span style={{ width: 1, height: 16, background: 'rgba(0,0,0,0.08)' }} />
                     {(['free', 'pro', 'studio'] as const).map(t => (
                         <button key={t} onClick={() => setTier(t)} style={{
                             padding: '4px 12px', fontSize: 10, fontWeight: 600, borderRadius: 6, fontFamily: mono,

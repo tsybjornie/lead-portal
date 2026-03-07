@@ -59,7 +59,7 @@ export default function SketchUpPage() {
 
     const navLinks = [
         { label: 'Dashboard', href: '/admin', active: false },
-        { label: 'Numbers', href: '/numbers', active: false },
+        { label: 'Autopilot', href: '/autopilot', active: false },
         { label: 'Intelligence', href: '/intelligence', active: false },
         { label: 'SketchUp', href: '/sketchup', active: true },
     ];

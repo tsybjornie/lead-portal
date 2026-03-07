@@ -71,9 +71,9 @@ export default function AutopilotPage() {
 
     const navLinks = [
         { label: 'Dashboard', href: '/admin', active: false },
-        { label: 'Match Briefs', href: '/admin/matches', active: false },
-        { label: 'Ratings', href: '/admin/ratings', active: false },
         { label: 'Autopilot', href: '/autopilot', active: true },
+        { label: 'Intelligence', href: '/intelligence', active: false },
+        { label: 'SketchUp', href: '/sketchup', active: false },
     ];
 
     return (
