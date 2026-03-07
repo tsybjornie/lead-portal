@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { TradeCategory, TRADE_PROFILES } from '@/types/trades';
 import { Jurisdiction } from '@/types/core';
 import { PropertyContext } from '@/types/site-protection';
@@ -10,6 +10,7 @@ import ZoneManager, { Zone, computeZoneMetrics } from '@/components/ZoneManager'
 import AutoCompleteInput from '@/components/AutoCompleteInput';
 import { VENDOR_LIBRARY } from '@/data/vendor-library';
 import { useVendorLibrary } from '@/hooks/useVendorLibrary';
+import { getQuotes, saveQuote, Quote } from '@/lib/supabase-data';
 
 // ============================================================
 // TYPES
@@ -194,21 +195,40 @@ export default function QuoteBuilderEnhanced({ onReady, onSectionsChange, onZone
     const [editingOptionsId, setEditingOptionsId] = useState<string | null>(null);
 
     // ============================================================
-    // LOCALSTORAGE PERSISTENCE
+    // LOCALSTORAGE + SUPABASE PERSISTENCE
     // ============================================================
     const STORAGE_KEY = 'quote-builder-draft';
     const ZONES_STORAGE_KEY = 'quote-builder-zones';
+    const supabaseQuoteId = useRef<string | null>(null);
+    const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Load: check Supabase first, fall back to localStorage
     useEffect(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
+        async function loadDraft() {
             try {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed)) setSections(parsed);
+                const quotes = await getQuotes();
+                const draft = quotes.find(q => q.status === 'DRAFT');
+                if (draft && Array.isArray(draft.sections) && draft.sections.length > 0) {
+                    supabaseQuoteId.current = draft.id;
+                    setSections(draft.sections as TradeSection[]);
+                    return; // Supabase had data, skip localStorage
+                }
             } catch (e) {
-                console.error('Failed to load quote draft', e);
+                console.error('Supabase load failed, falling back to localStorage', e);
+            }
+            // Fallback: localStorage
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) setSections(parsed);
+                } catch (e) {
+                    console.error('Failed to load quote draft', e);
+                }
             }
         }
+        loadDraft();
+
         const savedZones = localStorage.getItem(ZONES_STORAGE_KEY);
         if (savedZones) {
             try {
@@ -220,9 +240,37 @@ export default function QuoteBuilderEnhanced({ onReady, onSectionsChange, onZone
         }
     }, []);
 
+    // Save: localStorage immediate + Supabase debounced (3s)
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(sections));
         if (onSectionsChange) onSectionsChange(sections);
+
+        // Debounced Supabase save
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        if (sections.length > 0) {
+            saveTimerRef.current = setTimeout(async () => {
+                try {
+                    const total = sections.reduce((sum, s) =>
+                        sum + s.items.reduce((is, i) => is + (i.sellingPrice || 0), 0), 0);
+                    const result = await saveQuote({
+                        id: supabaseQuoteId.current || undefined,
+                        serial: 'DRAFT',
+                        status: 'DRAFT',
+                        doc_type: 'QO',
+                        version: 1,
+                        sections: sections,
+                        total,
+                    });
+                    if (result && !supabaseQuoteId.current) {
+                        supabaseQuoteId.current = result.id;
+                    }
+                } catch (e) {
+                    console.error('Supabase auto-save failed:', e);
+                }
+            }, 3000);
+        }
+
+        return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
     }, [sections, onSectionsChange]);
 
     useEffect(() => {

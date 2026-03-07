@@ -53,6 +53,13 @@ export default function HubPage() {
             href: "/follow-up",
         },
         {
+            id: "projects",
+            name: "Roof Projects",
+            tagline: "Your active project portfolio",
+            index: "01b",
+            href: "/projects",
+        },
+        {
             id: "numbers",
             name: "Roof Numbers",
             tagline: "Build quotes that protect your margin",

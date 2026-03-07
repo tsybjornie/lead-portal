@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Search, Filter, Phone, Mail, Clock, Plus, TrendingUp, Users, AlertCircle } from 'lucide-react';
-import { getLeads } from '@/lib/supabase-data';
+import { ArrowLeft, Search, Filter, Phone, Mail, Clock, Plus, TrendingUp, Users, AlertCircle, FolderPlus } from 'lucide-react';
+import { getLeads, createProject } from '@/lib/supabase-data';
 
 type LeadStatus = 'NEW' | 'CONTACTED' | 'SITE_VISIT' | 'QUOTING' | 'NEGOTIATING' | 'WON' | 'LOST';
 
@@ -267,6 +267,28 @@ export default function FollowUpPage() {
                                     </button>
                                     <button className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
                                         <Mail className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button
+                                        onClick={async (e) => {
+                                            e.stopPropagation();
+                                            const budgetNum = parseFloat(lead.budgetRange.replace(/[^0-9.]/g, '')) || undefined;
+                                            const project = await createProject({
+                                                client_name: lead.name,
+                                                client_phone: lead.phone,
+                                                property_type: lead.propertyType,
+                                                property_address: lead.location,
+                                                budget_min: budgetNum,
+                                                status: 'lead',
+                                            });
+                                            if (project) {
+                                                setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: 'QUOTING' as LeadStatus, nextAction: 'Project created — open quote builder' } : l));
+                                                alert(`Project created for ${lead.name}`);
+                                            }
+                                        }}
+                                        className="p-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-600 transition-colors"
+                                        title="Convert to Project"
+                                    >
+                                        <FolderPlus className="w-3.5 h-3.5" />
                                     </button>
                                 </div>
                             </div>
