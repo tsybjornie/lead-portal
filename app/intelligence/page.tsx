@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 /* ═══ MOCK DATA ═══ */
@@ -73,6 +73,129 @@ export default function IntelligencePage() {
     const [expandedCall, setExpandedCall] = useState<string | null>(null);
     const [expandedScript, setExpandedScript] = useState<string | null>('S1');
     const [tier, setTier] = useState<'free' | 'pro' | 'studio'>('studio');
+
+    // Audio Recorder State
+    const [recState, setRecState] = useState<'idle' | 'recording' | 'analyzing' | 'result'>('idle');
+    const [recTime, setRecTime] = useState(0);
+    const [waveData, setWaveData] = useState<number[]>(new Array(40).fill(2));
+    const [aiResult, setAiResult] = useState<{ score: number, transcript: { time: string, text: string, tag?: string }[], highlights: string[], issues: string[] } | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioContextRef = useRef<AudioContext | null>(null);
+    const analyserRef = useRef<AnalyserNode | null>(null);
+    const animFrameRef = useRef<number>(0);
+    const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const chunksRef = useRef<Blob[]>([]);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const formatTime = (secs: number) => {
+        const m = Math.floor(secs / 60).toString().padStart(2, '0');
+        const s = (secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    };
+
+    const drawWaveform = useCallback(() => {
+        if (!analyserRef.current || !canvasRef.current) return;
+        const analyser = analyserRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteTimeDomainData(dataArray);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#DC2626';
+        ctx.beginPath();
+        const sliceWidth = canvas.width / bufferLength;
+        let x = 0;
+        for (let i = 0; i < bufferLength; i++) {
+            const v = dataArray[i] / 128.0;
+            const y = (v * canvas.height) / 2;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+            x += sliceWidth;
+        }
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        // Update bar data for mini bars
+        const bars: number[] = [];
+        const step = Math.floor(bufferLength / 40);
+        for (let i = 0; i < 40; i++) {
+            const val = Math.abs(dataArray[i * step] - 128) / 128;
+            bars.push(Math.max(2, val * 36));
+        }
+        setWaveData(bars);
+
+        animFrameRef.current = requestAnimationFrame(drawWaveform);
+    }, []);
+
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaStreamSource(stream);
+            const analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            source.connect(analyser);
+            audioContextRef.current = audioContext;
+            analyserRef.current = analyser;
+
+            const mediaRecorder = new MediaRecorder(stream);
+            chunksRef.current = [];
+            mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data); };
+            mediaRecorder.start();
+            mediaRecorderRef.current = mediaRecorder;
+
+            setRecState('recording');
+            setRecTime(0);
+            setAiResult(null);
+            timerRef.current = setInterval(() => setRecTime(t => t + 1), 1000);
+            drawWaveform();
+        } catch (err) {
+            alert('Microphone access required for call recording.');
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+            mediaRecorderRef.current.stream.getTracks().forEach(t => t.stop());
+        }
+        if (audioContextRef.current) audioContextRef.current.close();
+        if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+        if (timerRef.current) clearInterval(timerRef.current);
+
+        setRecState('analyzing');
+        setWaveData(new Array(40).fill(2));
+
+        // Simulate AI analysis (in production: upload to Supabase → Whisper → GPT-4)
+        setTimeout(() => {
+            setAiResult({
+                score: 68,
+                transcript: [
+                    { time: '0:00', text: 'Good afternoon, thanks for meeting me here at your flat.', tag: 'rapport' },
+                    { time: '0:45', text: 'Can you walk me through what you\'re hoping to change?', tag: 'discovery' },
+                    { time: '2:30', text: 'Based on similar 4-room BTOs, renovation typically runs S$45-65k.', tag: 'anchoring' },
+                    { time: '5:10', text: 'Let me show you some projects I\'ve done in this area...', tag: 'portfolio' },
+                    { time: '8:00', text: 'The carpentry alone would be about S$18k for the built-ins.', tag: 'pricing' },
+                    { time: '12:30', text: 'I\'ll send the detailed quote through Roof within 48 hours.', tag: 'next-step' },
+                ],
+                highlights: ['Strong opening rapport', 'Good use of portfolio', 'Clear next step defined'],
+                issues: ['Price mentioned at 2:30 — too early (ideal: after minute 10)', 'No trial close attempted', 'Didn\'t ask about their budget range first'],
+            });
+            setRecState('result');
+        }, 3000);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+            if (timerRef.current) clearInterval(timerRef.current);
+            if (audioContextRef.current) audioContextRef.current.close();
+        };
+    }, []);
 
     const tabs = [
         { id: 'overview', label: 'Performance', icon: '📊' },
@@ -250,6 +373,110 @@ export default function IntelligencePage() {
                 {/* ═══ CALLS TAB ═══ */}
                 {tab === 'calls' && (
                     <div className="animate-in">
+                        {/* Live Recorder */}
+                        <div style={{
+                            background: recState === 'recording' ? 'rgba(220,38,38,0.02)' : 'white',
+                            borderRadius: 14, padding: 24, marginBottom: 20,
+                            border: `1px solid ${recState === 'recording' ? 'rgba(220,38,38,0.15)' : 'rgba(0,0,0,0.06)'}`,
+                            transition: 'all 0.3s',
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                                <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: recState === 'recording' ? '#DC2626' : 'rgba(0,0,0,0.3)', letterSpacing: '0.1em' }}>
+                                    {recState === 'recording' ? '● RECORDING' : recState === 'analyzing' ? '⏳ ANALYZING...' : recState === 'result' ? '✅ ANALYSIS COMPLETE' : '🎙️ RECORD A CALL'}
+                                </div>
+                                {recState === 'recording' && (
+                                    <div style={{ fontFamily: mono, fontSize: 18, fontWeight: 700, color: '#DC2626' }}>{formatTime(recTime)}</div>
+                                )}
+                            </div>
+
+                            {recState === 'idle' && (
+                                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', margin: '0 0 16px' }}>Tap to start recording your site visit or sales call. AI will analyze and score it.</p>
+                                    <button onClick={startRecording} style={{
+                                        padding: '12px 32px', fontSize: 14, fontWeight: 600, background: '#DC2626', color: 'white',
+                                        border: 'none', borderRadius: 10, cursor: 'pointer', fontFamily: f,
+                                        boxShadow: '0 2px 8px rgba(220,38,38,0.2)',
+                                    }}>🎙️ Start Recording</button>
+                                </div>
+                            )}
+
+                            {recState === 'recording' && (
+                                <div>
+                                    {/* Waveform */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, height: 40, marginBottom: 16, justifyContent: 'center' }}>
+                                        {waveData.map((h, i) => (
+                                            <div key={i} style={{
+                                                width: 4, height: h, borderRadius: 2, background: '#DC2626',
+                                                opacity: 0.4 + (h / 36) * 0.6, transition: 'height 0.1s',
+                                            }} />
+                                        ))}
+                                    </div>
+                                    <canvas ref={canvasRef} width={800} height={60} style={{ width: '100%', height: 60, borderRadius: 8, background: 'rgba(0,0,0,0.02)', marginBottom: 16 }} />
+                                    <div style={{ textAlign: 'center' }}>
+                                        <button onClick={stopRecording} style={{
+                                            padding: '10px 28px', fontSize: 13, fontWeight: 600, background: '#111', color: 'white',
+                                            border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: f,
+                                        }}>⏹ Stop & Analyze</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {recState === 'analyzing' && (
+                                <div style={{ textAlign: 'center', padding: '24px 0' }}>
+                                    <div style={{ fontSize: 28, marginBottom: 8, animation: 'pulse-soft 1.5s infinite' }}>🧠</div>
+                                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', margin: 0 }}>Transcribing with Whisper... Analyzing with AI...</p>
+                                    <style>{`@keyframes pulse-soft { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }`}</style>
+                                </div>
+                            )}
+
+                            {recState === 'result' && aiResult && (
+                                <div>
+                                    {/* Score + Summary */}
+                                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                                        <div style={{
+                                            width: 72, height: 72, borderRadius: 16, flexShrink: 0,
+                                            background: aiResult.score >= 70 ? 'rgba(5,150,105,0.06)' : aiResult.score >= 50 ? 'rgba(245,158,11,0.06)' : 'rgba(220,38,38,0.06)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        }}>
+                                            <span style={{
+                                                fontFamily: mono, fontSize: 28, fontWeight: 800,
+                                                color: aiResult.score >= 70 ? '#059669' : aiResult.score >= 50 ? '#D97706' : '#DC2626',
+                                            }}>{aiResult.score}</span>
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontSize: 9, fontWeight: 600, color: '#059669', fontFamily: mono, letterSpacing: '0.1em', marginBottom: 6 }}>✅ STRENGTHS</div>
+                                            {aiResult.highlights.map((h, i) => <div key={i} style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', padding: '1px 0' }}>• {h}</div>)}
+                                            <div style={{ fontSize: 9, fontWeight: 600, color: '#DC2626', fontFamily: mono, letterSpacing: '0.1em', marginBottom: 4, marginTop: 8 }}>⚠️ IMPROVE</div>
+                                            {aiResult.issues.map((iss, i) => <div key={i} style={{ fontSize: 11, color: 'rgba(0,0,0,0.5)', padding: '1px 0' }}>• {iss}</div>)}
+                                        </div>
+                                    </div>
+
+                                    {/* Transcript */}
+                                    <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', marginBottom: 8 }}>AI TRANSCRIPT</div>
+                                    <div style={{ background: 'rgba(0,0,0,0.02)', borderRadius: 10, padding: 14 }}>
+                                        {aiResult.transcript.map((t, i) => (
+                                            <div key={i} style={{ display: 'flex', gap: 10, padding: '6px 0', borderBottom: i < aiResult.transcript.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
+                                                <div style={{ fontFamily: mono, fontSize: 10, color: '#2563EB', fontWeight: 600, minWidth: 36 }}>{t.time}</div>
+                                                <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.6)', flex: 1, lineHeight: 1.5 }}>{t.text}</div>
+                                                {t.tag && <span style={{ fontSize: 8, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: 'rgba(37,99,235,0.06)', color: '#2563EB', alignSelf: 'flex-start', textTransform: 'uppercase' as const }}>{t.tag}</span>}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                                        <button onClick={() => { setRecState('idle'); setAiResult(null); }} style={{
+                                            padding: '8px 20px', fontSize: 11, fontWeight: 600, background: 'rgba(37,99,235,0.06)', color: '#2563EB',
+                                            border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: f,
+                                        }}>Record Another</button>
+                                        <button style={{
+                                            padding: '8px 20px', fontSize: 11, fontWeight: 600, background: 'rgba(0,0,0,0.04)', color: 'rgba(0,0,0,0.4)',
+                                            border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: f,
+                                        }}>Save to History</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <div style={{ background: 'white', borderRadius: 14, padding: 24, border: '1px solid rgba(0,0,0,0.06)', marginBottom: 20 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                                 <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em' }}>RECORDED CALLS</div>
