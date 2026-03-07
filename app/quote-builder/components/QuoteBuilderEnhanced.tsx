@@ -110,6 +110,9 @@ interface LineItem {
     selectedOptionId?: string;            // Client's chosen option
     clientStatus?: 'pending' | 'approved' | 'flagged';  // Client review state
     comments?: LineComment[];             // Per-line comment thread
+
+    // Custom Item Flag — no market benchmark available
+    isCustomItem?: boolean;
 }
 
 export interface TradeSection {
@@ -151,6 +154,33 @@ const TASK_TYPE_OPTIONS = [
 // ============================================================
 
 const generateId = (): string => `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+// Benchmark items from the Roof Price Index — used to detect custom items
+const BENCHMARK_ITEMS = new Set([
+    // Tiling
+    'homogeneous tile', 'feature wall tile', 'bathroom floor tile', 'non-slip',
+    // Carpentry
+    'kitchen cabinet', 'wardrobe', 'shoe cabinet', 'tv console', 'quartz countertop', 'laminate',
+    // Painting
+    'emulsion paint', 'repaint', 'feature wall', 'nippon', 'dulux',
+    // Electrical
+    'power point', 'light point', 'db box', 'rewiring',
+    // Plumbing
+    'water point', 'water heater', 'sink', 'tap',
+    // Hacking
+    'wall hacking', 'floor tile hacking', 'debris disposal', 'demolition',
+    // Aircon
+    'system 3', 'system 4', 'concealed piping', 'fan coil', 'daikin', 'mitsubishi',
+    // Common materials
+    'cement', 'screed', 'waterproofing', 'plaster', 'ceiling', 'cornice',
+    'vinyl', 'parquet', 'marble', 'granite', 'solid surface',
+]);
+
+function isKnownBenchmarkItem(description: string): boolean {
+    if (!description || description.length < 3) return true; // Don't flag empty items
+    const lower = description.toLowerCase();
+    return Array.from(BENCHMARK_ITEMS).some(term => lower.includes(term));
+}
 
 const formatCurrency = (amount: number, jurisdiction: Jurisdiction): string => {
     const symbol = jurisdiction === 'SG' ? 'S$' : 'RM';
@@ -541,6 +571,11 @@ export default function QuoteBuilderEnhanced({ onReady, onSectionsChange, onZone
                     updated.productivityMultiplier = updates.isStaircase ? 1.5 : 1.0;
                 }
 
+                // Auto-detect custom items when description changes
+                if (updates.description !== undefined) {
+                    updated.isCustomItem = !isKnownBenchmarkItem(updates.description);
+                }
+
                 return calculateLineItem(updated);
             });
 
@@ -770,6 +805,11 @@ export default function QuoteBuilderEnhanced({ onReady, onSectionsChange, onZone
                                                                 {item.isGift && (
                                                                     <span className="shrink-0 mt-1 px-1.5 py-0.5 bg-pink-100 text-pink-600 text-[10px] font-bold rounded">
                                                                         FOC
+                                                                    </span>
+                                                                )}
+                                                                {item.isCustomItem && (
+                                                                    <span className="shrink-0 mt-1 px-1.5 py-0.5 bg-orange-50 text-orange-600 text-[10px] font-bold rounded border border-orange-200" title="No market benchmark — designer's estimate">
+                                                                        CUSTOM
                                                                     </span>
                                                                 )}
                                                                 {item.materialOptions && item.materialOptions.length > 0 && (
