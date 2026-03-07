@@ -252,11 +252,6 @@ export default function AdminDashboard() {
             {/* Footer */}
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.05em' }}>© 2026 ROOF · ADMIN</span>
-                <div style={{ display: 'flex', gap: 24 }}>
-                    {[{ label: 'Landing', href: '/landing' }, { label: 'Match Briefs', href: '/admin/matches' }, { label: 'Ratings', href: '/admin/ratings' }].map(link => (
-                        <Link key={link.label} href={link.href} style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>{link.label}</Link>
-                    ))}
-                </div>
             </footer>
         </div>
     );
