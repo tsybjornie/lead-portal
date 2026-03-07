@@ -281,7 +281,7 @@ export default function ProspectKanban() {
                     return (
                         <div
                             key={col.status}
-                            className="min-w-[200px] w-[200px] shrink-0 flex flex-col"
+                            className="min-w-[220px] w-[220px] shrink-0 flex flex-col"
                             onDragOver={handleDragOver}
                             onDrop={() => handleDrop(col.status)}
                         >
@@ -313,7 +313,7 @@ export default function ProspectKanban() {
                                             draggable
                                             onDragStart={() => handleDragStart(prospect.id)}
                                             onClick={() => setExpandedCard(isExpanded ? null : prospect.id)}
-                                            className={`bg-white rounded-lg p-2.5 border cursor-grab active:cursor-grabbing transition-all hover:shadow-md ${draggedId === prospect.id
+                                            className={`bg-white rounded-lg p-3 border cursor-grab active:cursor-grabbing transition-all hover:shadow-md min-h-[76px] flex flex-col ${draggedId === prospect.id
                                                 ? 'opacity-50 border-blue-300'
                                                 : isStale
                                                     ? 'border-amber-200'
@@ -329,7 +329,7 @@ export default function ProspectKanban() {
                                             {prospect.projectType && (
                                                 <p className="text-[10px] text-slate-400 mt-0.5">{prospect.projectType}</p>
                                             )}
-                                            <div className="flex items-center justify-between mt-1.5">
+                                            <div className="flex items-center justify-between mt-auto pt-1.5">
                                                 {prospect.estimatedBudget ? (
                                                     <span className="text-[10px] font-bold text-slate-600">{fmt(prospect.estimatedBudget)}</span>
                                                 ) : <span />}
