@@ -2,21 +2,20 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useRoofAuth, lookupUserByCode } from '@/context/RoofAuthContext';
+import { useRoofAuth } from '@/context/RoofAuthContext';
 
 export default function Home() {
-  const { isLoggedIn, user } = useRoofAuth();
+  const { isLoggedIn, user, isLoading, defaultRoute } = useRoofAuth();
   const router = useRouter();
 
   useEffect(() => {
+    if (isLoading) return; // Wait for auth to hydrate
     if (isLoggedIn && user) {
-      // Redirect to user's role-appropriate dashboard
-      const entry = lookupUserByCode((user as any).code || '');
-      router.replace(entry?.defaultRoute || '/hub');
+      router.replace(defaultRoute);
     } else {
       router.replace('/landing');
     }
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, isLoading, defaultRoute, router]);
 
   return null;
 }
