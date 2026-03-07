@@ -10,6 +10,7 @@ const DEMAND = [
     { id: 'business', label: 'Business Owner', sub: 'Retail, F&B, hotel, industrial', href: '/signup/homeowner', img: '/images/roles/business.png', featured: false },
     { id: 'investor', label: 'Property Investor', sub: 'Shophouses, flips & portfolios', href: '/signup/homeowner', img: '/images/roles/investor.png', featured: false },
     { id: 'developer', label: 'Property Developer', sub: 'New builds & conversions', href: '/signup/homeowner', img: '/images/roles/office.png', featured: false },
+    { id: 'tenant', label: 'Tenant / Renter', sub: 'Rented homes & commercial fit-outs', href: '/signup/homeowner', img: '/images/roles/contractor.png', featured: false },
 ];
 
 const SUPPLY = [
