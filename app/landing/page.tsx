@@ -14,9 +14,10 @@ const DEMAND = [
 
 const SUPPLY = [
     { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', img: '/images/roles/design-firm.png' },
-    { id: 'contractor', label: 'Contractor', sub: 'Builders & tradesmen', href: '/signup/contractor', img: '/images/roles/contractor.png' },
-    { id: 'worker', label: 'Worker', sub: 'Site crew & skilled trades', href: '/signup/worker', img: '/images/roles/worker.png' },
-    { id: 'brand', label: 'Brand Owner / Distributor', sub: 'Materials, equipment & plant', href: '/signup/brand', img: '/images/roles/brand.png' },
+    { id: 'consultant', label: 'Consultant / QP', sub: 'Architects (PE), engineers, LEW, surveyors', href: '/signup/consultant', img: '/images/roles/consultant.png' },
+    { id: 'contractor', label: 'Contractor', sub: 'Builders, tradesmen & site crew', href: '/signup/contractor', img: '/images/roles/contractor.png' },
+    { id: 'specialist', label: 'Specialist', sub: 'Landscape, smart home, pest, cleaning, movers', href: '/signup/specialist', img: '/images/roles/specialist.png' },
+    { id: 'brand', label: 'Brand / Distributor', sub: 'Materials, equipment & plant', href: '/signup/brand', img: '/images/roles/brand.png' },
 ];
 
 export default function LandingPage() {
@@ -121,7 +122,7 @@ export default function LandingPage() {
                     <p className="text-[10px] tracking-[0.25em] uppercase font-medium text-[#bbb] mb-5">
                         I&apos;m a professional
                     </p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                         {SUPPLY.map((role, i) => (
                             <motion.div
                                 key={role.id}

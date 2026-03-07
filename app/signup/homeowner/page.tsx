@@ -3,9 +3,46 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const SG_PROPERTIES = ['HDB 3-Room', 'HDB 4-Room', 'HDB 5-Room', 'HDB Executive', 'Executive Condo (EC)', 'Condo', 'Landed — Terrace', 'Landed — Semi-D', 'Landed — Bungalow / GCB', 'Shophouse'];
-const MY_PROPERTIES = ['Flat / Apartment', 'Condo / Serviced Residence', 'Townhouse', 'Terrace (Single Storey)', 'Terrace (Double Storey)', 'Semi-D', 'Bungalow', 'Villa', 'Shophouse', 'Shop-Office (SOHO/SOFO)'];
-const BUDGET_RANGES = ['Below $30k', '$30k – $50k', '$50k – $80k', '$80k – $120k', '$120k – $200k', 'Above $200k'];
+const SG_PROPERTIES = [
+    'HDB 2-Room Flexi',
+    'HDB 3-Room',
+    'HDB 4-Room',
+    'HDB 5-Room',
+    'HDB 3Gen (Multi-Gen)',
+    'HDB Executive (EA)',
+    'HDB Executive Maisonette (EM)',
+    'HDB 5-Room Maisonette',
+    'HDB DBSS',
+    'HDB Jumbo',
+    'Executive Condo (EC)',
+    'Condo — Studio',
+    'Condo — 1 Bedroom',
+    'Condo — 2 Bedroom',
+    'Condo — 3 Bedroom',
+    'Condo — Penthouse / Loft',
+    'Landed — Terrace',
+    'Landed — Semi-D',
+    'Landed — Bungalow / GCB',
+    'Shophouse',
+];
+const MY_PROPERTIES = [
+    'Flat / Apartment',
+    'Condo / Serviced Residence — Studio',
+    'Condo / Serviced Residence — 1-3 Bed',
+    'Condo / Serviced Residence — Penthouse',
+    'Townhouse',
+    'Terrace (Single Storey)',
+    'Terrace (Double Storey)',
+    'Semi-D',
+    'Bungalow',
+    'Villa',
+    'Shophouse',
+    'Shop-Office (SOHO/SOFO)',
+];
+const BUDGET_RENO = ['Not needed', 'Below $10k', '$10k – $25k', '$25k – $50k', '$50k – $80k', '$80k – $150k', 'Above $150k'];
+const BUDGET_ME = ['Not needed', 'Below $3k', '$3k – $8k', '$8k – $15k', '$15k – $30k', 'Above $30k'];
+const BUDGET_FFE = ['Not needed', 'Below $5k', '$5k – $15k', '$15k – $30k', '$30k – $60k', 'Above $60k'];
+const BUDGET_TOTAL = ['Below $30k', '$30k – $50k', '$50k – $80k', '$80k – $120k', '$120k – $200k', '$200k – $500k', 'Above $500k'];
 const STYLES = ['Wabi-Sabi', 'Bauhaus', 'De Stijl', 'Brutalism', 'Art Nouveau', 'Peranakan', 'Hygge', 'Art Deco', 'Luxury', 'Not sure — help me decide'];
 const TIMELINES = ['ASAP (keys received)', 'Within 3 months', '3–6 months', '6–12 months', 'Just exploring'];
 const PROJECT_REASONS = [
@@ -19,14 +56,26 @@ const PROJECT_REASONS = [
 ];
 const OCCUPANTS = ['Couple', 'Child (young)', 'Child (teen)', 'Elderly parent', 'Helper / maid', 'Work from home', 'Guest room', 'Pets', 'Wheelchair user', 'Storage / utility', 'Empty'];
 const ROOM_LAYOUTS: Record<string, string[]> = {
-    // ── SG Flats (single level) ──
-    'HDB 3-Room': ['Master Bedroom', 'Bedroom 2', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
-    'HDB 4-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
-    'HDB 5-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
-    'HDB Executive': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Balcony'],
-    // ── SG Condos (single level unit) ──
-    'Executive Condo (EC)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony'],
-    'Condo': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony', 'Yard'],
+    // ── SG HDB Flats (single level) ──
+    'HDB 2-Room Flexi': ['Bedroom', 'Living Room', 'Kitchen', 'Bathroom', 'Bomb Shelter'],
+    'HDB 3-Room': ['Master Bedroom', 'Bedroom 2', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Bomb Shelter'],
+    'HDB 4-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Bomb Shelter', 'Service Yard'],
+    'HDB 5-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Bomb Shelter', 'Service Yard'],
+    'HDB 3Gen (Multi-Gen)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Bedroom 4 (elderly)', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1 (master)', 'Bathroom 2 (elderly)', 'Bathroom 3 (common)', 'Bomb Shelter', 'Service Yard'],
+    'HDB Executive (EA)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Balcony', 'Bomb Shelter', 'Service Yard'],
+    // ── SG HDB Maisonettes (2-level!) ──
+    'HDB Executive Maisonette (EM)': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Service Yard', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Study / Bedroom 4', 'L2 — Bathroom 1', 'L2 — Bathroom 2'],
+    'HDB 5-Room Maisonette': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Service Yard', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2'],
+    // ── SG HDB Special Types (single level) ──
+    'HDB DBSS': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (enclosed)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Bomb Shelter', 'Service Yard'],
+    'HDB Jumbo': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Bedroom 4', 'Bedroom 5', 'Living Room', 'Dining', 'Kitchen 1', 'Kitchen 2', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Service Yard 1', 'Service Yard 2'],
+    // ── SG Condos ──
+    'Executive Condo (EC)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony', 'Yard'],
+    'Condo — Studio': ['Bedroom / Living', 'Kitchen', 'Bathroom'],
+    'Condo — 1 Bedroom': ['Bedroom', 'Living Room', 'Kitchen', 'Bathroom', 'Balcony'],
+    'Condo — 2 Bedroom': ['Master Bedroom', 'Bedroom 2', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Balcony'],
+    'Condo — 3 Bedroom': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony', 'Yard'],
+    'Condo — Penthouse / Loft': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Balcony', 'L2 — Master Suite', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'Roof — Terrace'],
     // ── SG Landed (multi-level) ──
     'Landed — Terrace': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2'],
     'Landed — Semi-D': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen (wet)', 'L1 — Kitchen (dry)', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'Ext — Garden'],
@@ -35,7 +84,9 @@ const ROOM_LAYOUTS: Record<string, string[]> = {
     'Shophouse': ['L1 — Commercial / Retail', 'L1 — Back Kitchen', 'L1 — Bathroom', 'L1 — Airwell', 'L2 — Living Room', 'L2 — Dining', 'L2 — Bathroom', 'L3 — Master Bedroom', 'L3 — Bedroom 2', 'L3 — Bedroom 3', 'L3 — Bathroom', 'Roof — Terrace'],
     // ── MY Flats (single level) ──
     'Flat / Apartment': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
-    'Condo / Serviced Residence': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony'],
+    'Condo / Serviced Residence — Studio': ['Bedroom / Living', 'Kitchen', 'Bathroom'],
+    'Condo / Serviced Residence — 1-3 Bed': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony'],
+    'Condo / Serviced Residence — Penthouse': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Balcony', 'L2 — Master Suite', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'Roof — Terrace'],
     // ── MY Landed (multi-level) ──
     'Townhouse': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L3 — Bedroom 4', 'L3 — Bathroom'],
     'Terrace (Single Storey)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Car Porch'],
@@ -47,7 +98,7 @@ const ROOM_LAYOUTS: Record<string, string[]> = {
 };
 
 export default function HomeownerSignup() {
-    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '' });
+    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '' });
     const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
@@ -78,7 +129,10 @@ export default function HomeownerSignup() {
                     property_type: form.property,
                     property_address: form.address,
                     project_reason: form.reason,
-                    budget: form.budget,
+                    budget_renovation: form.budgetReno,
+                    budget_me: form.budgetME,
+                    budget_ffe: form.budgetFFE,
+                    budget_total: form.budgetTotal,
                     timeline: form.timeline,
                     preferred_style: form.style,
                     rooms: form.rooms,
@@ -93,7 +147,7 @@ export default function HomeownerSignup() {
             } else {
                 setMessage('Submitted! We will match you with 3 designers within 24 hours.');
                 setMessageType('success');
-                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', rooms: {}, reason: '' });
+                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {}, reason: '' });
             }
         } catch {
             setMessage('Connection error. Please try again.');
@@ -241,21 +295,44 @@ export default function HomeownerSignup() {
                             {PROJECT_REASONS.map(r => <option key={r} value={r}>{r}</option>)}
                         </select>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                         <div>
-                            <label style={labelStyle}>Budget</label>
-                            <select style={{ ...selectStyle, color: form.budget ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.budget} onChange={e => setForm(p => ({ ...p, budget: e.target.value }))}>
-                                <option value="">Select range</option>
-                                {BUDGET_RANGES.map(b => <option key={b} value={b}>{b}</option>)}
+                            <label style={labelStyle}>硬装 Hard Deco (Reno Works)</label>
+                            <select style={{ ...selectStyle, color: form.budgetReno ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.budgetReno} onChange={e => setForm(p => ({ ...p, budgetReno: e.target.value }))}>
+                                <option value="">Hacking, tiling, carpentry, paint</option>
+                                {BUDGET_RENO.map(b => <option key={b} value={b}>{b}</option>)}
                             </select>
                         </div>
                         <div>
-                            <label style={labelStyle}>Timeline</label>
-                            <select style={{ ...selectStyle, color: form.timeline ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.timeline} onChange={e => setForm(p => ({ ...p, timeline: e.target.value }))}>
-                                <option value="">When do you need?</option>
-                                {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
+                            <label style={labelStyle}>M&E (Electrical & Plumbing)</label>
+                            <select style={{ ...selectStyle, color: form.budgetME ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.budgetME} onChange={e => setForm(p => ({ ...p, budgetME: e.target.value }))}>
+                                <option value="">Wiring, aircon, plumbing</option>
+                                {BUDGET_ME.map(b => <option key={b} value={b}>{b}</option>)}
                             </select>
                         </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                            <label style={labelStyle}>软装 Soft Deco (FF&E)</label>
+                            <select style={{ ...selectStyle, color: form.budgetFFE ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.budgetFFE} onChange={e => setForm(p => ({ ...p, budgetFFE: e.target.value }))}>
+                                <option value="">Sofa, bed, fridge, curtains</option>
+                                {BUDGET_FFE.map(b => <option key={b} value={b}>{b}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <label style={labelStyle}>Total Budget (overall cap)</label>
+                            <select style={{ ...selectStyle, color: form.budgetTotal ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.budgetTotal} onChange={e => setForm(p => ({ ...p, budgetTotal: e.target.value }))}>
+                                <option value="">Total all-in</option>
+                                {BUDGET_TOTAL.map(b => <option key={b} value={b}>{b}</option>)}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label style={labelStyle}>Timeline</label>
+                        <select style={{ ...selectStyle, color: form.timeline ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.timeline} onChange={e => setForm(p => ({ ...p, timeline: e.target.value }))}>
+                            <option value="">When do you need?</option>
+                            {TIMELINES.map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
                     </div>
                 </div>
 
