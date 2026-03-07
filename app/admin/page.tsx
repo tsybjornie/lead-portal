@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 /* ── Seed data (Bjorn's real network) ── */
@@ -35,11 +36,11 @@ function irsTier(score: number) {
 }
 
 export default function AdminDashboard() {
-    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+    const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
+    const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
     const [tab, setTab] = useState<'overview' | 'firms' | 'homeowners' | 'workers' | 'pricing'>('overview');
 
     const totalGMV = FIRMS.reduce((s, f) => s + f.gmv, 0);
-    const totalProjects = FIRMS.reduce((s, f) => s + f.projects, 0);
     const escrowRevenue = Math.round(totalGMV * 0.02);
     const commissionRevenue = Math.round(totalGMV * 0.015);
 
@@ -51,37 +52,77 @@ export default function AdminDashboard() {
         { key: 'pricing', label: 'Price Index' },
     ];
 
+    const cardStyle = {
+        background: 'white', borderRadius: 12, padding: '20px 24px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+    };
+    const thStyle = {
+        padding: '10px 14px', textAlign: 'left' as const, fontSize: 9, fontWeight: 600 as const,
+        color: 'rgba(0,0,0,0.35)', textTransform: 'uppercase' as const, letterSpacing: '0.1em',
+        fontFamily: mono,
+    };
+    const tdStyle = { padding: '10px 14px', fontSize: 12, color: 'rgba(0,0,0,0.6)' };
+    const badge = (text: string, color: string) => ({
+        padding: '2px 10px', borderRadius: 20, fontSize: 10, fontWeight: 600 as const,
+        background: `${color}12`, color, display: 'inline-block' as const,
+    });
+
+    const navLinks = [
+        { label: 'Dashboard', href: '/admin', active: true },
+        { label: 'Match Briefs', href: '/admin/matches', active: false },
+        { label: 'Ratings', href: '/admin/ratings', active: false },
+    ];
+
     return (
-        <div style={{ fontFamily: f, background: '#18171C', color: 'white', minHeight: '100vh' }}>
-            {/* Header */}
-            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 7, background: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800 }}>R</div>
-                    <span style={{ fontSize: 15, fontWeight: 800 }}>Roof Admin</span>
-                    <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'rgba(5,150,105,0.2)', color: '#34D399', fontWeight: 600, marginLeft: 4 }}>FOUNDER</span>
+        <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+            {/* Nav */}
+            <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
+                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
+                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ADMIN</span>
+                    <span style={{ padding: '2px 8px', borderRadius: 4, background: 'rgba(5,150,105,0.08)', color: '#059669', fontSize: 9, fontWeight: 600, letterSpacing: '0.08em' }}>FOUNDER</span>
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Bjorn — Multiply Carpentry</div>
-            </div>
+                <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+                    {navLinks.map(link => (
+                        <Link key={link.label} href={link.href} style={{
+                            fontSize: 11, fontWeight: link.active ? 600 : 400,
+                            color: link.active ? '#111' : 'rgba(0,0,0,0.35)',
+                            textDecoration: 'none', transition: 'color 0.2s',
+                            borderBottom: link.active ? '2px solid #111' : '2px solid transparent',
+                            paddingBottom: 2,
+                        }}>{link.label}</Link>
+                    ))}
+                </div>
+            </nav>
 
-            {/* Tabs */}
-            <div style={{ padding: '0 28px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: 4 }}>
-                {tabs.map(t => (
-                    <button
-                        key={t.key}
-                        onClick={() => setTab(t.key as typeof tab)}
-                        style={{
-                            padding: '12px 16px', fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer',
-                            background: 'transparent', color: tab === t.key ? 'white' : 'rgba(255,255,255,0.4)',
-                            borderBottom: tab === t.key ? '2px solid #059669' : '2px solid transparent',
-                            fontFamily: f, transition: 'all 0.15s',
-                        }}
-                    >
-                        {t.label}
-                    </button>
-                ))}
-            </div>
+            <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 48px' }}>
+                {/* Header */}
+                <div style={{ marginBottom: 32 }}>
+                    <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.2em', textTransform: 'uppercase' as const, marginBottom: 12 }}>PLATFORM OVERVIEW</div>
+                    <h1 style={{ fontSize: 28, fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 4px', color: '#111' }}>
+                        Roof <span style={{ color: 'rgba(0,0,0,0.2)', fontStyle: 'italic' }}>Admin</span>
+                    </h1>
+                    <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', margin: 0 }}>Bjorn — Multiply Carpentry</p>
+                </div>
 
-            <div style={{ padding: '28px' }}>
+                {/* Tabs */}
+                <div style={{ display: 'flex', gap: 4, marginBottom: 28, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                    {tabs.map(t => (
+                        <button key={t.key} onClick={() => setTab(t.key as typeof tab)} style={{
+                            padding: '10px 16px', fontSize: 11, fontWeight: 500, border: 'none', cursor: 'pointer',
+                            background: 'transparent', fontFamily: mono,
+                            color: tab === t.key ? '#111' : 'rgba(0,0,0,0.35)',
+                            borderBottom: tab === t.key ? '2px solid #111' : '2px solid transparent',
+                            transition: 'all 0.15s', letterSpacing: '0.02em',
+                        }}>{t.label}</button>
+                    ))}
+                </div>
+
                 {tab === 'overview' && (
                     <>
                         {/* KPI Cards */}
@@ -92,33 +133,29 @@ export default function AdminDashboard() {
                                 { label: 'Homeowner Leads', value: `${HOMEOWNERS.length}`, sub: `${HOMEOWNERS.filter(h => h.status === 'Matched').length} matched`, color: '#D97706' },
                                 { label: 'Est. Platform Revenue', value: `S$${((escrowRevenue + commissionRevenue) / 1000).toFixed(1)}k`, sub: 'Escrow + commission', color: '#8B5CF6' },
                             ].map(kpi => (
-                                <div key={kpi.label} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', padding: '20px' }}>
-                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>{kpi.label}</div>
-                                    <div style={{ fontSize: 28, fontWeight: 900, color: kpi.color }}>{kpi.value}</div>
-                                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>{kpi.sub}</div>
+                                <div key={kpi.label} style={cardStyle}>
+                                    <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.35)', textTransform: 'uppercase' as const, letterSpacing: '0.12em', marginBottom: 8 }}>{kpi.label}</div>
+                                    <div style={{ fontSize: 28, fontWeight: 700, color: kpi.color, letterSpacing: '-0.02em' }}>{kpi.value}</div>
+                                    <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.3)', marginTop: 4 }}>{kpi.sub}</div>
                                 </div>
                             ))}
                         </div>
 
                         {/* Founding 20 Visual */}
-                        <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', padding: '20px', marginBottom: 28 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Founding 20 Slots</div>
-                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <div style={{ ...cardStyle, marginBottom: 28 }}>
+                            <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 14 }}>FOUNDING 20 SLOTS</div>
+                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                                 {Array.from({ length: 20 }).map((_, i) => {
                                     const firm = FIRMS[i];
                                     return (
-                                        <div
-                                            key={i}
-                                            title={firm ? `${firm.name} (${firm.owner})` : `Slot ${i + 1} — Available`}
-                                            style={{
-                                                width: 40, height: 40, borderRadius: 8,
-                                                background: firm ? '#059669' : 'rgba(255,255,255,0.04)',
-                                                border: firm ? '2px solid #34D399' : '2px solid rgba(255,255,255,0.08)',
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                fontSize: 10, fontWeight: 700, color: firm ? 'white' : 'rgba(255,255,255,0.2)',
-                                                cursor: 'default',
-                                            }}
-                                        >
+                                        <div key={i} title={firm ? `${firm.name} (${firm.owner})` : `Slot ${i + 1} — Available`} style={{
+                                            width: 44, height: 44, borderRadius: 10,
+                                            background: firm ? '#059669' : 'rgba(0,0,0,0.03)',
+                                            border: firm ? '2px solid rgba(5,150,105,0.3)' : '2px dashed rgba(0,0,0,0.1)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: 11, fontWeight: 700, color: firm ? 'white' : 'rgba(0,0,0,0.15)',
+                                            cursor: 'default', transition: 'transform 0.2s',
+                                        }}>
                                             {firm ? firm.name.charAt(0) : i + 1}
                                         </div>
                                     );
@@ -128,29 +165,29 @@ export default function AdminDashboard() {
 
                         {/* Revenue Breakdown */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                            <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', padding: '20px' }}>
-                                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>Revenue by Source</div>
+                            <div style={cardStyle}>
+                                <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 14 }}>REVENUE BY SOURCE</div>
                                 {[
-                                    { label: 'Escrow fees (2% GMV)', value: `S$${escrowRevenue.toLocaleString()}`, pct: 55 },
-                                    { label: 'Commission (blended 1.5%)', value: `S$${commissionRevenue.toLocaleString()}`, pct: 35 },
-                                    { label: 'Setup fees', value: 'S$0', pct: 0 },
-                                    { label: 'SaaS', value: 'S$0', pct: 0 },
+                                    { label: 'Escrow fees (2% GMV)', value: `S$${escrowRevenue.toLocaleString()}`, active: true },
+                                    { label: 'Commission (blended 1.5%)', value: `S$${commissionRevenue.toLocaleString()}`, active: true },
+                                    { label: 'Setup fees', value: 'S$0', active: false },
+                                    { label: 'SaaS', value: 'S$0', active: false },
                                 ].map(r => (
-                                    <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>{r.label}</span>
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: r.pct > 0 ? '#059669' : 'rgba(255,255,255,0.2)' }}>{r.value}</span>
+                                    <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                                        <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>{r.label}</span>
+                                        <span style={{ fontSize: 13, fontWeight: 600, color: r.active ? '#059669' : 'rgba(0,0,0,0.15)' }}>{r.value}</span>
                                     </div>
                                 ))}
                             </div>
-                            <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', padding: '20px' }}>
-                                <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>GMV by Market</div>
+                            <div style={cardStyle}>
+                                <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 14 }}>GMV BY MARKET</div>
                                 {[
                                     { label: 'Singapore', value: `S$${FIRMS.filter(f => f.market === 'SG').reduce((s, f) => s + f.gmv, 0).toLocaleString()}` },
                                     { label: 'Johor Bahru', value: `S$${FIRMS.filter(f => f.market === 'MY').reduce((s, f) => s + f.gmv, 0).toLocaleString()}` },
                                 ].map(m => (
-                                    <div key={m.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{m.label}</span>
-                                        <span style={{ fontSize: 13, fontWeight: 700 }}>{m.value}</span>
+                                    <div key={m.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                                        <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)' }}>{m.label}</span>
+                                        <span style={{ fontSize: 14, fontWeight: 600 }}>{m.value}</span>
                                     </div>
                                 ))}
                             </div>
@@ -159,30 +196,26 @@ export default function AdminDashboard() {
                 )}
 
                 {tab === 'firms' && (
-                    <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                    <div style={{ ...cardStyle, overflow: 'hidden', padding: 0 }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                                <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                                     {['Firm', 'Owner', 'Market', 'Type', 'Tier', 'Projects', 'GMV', 'Status'].map(h => (
-                                        <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{h}</th>
+                                        <th key={h} style={thStyle}>{h}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {FIRMS.map(firm => (
-                                    <tr key={firm.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                        <td style={{ padding: '10px 14px', fontWeight: 600 }}>{firm.name}</td>
-                                        <td style={{ padding: '10px 14px', color: 'rgba(255,255,255,0.5)' }}>{firm.owner}</td>
-                                        <td style={{ padding: '10px 14px' }}>
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, background: firm.market === 'SG' ? 'rgba(37,99,235,0.15)' : 'rgba(217,119,6,0.15)', color: firm.market === 'SG' ? '#60A5FA' : '#FBBF24', fontSize: 10, fontWeight: 600 }}>{firm.market}</span>
-                                        </td>
-                                        <td style={{ padding: '10px 14px', color: 'rgba(255,255,255,0.5)' }}>{firm.type}</td>
-                                        <td style={{ padding: '10px 14px' }}>
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, background: 'rgba(5,150,105,0.15)', color: '#34D399', fontSize: 10, fontWeight: 600 }}>{firm.tier}</span>
-                                        </td>
-                                        <td style={{ padding: '10px 14px' }}>{firm.projects}</td>
-                                        <td style={{ padding: '10px 14px', fontWeight: 600 }}>S${firm.gmv.toLocaleString()}</td>
-                                        <td style={{ padding: '10px 14px' }}>
+                                    <tr key={firm.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>{firm.name}</td>
+                                        <td style={tdStyle}>{firm.owner}</td>
+                                        <td style={tdStyle}><span style={badge(firm.market, firm.market === 'SG' ? '#2563EB' : '#D97706')}>{firm.market}</span></td>
+                                        <td style={tdStyle}>{firm.type}</td>
+                                        <td style={tdStyle}><span style={badge(firm.tier, '#059669')}>{firm.tier}</span></td>
+                                        <td style={tdStyle}>{firm.projects}</td>
+                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>S${firm.gmv.toLocaleString()}</td>
+                                        <td style={tdStyle}>
                                             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#059669', display: 'inline-block', marginRight: 6 }}></span>
                                             {firm.status}
                                         </td>
@@ -194,26 +227,24 @@ export default function AdminDashboard() {
                 )}
 
                 {tab === 'homeowners' && (
-                    <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                    <div style={{ ...cardStyle, overflow: 'hidden', padding: 0 }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                                <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                                     {['Name', 'Property', 'Location', 'Budget', 'Status', 'Matched Firm'].map(h => (
-                                        <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{h}</th>
+                                        <th key={h} style={thStyle}>{h}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody>
                                 {HOMEOWNERS.map(ho => (
-                                    <tr key={ho.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                        <td style={{ padding: '10px 14px', fontWeight: 600 }}>{ho.name}</td>
-                                        <td style={{ padding: '10px 14px', color: 'rgba(255,255,255,0.5)' }}>{ho.property}</td>
-                                        <td style={{ padding: '10px 14px', color: 'rgba(255,255,255,0.5)' }}>{ho.location}</td>
-                                        <td style={{ padding: '10px 14px', fontWeight: 600 }}>S${ho.budget.toLocaleString()}</td>
-                                        <td style={{ padding: '10px 14px' }}>
-                                            <span style={{ padding: '2px 8px', borderRadius: 4, background: ho.status === 'Matched' ? 'rgba(5,150,105,0.15)' : 'rgba(217,119,6,0.15)', color: ho.status === 'Matched' ? '#34D399' : '#FBBF24', fontSize: 10, fontWeight: 600 }}>{ho.status}</span>
-                                        </td>
-                                        <td style={{ padding: '10px 14px', color: ho.matchedFirm === '—' ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.7)' }}>{ho.matchedFirm}</td>
+                                    <tr key={ho.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>{ho.name}</td>
+                                        <td style={tdStyle}>{ho.property}</td>
+                                        <td style={tdStyle}>{ho.location}</td>
+                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>S${ho.budget.toLocaleString()}</td>
+                                        <td style={tdStyle}><span style={badge(ho.status, ho.status === 'Matched' ? '#059669' : '#D97706')}>{ho.status}</span></td>
+                                        <td style={{ ...tdStyle, color: ho.matchedFirm === '—' ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.6)' }}>{ho.matchedFirm}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -222,12 +253,12 @@ export default function AdminDashboard() {
                 )}
 
                 {tab === 'workers' && (
-                    <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                    <div style={{ ...cardStyle, overflow: 'hidden', padding: 0 }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                                <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                                     {['Worker', 'Trade', 'IRS', 'Tier', 'Market', 'Jobs'].map(h => (
-                                        <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{h}</th>
+                                        <th key={h} style={thStyle}>{h}</th>
                                     ))}
                                 </tr>
                             </thead>
@@ -235,17 +266,13 @@ export default function AdminDashboard() {
                                 {WORKERS.map(w => {
                                     const tier = irsTier(w.irs);
                                     return (
-                                        <tr key={w.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                                            <td style={{ padding: '10px 14px', fontWeight: 600 }}>{w.name}</td>
-                                            <td style={{ padding: '10px 14px', color: 'rgba(255,255,255,0.5)' }}>{w.trade}</td>
-                                            <td style={{ padding: '10px 14px', fontWeight: 700, color: tier.color }}>{w.irs}</td>
-                                            <td style={{ padding: '10px 14px' }}>
-                                                <span style={{ padding: '2px 8px', borderRadius: 4, background: `${tier.color}22`, color: tier.color, fontSize: 10, fontWeight: 600 }}>{tier.label}</span>
-                                            </td>
-                                            <td style={{ padding: '10px 14px' }}>
-                                                <span style={{ padding: '2px 8px', borderRadius: 4, background: w.market === 'SG' ? 'rgba(37,99,235,0.15)' : 'rgba(217,119,6,0.15)', color: w.market === 'SG' ? '#60A5FA' : '#FBBF24', fontSize: 10, fontWeight: 600 }}>{w.market}</span>
-                                            </td>
-                                            <td style={{ padding: '10px 14px' }}>{w.jobs}</td>
+                                        <tr key={w.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                                            <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>{w.name}</td>
+                                            <td style={tdStyle}>{w.trade}</td>
+                                            <td style={{ ...tdStyle, fontWeight: 700, color: tier.color }}>{w.irs}</td>
+                                            <td style={tdStyle}><span style={badge(tier.label, tier.color)}>{tier.label}</span></td>
+                                            <td style={tdStyle}><span style={badge(w.market, w.market === 'SG' ? '#2563EB' : '#D97706')}>{w.market}</span></td>
+                                            <td style={tdStyle}>{w.jobs}</td>
                                         </tr>
                                     );
                                 })}
@@ -255,15 +282,27 @@ export default function AdminDashboard() {
                 )}
 
                 {tab === 'pricing' && (
-                    <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)', padding: '20px' }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 4 }}>Price Index — Internal Only</div>
-                        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 16 }}>This data is not public. For your reference only.</div>
-                        <a href="/price-index" style={{ display: 'inline-block', padding: '10px 20px', background: '#059669', color: 'white', borderRadius: 8, textDecoration: 'none', fontSize: 12, fontWeight: 600 }}>
-                            Open Price Index
-                        </a>
+                    <div style={cardStyle}>
+                        <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 8 }}>PRICE INDEX</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Internal Reference Only</div>
+                        <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', marginBottom: 20 }}>This data is not public. For your reference only.</div>
+                        <Link href="/price-index" style={{
+                            display: 'inline-block', padding: '10px 24px', background: '#111', color: 'white',
+                            borderRadius: 8, textDecoration: 'none', fontSize: 12, fontWeight: 600,
+                        }}>Open Price Index →</Link>
                     </div>
                 )}
             </div>
+
+            {/* Footer */}
+            <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontFamily: mono, fontSize: 10, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.05em' }}>© 2026 ROOF · ADMIN</span>
+                <div style={{ display: 'flex', gap: 24 }}>
+                    {[{ label: 'Landing', href: '/landing' }, { label: 'Match Briefs', href: '/admin/matches' }, { label: 'Ratings', href: '/admin/ratings' }].map(link => (
+                        <Link key={link.label} href={link.href} style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>{link.label}</Link>
+                    ))}
+                </div>
+            </footer>
         </div>
     );
 }

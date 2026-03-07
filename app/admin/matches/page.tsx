@@ -279,11 +279,15 @@ export default function MatchBriefPage() {
             {/* Nav */}
             <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/admin" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.15)' }}>/ </span>
+                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
+                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
                     <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>MATCH INTELLIGENCE</span>
                 </div>
-                <Link href="/admin" style={{ fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}>← Admin</Link>
+                <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+                    <Link href="/admin" style={{ fontSize: 11, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Dashboard</Link>
+                    <Link href="/admin/matches" style={{ fontSize: 11, fontWeight: 600, color: '#111', textDecoration: 'none', borderBottom: '2px solid #111', paddingBottom: 2 }}>Match Briefs</Link>
+                    <Link href="/admin/ratings" style={{ fontSize: 11, fontWeight: 400, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Ratings</Link>
+                </div>
             </nav>
 
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 48px' }}>
@@ -350,6 +354,64 @@ export default function MatchBriefPage() {
                         <div style={{ fontSize: 13, fontWeight: 500 }}>{lead.cultural.length > 0 ? lead.cultural.join(', ') : '—'}</div>
                     </div>
                 </div>
+
+                {/* ═══ PREDICTION ODDS BAR ═══ */}
+                {(() => {
+                    const sorted = [...briefs].sort((a, b) => b.closeRate - a.closeRate);
+                    const totalOdds = sorted.reduce((s, b) => s + b.closeRate, 0);
+                    const fieldOdds = Math.max(0, 100 - totalOdds);
+                    const oddsColors = ['#059669', '#2563EB', '#D97706', '#8B5CF6'];
+                    return (
+                        <div style={{
+                            background: 'white', borderRadius: 12, padding: '20px 24px', marginBottom: 24,
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                                <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const }}>CLOSING ODDS</div>
+                                <div style={{ fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.25)', letterSpacing: '0.05em' }}>Based on historical close rates</div>
+                            </div>
+                            {/* Visual bar */}
+                            <div style={{ display: 'flex', height: 32, borderRadius: 8, overflow: 'hidden', marginBottom: 12 }}>
+                                {sorted.map((b, i) => (
+                                    <div key={i} style={{
+                                        width: `${b.closeRate}%`, background: oddsColors[i % oddsColors.length],
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontSize: 10, fontWeight: 700, color: 'white', transition: 'width 0.5s',
+                                        minWidth: b.closeRate > 8 ? 'auto' : 0,
+                                    }}>
+                                        {b.closeRate > 12 ? `${b.closeRate}%` : ''}
+                                    </div>
+                                ))}
+                                {fieldOdds > 0 && (
+                                    <div style={{
+                                        width: `${fieldOdds}%`, background: 'rgba(0,0,0,0.06)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        fontSize: 10, fontWeight: 600, color: 'rgba(0,0,0,0.25)',
+                                    }}>
+                                        {fieldOdds > 12 ? `${fieldOdds}%` : ''}
+                                    </div>
+                                )}
+                            </div>
+                            {/* Legend */}
+                            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+                                {sorted.map((b, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ width: 10, height: 10, borderRadius: 3, background: oddsColors[i % oddsColors.length] }} />
+                                        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.6)' }}>{b.firm}</span>
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: oddsColors[i % oddsColors.length] }}>{b.closeRate}%</span>
+                                    </div>
+                                ))}
+                                {fieldOdds > 0 && (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ width: 10, height: 10, borderRadius: 3, background: 'rgba(0,0,0,0.08)' }} />
+                                        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.3)' }}>No Close (Field)</span>
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(0,0,0,0.2)' }}>{fieldOdds}%</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })()}
 
                 {/* Match briefs */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
