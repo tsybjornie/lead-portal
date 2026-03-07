@@ -36,25 +36,25 @@ const PROJECTS: Record<string, {
     },
 };
 
-const TEAM: Record<string, { role: string; name: string; firm?: string; status: string; email: string; avatar: string }[]> = {
+const TEAM: Record<string, { role: string; name: string; firm?: string; status: string; email: string; initials: string }[]> = {
     'sarah-tan': [
-        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', avatar: '🧑‍🎨' },
-        { role: 'Client', name: 'Sarah Tan', status: 'active', email: 'sarah.tan@gmail.com', avatar: '👩' },
-        { role: 'Drafter', name: 'Ryan Choo', status: 'active', email: 'ryan@drafts.sg', avatar: '✏️' },
-        { role: 'Contractor', name: 'Ah Kow Construction', status: 'active', email: 'ahkow@build.sg', avatar: '🔨' },
-        { role: 'Vendor', name: 'Hafary Tiles', status: 'pending', email: 'orders@hafary.com.sg', avatar: '🏪' },
-        { role: 'Vendor', name: 'KimSeng Hardware', status: 'invited', email: 'sales@kimseng.com', avatar: '🏪' },
+        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', initials: 'D' },
+        { role: 'Client', name: 'Sarah Tan', status: 'active', email: 'sarah.tan@gmail.com', initials: 'C' },
+        { role: 'Drafter', name: 'Ryan Choo', status: 'active', email: 'ryan@drafts.sg', initials: 'DR' },
+        { role: 'Contractor', name: 'Ah Kow Construction', status: 'active', email: 'ahkow@build.sg', initials: 'CO' },
+        { role: 'Vendor', name: 'Hafary Tiles', status: 'pending', email: 'orders@hafary.com.sg', initials: 'V' },
+        { role: 'Vendor', name: 'KimSeng Hardware', status: 'invited', email: 'sales@kimseng.com', initials: 'V' },
     ],
     'lim-wei-ming': [
-        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', avatar: '🧑‍🎨' },
-        { role: 'Client', name: 'Lim Wei Ming', status: 'active', email: 'weiming@outlook.com', avatar: '👨' },
-        { role: 'Drafter', name: 'Ryan Choo', status: 'active', email: 'ryan@drafts.sg', avatar: '✏️' },
-        { role: 'Contractor', name: 'Ah Kow Construction', status: 'active', email: 'ahkow@build.sg', avatar: '🔨' },
-        { role: 'Consultant', name: 'Eng Liang QP', status: 'active', email: 'elqp@consult.sg', avatar: '📐' },
+        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', initials: 'D' },
+        { role: 'Client', name: 'Lim Wei Ming', status: 'active', email: 'weiming@outlook.com', initials: 'C' },
+        { role: 'Drafter', name: 'Ryan Choo', status: 'active', email: 'ryan@drafts.sg', initials: 'DR' },
+        { role: 'Contractor', name: 'Ah Kow Construction', status: 'active', email: 'ahkow@build.sg', initials: 'CO' },
+        { role: 'Consultant', name: 'Eng Liang QP', status: 'active', email: 'elqp@consult.sg', initials: 'QP' },
     ],
     'nurul-aisyah': [
-        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', avatar: '🧑‍🎨' },
-        { role: 'Client', name: 'Nurul Aisyah', status: 'active', email: 'nurul@email.com', avatar: '👩' },
+        { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', initials: 'D' },
+        { role: 'Client', name: 'Nurul Aisyah', status: 'active', email: 'nurul@email.com', initials: 'C' },
     ],
 };
 
@@ -117,28 +117,28 @@ const MILESTONES: Record<string, { label: string; target: string; done: boolean;
     ],
 };
 
-const ACTIVITY: Record<string, { actor: string; action: string; detail: string; time: string; icon: string }[]> = {
+const ACTIVITY: Record<string, { actor: string; action: string; detail: string; time: string }[]> = {
     'sarah-tan': [
-        { actor: 'Ryan Choo', action: 'uploaded', detail: 'TanBTO_V3.skp — kitchen layout revised', time: '2h ago', icon: '📄' },
-        { actor: 'Ah Kow', action: 'completed', detail: 'Electrical rough-in — all points tested', time: '1d ago', icon: '✅' },
-        { actor: 'Sarah Tan', action: 'approved', detail: 'Quote V3 — S$58,200', time: '6d ago', icon: '💰' },
-        { actor: 'Bjorn', action: 'shared', detail: 'Floor plan V3 with client', time: '1w ago', icon: '📤' },
-        { actor: 'Hafary Tiles', action: 'confirmed', detail: 'PO #HF-2026-089 — delivery 15 Mar', time: '1w ago', icon: '🏪' },
-        { actor: 'Ryan Choo', action: 'uploaded', detail: 'Kitchen render final — client review', time: '2w ago', icon: '🖼️' },
-        { actor: 'Ah Kow', action: 'started', detail: 'Hacking & removal phase', time: '3w ago', icon: '🔨' },
-        { actor: 'Bjorn', action: 'created', detail: 'Project created from lead', time: '7w ago', icon: '🚀' },
+        { actor: 'Ryan Choo', action: 'uploaded', detail: 'TanBTO_V3.skp — kitchen layout revised', time: '2h ago' },
+        { actor: 'Ah Kow', action: 'completed', detail: 'Electrical rough-in — all points tested', time: '1d ago' },
+        { actor: 'Sarah Tan', action: 'approved', detail: 'Quote V3 — S$58,200', time: '6d ago' },
+        { actor: 'Bjorn', action: 'shared', detail: 'Floor plan V3 with client', time: '1w ago' },
+        { actor: 'Hafary Tiles', action: 'confirmed', detail: 'PO #HF-2026-089 — delivery 15 Mar', time: '1w ago' },
+        { actor: 'Ryan Choo', action: 'uploaded', detail: 'Kitchen render final — client review', time: '2w ago' },
+        { actor: 'Ah Kow', action: 'started', detail: 'Hacking & removal phase', time: '3w ago' },
+        { actor: 'Bjorn', action: 'created', detail: 'Project created from lead', time: '7w ago' },
     ],
     'lim-wei-ming': [
-        { actor: 'Ryan Choo', action: 'uploaded', detail: 'Master bedroom render', time: '1w ago', icon: '🖼️' },
-        { actor: 'Eng Liang QP', action: 'approved', detail: 'Structural plan — no PE endorsement needed', time: '2w ago', icon: '📐' },
-        { actor: 'Lim Wei Ming', action: 'approved', detail: 'Quote V2 — S$95,800', time: '7w ago', icon: '💰' },
-        { actor: 'Bjorn', action: 'created', detail: 'Project created', time: '14w ago', icon: '🚀' },
+        { actor: 'Ryan Choo', action: 'uploaded', detail: 'Master bedroom render', time: '1w ago' },
+        { actor: 'Eng Liang QP', action: 'approved', detail: 'Structural plan — no PE endorsement needed', time: '2w ago' },
+        { actor: 'Lim Wei Ming', action: 'approved', detail: 'Quote V2 — S$95,800', time: '7w ago' },
+        { actor: 'Bjorn', action: 'created', detail: 'Project created', time: '14w ago' },
     ],
     'nurul-aisyah': [
-        { actor: 'Bjorn', action: 'uploaded', detail: 'Site survey report', time: '5d ago', icon: '📄' },
-        { actor: 'Bjorn', action: 'created', detail: 'Quote V1 — S$195,000 (pending approval)', time: '3d ago', icon: '💰' },
-        { actor: 'Nurul Aisyah', action: 'signed', detail: 'Design agreement', time: '1w ago', icon: '✍️' },
-        { actor: 'Bjorn', action: 'created', detail: 'Project created from site visit', time: '1w ago', icon: '🚀' },
+        { actor: 'Bjorn', action: 'uploaded', detail: 'Site survey report', time: '5d ago' },
+        { actor: 'Bjorn', action: 'created', detail: 'Quote V1 — S$195,000 (pending approval)', time: '3d ago' },
+        { actor: 'Nurul Aisyah', action: 'signed', detail: 'Design agreement', time: '1w ago' },
+        { actor: 'Bjorn', action: 'created', detail: 'Project created from site visit', time: '1w ago' },
     ],
 };
 
@@ -170,7 +170,7 @@ export default function ProjectDetailPage() {
         return (
             <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 48, marginBottom: 16 }}>🏗️</div>
+                    <div style={{ fontSize: 14, fontFamily: mono, fontWeight: 700, color: 'rgba(0,0,0,0.25)', marginBottom: 16 }}>404</div>
                     <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8 }}>Project not found</h2>
                     <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.4)', marginBottom: 24 }}>This project ID doesn't match any demo project.</p>
                     <Link href="/projects" style={{ padding: '10px 20px', fontSize: 13, fontWeight: 600, background: '#111', color: 'white', borderRadius: 8, textDecoration: 'none' }}>← Back to Projects</Link>
@@ -186,13 +186,13 @@ export default function ProjectDetailPage() {
     const activity = ACTIVITY[id] || [];
     const statusBadge = STATUS_BADGE[project.status] || STATUS_BADGE.active;
 
-    const tabs: { id: Tab; label: string; icon: string; count?: number }[] = [
-        { id: 'overview', label: 'Overview', icon: '📊' },
-        { id: 'team', label: 'Team', icon: '👥', count: team.length },
-        { id: 'quotes', label: 'Quotes', icon: '💰', count: quotes.length },
-        { id: 'files', label: 'Files', icon: '📁', count: files.length },
-        { id: 'schedule', label: 'Schedule', icon: '📅', count: milestones.length },
-        { id: 'activity', label: 'Activity', icon: '⚡', count: activity.length },
+    const tabs: { id: Tab; label: string; count?: number }[] = [
+        { id: 'overview', label: 'Overview' },
+        { id: 'team', label: 'Team', count: team.length },
+        { id: 'quotes', label: 'Quotes', count: quotes.length },
+        { id: 'files', label: 'Files', count: files.length },
+        { id: 'schedule', label: 'Schedule', count: milestones.length },
+        { id: 'activity', label: 'Activity', count: activity.length },
     ];
 
     return (
@@ -261,7 +261,7 @@ export default function ProjectDetailPage() {
                             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
                             marginBottom: -1,
                         }}>
-                            <span style={{ fontSize: 13 }}>{t.icon}</span> {t.label}
+                            {t.label}
                             {t.count !== undefined && (
                                 <span style={{ fontSize: 9, fontWeight: 700, fontFamily: mono, padding: '1px 5px', borderRadius: 4, background: tab === t.id ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.04)', color: tab === t.id ? '#111' : 'rgba(0,0,0,0.3)' }}>{t.count}</span>
                             )}
@@ -294,7 +294,7 @@ export default function ProjectDetailPage() {
                                     const rc = ROLE_COLORS[m.role] || ROLE_COLORS.Vendor;
                                     return (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px', borderRadius: 8, background: rc.bg }}>
-                                            <span style={{ fontSize: 14 }}>{m.avatar}</span>
+                                            <span style={{ fontFamily: mono, fontSize: 9, fontWeight: 700, color: rc.text }}>{m.initials}</span>
                                             <span style={{ fontSize: 11, fontWeight: 500, color: rc.text }}>{m.name}</span>
                                             <span style={{ fontSize: 8, fontWeight: 700, fontFamily: mono, color: rc.text, opacity: 0.6 }}>{m.role.toUpperCase()}</span>
                                         </div>
@@ -309,7 +309,7 @@ export default function ProjectDetailPage() {
                             <div style={{ fontFamily: mono, fontSize: 8, fontWeight: 600, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', marginBottom: 12 }}>RECENT ACTIVITY</div>
                             {activity.slice(0, 4).map((a, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 0', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                                    <span style={{ fontSize: 16, flexShrink: 0, marginTop: 2 }}>{a.icon}</span>
+                                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(0,0,0,0.15)', flexShrink: 0, marginTop: 7 }} />
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontSize: 12 }}><strong>{a.actor}</strong> <span style={{ color: 'rgba(0,0,0,0.35)' }}>{a.action}</span></div>
                                         <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', marginTop: 2 }}>{a.detail}</div>
@@ -336,7 +336,7 @@ export default function ProjectDetailPage() {
                                 return (
                                     <div key={i} className="collab-card" style={{ background: 'white', borderRadius: 12, padding: '16px 20px', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                                            <div style={{ width: 40, height: 40, borderRadius: 12, background: rc.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{m.avatar}</div>
+                                            <div style={{ width: 40, height: 40, borderRadius: 12, background: rc.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: mono, fontSize: 12, fontWeight: 700, color: rc.text, flexShrink: 0 }}>{m.initials}</div>
                                             <div>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                                     <span style={{ fontSize: 13, fontWeight: 600 }}>{m.name}</span>
@@ -408,7 +408,7 @@ export default function ProjectDetailPage() {
                             {files.map((file, i) => (
                                 <div key={i} className="collab-card" style={{ background: 'white', borderRadius: 10, padding: '14px 18px', border: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                        <span style={{ fontSize: 20 }}>{file.type === 'SketchUp' ? '📐' : file.type === 'Image' ? '🖼️' : '📄'}</span>
+                                        <div style={{ width: 32, height: 32, borderRadius: 8, background: file.type === 'SketchUp' ? 'rgba(139,92,246,0.06)' : file.type === 'Image' ? 'rgba(234,88,12,0.06)' : 'rgba(0,0,0,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: mono, fontSize: 8, fontWeight: 700, color: file.type === 'SketchUp' ? '#8B5CF6' : file.type === 'Image' ? '#EA580C' : 'rgba(0,0,0,0.3)', flexShrink: 0 }}>{file.type === 'SketchUp' ? 'SKP' : file.type === 'Image' ? 'IMG' : 'PDF'}</div>
                                         <div>
                                             <div style={{ fontSize: 12, fontWeight: 600 }}>{file.name}</div>
                                             <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', marginTop: 2 }}>{file.category} · {file.size} · by {file.uploadedBy}</div>
@@ -467,7 +467,7 @@ export default function ProjectDetailPage() {
                         <div style={{ background: 'white', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                             {activity.map((a, i) => (
                                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '14px 20px', borderTop: i > 0 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                                    <span style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{a.icon}</span>
+                                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(0,0,0,0.15)', flexShrink: 0, marginTop: 8 }} />
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontSize: 13 }}><strong>{a.actor}</strong> <span style={{ color: 'rgba(0,0,0,0.35)' }}>{a.action}</span></div>
                                         <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', marginTop: 3 }}>{a.detail}</div>
