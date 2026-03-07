@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
         rules: [
             {
                 userAgent: '*',
-                allow: '/',
+                allow: ['/', '/landing', '/login', '/signup', '/price-index'],
                 disallow: [
                     '/api/',
                     '/client/',
@@ -13,13 +13,16 @@ export default function robots(): MetadataRoute.Robots {
                     '/quote-builder',
                     '/ledger',
                     '/prospect',
-                    '/paddleduck',
+                    '/hub',
+                    '/projects',
+                    '/follow-up',
+                    '/pending-approval',
                 ],
             },
-            // Explicitly allow AI crawlers
+            // Allow AI crawlers for discovery
             {
                 userAgent: 'GPTBot',
-                allow: ['/', '/landing', '/why-roof', '/irs', '/join', '/forecast'],
+                allow: ['/', '/landing', '/price-index'],
             },
             {
                 userAgent: 'ChatGPT-User',
@@ -38,6 +41,6 @@ export default function robots(): MetadataRoute.Robots {
                 allow: '/',
             },
         ],
-        sitemap: 'https://roof.sg/sitemap.xml',
+        sitemap: 'https://roof-builder.vercel.app/sitemap.xml',
     };
 }

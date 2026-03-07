@@ -20,6 +20,31 @@ export default function LandingPage() {
             className="min-h-screen bg-[#fafafa] text-[#111] overflow-hidden"
             style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}
         >
+            {/* JSON-LD Structured Data for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "SoftwareApplication",
+                        "name": "Roof",
+                        "description": "The operating system for renovation. Manage leads, quotes, projects, schedules, and payments in one platform.",
+                        "applicationCategory": "BusinessApplication",
+                        "operatingSystem": "Web",
+                        "url": "https://roof-builder.vercel.app",
+                        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SGD" },
+                        "author": {
+                            "@type": "Organization",
+                            "name": "Roof",
+                            "url": "https://roof-builder.vercel.app",
+                            "areaServed": [
+                                { "@type": "Country", "name": "Singapore" },
+                                { "@type": "Country", "name": "Malaysia" }
+                            ]
+                        }
+                    })
+                }}
+            />
             {/* Top bar */}
             <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-5 bg-[#fafafa]/80 backdrop-blur-xl">
                 <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">
