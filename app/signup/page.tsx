@@ -24,6 +24,21 @@ export default function SignupPage() {
 
     const handleSubmit = async () => {
         if (!formData.name || !formData.email || !formData.password) return;
+
+        // Email format validation
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            setMessage('Please enter a valid email address.');
+            setMessageType('error');
+            return;
+        }
+
+        // Password strength
+        if (formData.password.length < 6) {
+            setMessage('Password must be at least 6 characters.');
+            setMessageType('error');
+            return;
+        }
+
         setIsSubmitting(true);
         setMessage('');
 
@@ -46,7 +61,7 @@ export default function SignupPage() {
 
             // 2. Create profile record
             if (authData.user) {
-                await supabase.from('profiles').insert({
+                const { error: profileError } = await supabase.from('profiles').insert({
                     id: authData.user.id,
                     email: formData.email,
                     full_name: formData.name,
@@ -55,6 +70,13 @@ export default function SignupPage() {
                     firm_name: formData.firmName,
                     job_title: formData.role,
                 });
+
+                if (profileError) {
+                    setMessage('Account created but profile save failed. Please contact support.');
+                    setMessageType('error');
+                    setIsSubmitting(false);
+                    return;
+                }
             }
 
             setMessage('Account created! Check your email to verify, then log in.');

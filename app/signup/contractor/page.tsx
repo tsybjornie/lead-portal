@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
 const TRADE_TYPES = [
     'General Renovation', 'Painting', 'Plumbing', 'Electrical (LEW)',
@@ -15,6 +14,7 @@ const COVERAGE = ['Island-wide SG', 'Central', 'East', 'West', 'North', 'JB / Is
 
 export default function ContractorSignup() {
     const [form, setForm] = useState({ company: '', uen: '', contact: '', email: '', phone: '', bca: '', hdb: '', trades: [] as string[], size: '', coverage: [] as string[], rate: '', notes: '' });
+    const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
@@ -26,28 +26,34 @@ export default function ContractorSignup() {
         setIsSubmitting(true);
         setMessage('');
         try {
-            const { error } = await supabase.from('contractor_applications').insert({
-                company_name: form.company,
-                uen: form.uen,
-                contact_person: form.contact,
-                email: form.email,
-                phone: form.phone,
-                bca_license: form.bca,
-                hdb_license: form.hdb,
-                trades: form.trades,
-                team_size: form.size,
-                coverage: form.coverage,
-                day_rate: form.rate,
+            const res = await fetch('/api/submit/contractor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    company_name: form.company,
+                    uen: form.uen,
+                    contact_person: form.contact,
+                    email: form.email,
+                    phone: form.phone,
+                    bca_license: form.bca,
+                    hdb_license: form.hdb,
+                    trades: form.trades,
+                    team_size: form.size,
+                    coverage: form.coverage,
+                    day_rate: form.rate,
+                    _website: honeypot,
+                }),
             });
-            if (error) {
-                setMessage(error.message);
+            const data = await res.json();
+            if (!res.ok) {
+                setMessage(data.error || 'Something went wrong.');
                 setMessageType('error');
             } else {
                 setMessage('Application submitted! We will review within 48 hours.');
                 setMessageType('success');
             }
         } catch {
-            setMessage('Something went wrong. Please try again.');
+            setMessage('Connection error. Please try again.');
             setMessageType('error');
         }
         setIsSubmitting(false);

@@ -1,62 +1,71 @@
 'use client';
 
-import { useRoofAuth, validateCredentials, getAllUsers, ROLE_COLORS } from '@/context/RoofAuthContext';
+import { useRoofAuth } from '@/context/RoofAuthContext';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 export default function LoginPage() {
-    const { loginByCode, isLoggedIn, user } = useRoofAuth();
+    const { isLoggedIn, user, login } = useRoofAuth();
     const router = useRouter();
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const usernameRef = useRef<HTMLInputElement>(null);
-    const allUsers = getAllUsers();
+    const emailRef = useRef<HTMLInputElement>(null);
 
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
-    useEffect(() => { usernameRef.current?.focus(); }, []);
+    useEffect(() => { emailRef.current?.focus(); }, []);
 
     // If already logged in, redirect
     if (isLoggedIn && user) {
         return null;
     }
 
-    const handleLogin = () => {
-        if (!username.trim()) { setError('Enter your username'); return; }
+    const handleLogin = async () => {
+        if (!email.trim()) { setError('Enter your email'); return; }
         if (!password.trim()) { setError('Enter your password'); return; }
         setIsLoading(true);
         setError('');
 
-        setTimeout(() => {
-            const entry = validateCredentials(username, password);
-            if (entry) {
-                loginByCode(entry.user.code);
-                router.push(entry.defaultRoute);
-            } else {
-                setError('Invalid username or password');
+        try {
+            const { data, error: authError } = await supabase.auth.signInWithPassword({
+                email: email.trim(),
+                password,
+            });
+
+            if (authError) {
+                setError(authError.message === 'Invalid login credentials'
+                    ? 'Invalid email or password'
+                    : authError.message
+                );
                 setIsLoading(false);
+                return;
             }
-        }, 300);
+
+            if (data?.user) {
+                // Fetch profile for role-based routing
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role, full_name')
+                    .eq('id', data.user.id)
+                    .single();
+
+                const role = profile?.role || 'designer';
+                login(role as any);
+                router.push('/hub');
+            }
+        } catch {
+            setError('Connection error. Please try again.');
+            setIsLoading(false);
+        }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') handleLogin();
-    };
-
-    const quickLogin = (uname: string) => {
-        setUsername(uname);
-        setPassword('roof123');
-        setTimeout(() => {
-            const entry = validateCredentials(uname, 'roof123');
-            if (entry) {
-                loginByCode(entry.user.code);
-                router.push(entry.defaultRoute);
-            }
-        }, 200);
     };
 
     const inputStyle = {
@@ -125,15 +134,15 @@ export default function LoginPage() {
                 {/* Form */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 20 }}>
                     <div>
-                        <label style={labelStyle}>Username</label>
+                        <label style={labelStyle}>Email</label>
                         <input
-                            ref={usernameRef}
-                            type="text"
-                            value={username}
-                            onChange={e => { setUsername(e.target.value); setError(''); }}
+                            ref={emailRef}
+                            type="email"
+                            value={email}
+                            onChange={e => { setEmail(e.target.value); setError(''); }}
                             onKeyDown={handleKeyDown}
-                            placeholder="Enter username"
-                            autoComplete="username"
+                            placeholder="Enter email"
+                            autoComplete="email"
                             style={{
                                 ...inputStyle,
                                 borderColor: error ? 'rgba(220,38,38,0.5)' : 'rgba(0,0,0,0.15)',

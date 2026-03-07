@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
 
 const PROPERTY_TYPES = ['HDB 3-Room', 'HDB 4-Room', 'HDB 5-Room', 'HDB Executive', 'Condo', 'Landed — Terrace', 'Landed — Semi-D', 'Landed — Bungalow', 'Commercial'];
 const BUDGET_RANGES = ['Below $30k', '$30k – $50k', '$50k – $80k', '$80k – $120k', '$120k – $200k', 'Above $200k'];
@@ -11,6 +10,7 @@ const TIMELINES = ['ASAP (keys received)', 'Within 3 months', '3–6 months', '6
 
 export default function HomeownerSignup() {
     const [form, setForm] = useState({ name: '', email: '', phone: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '' });
+    const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
@@ -22,19 +22,25 @@ export default function HomeownerSignup() {
         setIsSubmitting(true);
         setMessage('');
         try {
-            const { error } = await supabase.from('homeowner_leads').insert({
-                full_name: form.name,
-                email: form.email,
-                phone: form.phone,
-                property_type: form.property,
-                property_address: form.address,
-                budget: form.budget,
-                timeline: form.timeline,
-                preferred_style: form.style,
-                notes: form.notes,
+            const res = await fetch('/api/submit/homeowner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    full_name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    property_type: form.property,
+                    property_address: form.address,
+                    budget: form.budget,
+                    timeline: form.timeline,
+                    preferred_style: form.style,
+                    notes: form.notes,
+                    _website: honeypot,
+                }),
             });
-            if (error) {
-                setMessage(error.message);
+            const data = await res.json();
+            if (!res.ok) {
+                setMessage(data.error || 'Something went wrong.');
                 setMessageType('error');
             } else {
                 setMessage('Submitted! We will match you with 3 designers within 24 hours.');
@@ -42,7 +48,7 @@ export default function HomeownerSignup() {
                 setForm({ name: '', email: '', phone: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '' });
             }
         } catch {
-            setMessage('Something went wrong. Please try again.');
+            setMessage('Connection error. Please try again.');
             setMessageType('error');
         }
         setIsSubmitting(false);
