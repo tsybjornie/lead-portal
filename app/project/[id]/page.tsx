@@ -54,6 +54,8 @@ const TEAM: Record<string, { role: string; name: string; firm?: string; status: 
     ],
     'nurul-aisyah': [
         { role: 'Designer', name: 'Bjorn', firm: 'Multiply Carpentry', status: 'active', email: 'bjorn@multiply.sg', initials: 'D' },
+        { role: 'Designer', name: 'Jessica Chen', firm: 'Multiply Carpentry', status: 'active', email: 'jessica@multiply.sg', initials: 'D' },
+        { role: 'Designer', name: 'Ahmad Razif', firm: 'Multiply Carpentry', status: 'active', email: 'razif@multiply.sg', initials: 'D' },
         { role: 'Client', name: 'Nurul Aisyah', status: 'active', email: 'nurul@email.com', initials: 'C' },
     ],
 };
@@ -358,7 +360,7 @@ export default function ProjectDetailPage() {
                         <div style={{ marginTop: 24, padding: '20px', background: 'rgba(0,0,0,0.02)', borderRadius: 12, border: '1px dashed rgba(0,0,0,0.1)' }}>
                             <div style={{ fontFamily: mono, fontSize: 8, fontWeight: 600, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', marginBottom: 12 }}>INVITE BY ROLE</div>
                             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {['Drafter', 'Contractor', 'Vendor', 'Consultant'].map(role => {
+                                {['Designer', 'Drafter', 'Contractor', 'Vendor', 'Consultant'].map(role => {
                                     const rc = ROLE_COLORS[role] || ROLE_COLORS.Vendor;
                                     return (
                                         <button key={role} style={{ padding: '8px 16px', fontSize: 11, fontWeight: 600, background: rc.bg, color: rc.text, border: 'none', borderRadius: 8, cursor: 'pointer' }}>+ {role}</button>
