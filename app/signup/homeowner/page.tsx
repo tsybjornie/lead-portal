@@ -17,21 +17,37 @@ const PROJECT_REASONS = [
     'Partial upgrade (kitchen / bathroom only)',
     'Just exploring options',
 ];
-const HOUSEHOLD = [
-    { id: 'couple', label: 'Couple' },
-    { id: 'kids', label: 'Young children' },
-    { id: 'teens', label: 'Teenagers' },
-    { id: 'elderly', label: 'Elderly parents' },
-    { id: 'wheelchair', label: 'Wheelchair / mobility aid' },
-    { id: 'helper', label: 'Helper / maid' },
-    { id: 'pets_dog', label: 'Dogs' },
-    { id: 'pets_cat', label: 'Cats' },
-    { id: 'single', label: 'Living alone' },
-    { id: 'wfh', label: 'Work from home' },
-];
+const OCCUPANTS = ['Couple', 'Child (young)', 'Child (teen)', 'Elderly parent', 'Helper / maid', 'Work from home', 'Guest room', 'Pets', 'Wheelchair user', 'Storage / utility', 'Empty'];
+const ROOM_LAYOUTS: Record<string, string[]> = {
+    // ── SG Flats (single level) ──
+    'HDB 3-Room': ['Master Bedroom', 'Bedroom 2', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
+    'HDB 4-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
+    'HDB 5-Room': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
+    'HDB Executive': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study / Bedroom 4', 'Living Room', 'Dining', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Balcony'],
+    // ── SG Condos (single level unit) ──
+    'Executive Condo (EC)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony'],
+    'Condo': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony', 'Yard'],
+    // ── SG Landed (multi-level) ──
+    'Landed — Terrace': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2'],
+    'Landed — Semi-D': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen (wet)', 'L1 — Kitchen (dry)', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'Ext — Garden'],
+    'Landed — Bungalow / GCB': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen (wet)', 'L1 — Kitchen (dry)', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Laundry', 'L1 — Car Porch', 'L2 — Master Suite', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'L3 — Bedroom 5', 'L3 — Bedroom 6', 'L3 — Bathroom', 'Ext — Pool Area', 'Ext — Garden'],
+    // ── SG Shophouse (multi-level) ──
+    'Shophouse': ['L1 — Commercial / Retail', 'L1 — Back Kitchen', 'L1 — Bathroom', 'L1 — Airwell', 'L2 — Living Room', 'L2 — Dining', 'L2 — Bathroom', 'L3 — Master Bedroom', 'L3 — Bedroom 2', 'L3 — Bedroom 3', 'L3 — Bathroom', 'Roof — Terrace'],
+    // ── MY Flats (single level) ──
+    'Flat / Apartment': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2'],
+    'Condo / Serviced Residence': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Study', 'Living Room', 'Dining', 'Kitchen (wet)', 'Kitchen (dry)', 'Bathroom 1', 'Bathroom 2', 'Bathroom 3', 'Balcony'],
+    // ── MY Landed (multi-level) ──
+    'Townhouse': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L3 — Bedroom 4', 'L3 — Bathroom'],
+    'Terrace (Single Storey)': ['Master Bedroom', 'Bedroom 2', 'Bedroom 3', 'Living Room', 'Kitchen', 'Bathroom 1', 'Bathroom 2', 'Car Porch'],
+    'Terrace (Double Storey)': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Bathroom 1', 'L2 — Bathroom 2'],
+    'Semi-D': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen (wet)', 'L1 — Kitchen (dry)', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Bedroom', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'Ext — Garden'],
+    'Bungalow': ['L1 — Living Room', 'L1 — Dining', 'L1 — Kitchen (wet)', 'L1 — Kitchen (dry)', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Suite', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'Ext — Pool Area', 'Ext — Garden'],
+    'Villa': ['L1 — Grand Living', 'L1 — Formal Dining', 'L1 — Kitchen', 'L1 — Bathroom', 'L1 — Helper Room', 'L1 — Car Porch', 'L2 — Master Suite', 'L2 — Bedroom 2', 'L2 — Bedroom 3', 'L2 — Bedroom 4', 'L2 — Family Room', 'L2 — Bathroom 1', 'L2 — Bathroom 2', 'L2 — Bathroom 3', 'L3 — Bedroom 5', 'L3 — Bedroom 6', 'L3 — Bathroom', 'Ext — Pool Area', 'Ext — Garden'],
+    'Shop-Office (SOHO/SOFO)': ['Work Area', 'Meeting Room', 'Pantry', 'Bathroom', 'Storage'],
+};
 
 export default function HomeownerSignup() {
-    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', household: [] as string[], reason: '' });
+    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '' });
     const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
@@ -40,9 +56,10 @@ export default function HomeownerSignup() {
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
 
     const propertyTypes = form.country === 'MY' ? MY_PROPERTIES : SG_PROPERTIES;
+    const currentRooms = ROOM_LAYOUTS[form.property] || [];
 
-    const toggleHousehold = (id: string) => {
-        setForm(p => ({ ...p, household: p.household.includes(id) ? p.household.filter(h => h !== id) : [...p.household, id] }));
+    const setRoomOccupant = (room: string, occupant: string) => {
+        setForm(p => ({ ...p, rooms: { ...p.rooms, [room]: occupant } }));
     };
 
     const handleSubmit = async () => {
@@ -64,7 +81,7 @@ export default function HomeownerSignup() {
                     budget: form.budget,
                     timeline: form.timeline,
                     preferred_style: form.style,
-                    household: form.household,
+                    rooms: form.rooms,
                     notes: form.notes,
                     _website: honeypot,
                 }),
@@ -76,7 +93,7 @@ export default function HomeownerSignup() {
             } else {
                 setMessage('Submitted! We will match you with 3 designers within 24 hours.');
                 setMessageType('success');
-                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', household: [], reason: '' });
+                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budget: '', style: '', timeline: '', notes: '', rooms: {}, reason: '' });
             }
         } catch {
             setMessage('Connection error. Please try again.');
@@ -207,7 +224,7 @@ export default function HomeownerSignup() {
                         </div>
                         <div>
                             <label style={labelStyle}>Property Type</label>
-                            <select style={{ ...selectStyle, color: form.property ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.property} onChange={e => setForm(p => ({ ...p, property: e.target.value }))}>
+                            <select style={{ ...selectStyle, color: form.property ? '#111' : 'rgba(0,0,0,0.3)' }} value={form.property} onChange={e => setForm(p => ({ ...p, property: e.target.value, rooms: {} }))}>
                                 <option value="">{form.country ? 'Select type' : 'Select country first'}</option>
                                 {propertyTypes.map(t => <option key={t} value={t}>{t}</option>)}
                             </select>
@@ -242,26 +259,41 @@ export default function HomeownerSignup() {
                     </div>
                 </div>
 
-                {/* WHO LIVES HERE */}
-                <div style={{ marginBottom: 32 }}>
-                    <div style={{
-                        fontFamily: mono, fontSize: 9, fontWeight: 500,
-                        color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
-                        textTransform: 'uppercase' as const, marginBottom: 20,
-                        paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
-                    }}>WHO LIVES HERE</div>
+                {/* ROOM-BY-ROOM ALLOCATION */}
+                {currentRooms.length > 0 && (
+                    <div style={{ marginBottom: 32 }}>
+                        <div style={{
+                            fontFamily: mono, fontSize: 9, fontWeight: 500,
+                            color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em',
+                            textTransform: 'uppercase' as const, marginBottom: 20,
+                            paddingBottom: 8, borderBottom: '1px solid rgba(0,0,0,0.1)',
+                        }}>ROOM ALLOCATION</div>
 
-                    <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', margin: '0 0 12px', lineHeight: 1.5 }}>
-                        This helps your designer plan for accessibility, safety, and lifestyle needs.
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {HOUSEHOLD.map(h => (
-                            <span key={h.id} onClick={() => toggleHousehold(h.id)} style={chipStyle(form.household.includes(h.id))}>
-                                {h.label}
-                            </span>
-                        ))}
+                        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', margin: '0 0 16px', lineHeight: 1.5 }}>
+                            Tell us who uses each room — this helps your designer plan for privacy, safety, and accessibility.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {currentRooms.map(room => (
+                                <div key={room} style={{
+                                    display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'center',
+                                    padding: '8px 12px', borderRadius: 6,
+                                    background: form.rooms[room] && form.rooms[room] !== 'Empty' ? 'rgba(0,0,0,0.02)' : 'transparent',
+                                    border: '1px solid rgba(0,0,0,0.06)',
+                                }}>
+                                    <span style={{ fontSize: 12, color: '#111', fontWeight: 500 }}>{room}</span>
+                                    <select
+                                        style={{ ...selectStyle, fontSize: 11, padding: '6px 10px', color: form.rooms[room] ? '#111' : 'rgba(0,0,0,0.3)' }}
+                                        value={form.rooms[room] || ''}
+                                        onChange={e => setRoomOccupant(room, e.target.value)}
+                                    >
+                                        <option value="">Who uses this?</option>
+                                        {OCCUPANTS.map(o => <option key={o} value={o}>{o}</option>)}
+                                    </select>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* PREFERENCES */}
                 <div style={{ marginBottom: 32 }}>
