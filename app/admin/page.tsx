@@ -5,11 +5,11 @@ import { useState } from 'react';
 
 /* ── Seed data (Bjorn's real network) ── */
 const FIRMS = [
-    { id: 1, name: 'Multiply Carpentry', owner: 'Bjorn', market: 'SG', type: 'Designer', tier: 'Founding', status: 'Active', projects: 3, gmv: 126000, joined: '2026-01-15' },
-    { id: 2, name: 'Bjorn JB Studio', owner: 'Bjorn', market: 'MY', type: 'Designer', tier: 'Founding', status: 'Active', projects: 2, gmv: 45000, joined: '2026-01-15' },
-    { id: 3, name: 'Cubic Deco', owner: 'Uncle', market: 'SG', type: 'Contractor', tier: 'Founding', status: 'Active', projects: 4, gmv: 88000, joined: '2026-02-01' },
-    { id: 4, name: 'Glass Vision Pte Ltd', owner: 'Cousin', market: 'SG', type: 'Contractor', tier: 'Founding', status: 'Active', projects: 1, gmv: 22000, joined: '2026-02-10' },
-    { id: 5, name: 'Metalliqx', owner: 'Allen (Mentor)', market: 'SG', type: 'Vendor', tier: 'Founding', status: 'Active', projects: 0, gmv: 15000, joined: '2026-02-15' },
+    { id: 1, name: 'Multiply Carpentry', owner: 'Bjorn', market: 'SG', type: 'Designer', tier: 'Founding', status: 'Active', projects: 3, gmv: 126000, joined: '2026-01-15', color: '#059669' },
+    { id: 2, name: 'Bjorn JB Studio', owner: 'Bjorn', market: 'MY', type: 'Designer', tier: 'Founding', status: 'Active', projects: 2, gmv: 45000, joined: '2026-01-15', color: '#2563EB' },
+    { id: 3, name: 'Cubic Deco', owner: 'Uncle', market: 'SG', type: 'Contractor', tier: 'Founding', status: 'Active', projects: 4, gmv: 88000, joined: '2026-02-01', color: '#8B5CF6' },
+    { id: 4, name: 'Glass Vision Pte Ltd', owner: 'Cousin', market: 'SG', type: 'Contractor', tier: 'Founding', status: 'Active', projects: 1, gmv: 22000, joined: '2026-02-10', color: '#D97706' },
+    { id: 5, name: 'Metalliqx', owner: 'Allen (Mentor)', market: 'SG', type: 'Vendor', tier: 'Founding', status: 'Active', projects: 0, gmv: 15000, joined: '2026-02-15', color: '#DC2626' },
 ];
 
 const HOMEOWNERS = [
@@ -20,11 +20,11 @@ const HOMEOWNERS = [
 ];
 
 const WORKERS = [
-    { id: 1, name: 'Raj Kumar', trade: 'Tiling', irs: 920, market: 'SG', jobs: 47 },
-    { id: 2, name: 'Ali bin Hassan', trade: 'Carpentry', irs: 780, market: 'MY', jobs: 32 },
-    { id: 3, name: 'Tan Ah Kow', trade: 'Electrical', irs: 650, market: 'SG', jobs: 21 },
-    { id: 4, name: 'Muthu', trade: 'Painting', irs: 545, market: 'MY', jobs: 15 },
-    { id: 5, name: 'Jason Lee', trade: 'Plumbing', irs: 320, market: 'SG', jobs: 5 },
+    { id: 1, name: 'Raj Kumar', trade: 'Tiling', irs: 920, market: 'SG', jobs: 47, color: '#059669' },
+    { id: 2, name: 'Ali bin Hassan', trade: 'Carpentry', irs: 780, market: 'MY', jobs: 32, color: '#2563EB' },
+    { id: 3, name: 'Tan Ah Kow', trade: 'Electrical', irs: 650, market: 'SG', jobs: 21, color: '#D97706' },
+    { id: 4, name: 'Muthu', trade: 'Painting', irs: 545, market: 'MY', jobs: 15, color: '#8B5CF6' },
+    { id: 5, name: 'Jason Lee', trade: 'Plumbing', irs: 320, market: 'SG', jobs: 5, color: '#9B9A97' },
 ];
 
 function irsTier(score: number) {
@@ -38,7 +38,7 @@ function irsTier(score: number) {
 export default function AdminDashboard() {
     const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
     const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
-    const [tab, setTab] = useState<'overview' | 'firms' | 'homeowners' | 'workers' | 'pricing'>('overview');
+    const [tab, setTab] = useState<'overview' | 'firms' | 'homeowners' | 'workers'>('overview');
 
     const totalGMV = FIRMS.reduce((s, f) => s + f.gmv, 0);
     const escrowRevenue = Math.round(totalGMV * 0.02);
@@ -49,7 +49,6 @@ export default function AdminDashboard() {
         { key: 'firms', label: `Firms (${FIRMS.length})` },
         { key: 'homeowners', label: `Homeowners (${HOMEOWNERS.length})` },
         { key: 'workers', label: `Workers (${WORKERS.length})` },
-        { key: 'pricing', label: 'Price Index' },
     ];
 
     const cardStyle = {
@@ -208,7 +207,12 @@ export default function AdminDashboard() {
                             <tbody>
                                 {FIRMS.map(firm => (
                                     <tr key={firm.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>{firm.name}</td>
+                                        <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                <div style={{ width: 32, height: 32, borderRadius: 8, background: firm.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: 'white', flexShrink: 0 }}>{firm.name.charAt(0)}</div>
+                                                {firm.name}
+                                            </div>
+                                        </td>
                                         <td style={tdStyle}>{firm.owner}</td>
                                         <td style={tdStyle}><span style={badge(firm.market, firm.market === 'SG' ? '#2563EB' : '#D97706')}>{firm.market}</span></td>
                                         <td style={tdStyle}>{firm.type}</td>
@@ -267,7 +271,12 @@ export default function AdminDashboard() {
                                     const tier = irsTier(w.irs);
                                     return (
                                         <tr key={w.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                                            <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>{w.name}</td>
+                                            <td style={{ ...tdStyle, fontWeight: 600, color: '#111' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: w.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: 'white', flexShrink: 0 }}>{w.name.charAt(0)}</div>
+                                                    {w.name}
+                                                </div>
+                                            </td>
                                             <td style={tdStyle}>{w.trade}</td>
                                             <td style={{ ...tdStyle, fontWeight: 700, color: tier.color }}>{w.irs}</td>
                                             <td style={tdStyle}><span style={badge(tier.label, tier.color)}>{tier.label}</span></td>
@@ -281,17 +290,7 @@ export default function AdminDashboard() {
                     </div>
                 )}
 
-                {tab === 'pricing' && (
-                    <div style={cardStyle}>
-                        <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 8 }}>PRICE INDEX</div>
-                        <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Internal Reference Only</div>
-                        <div style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', marginBottom: 20 }}>This data is not public. For your reference only.</div>
-                        <Link href="/price-index" style={{
-                            display: 'inline-block', padding: '10px 24px', background: '#111', color: 'white',
-                            borderRadius: 8, textDecoration: 'none', fontSize: 12, fontWeight: 600,
-                        }}>Open Price Index →</Link>
-                    </div>
-                )}
+
             </div>
 
             {/* Footer */}

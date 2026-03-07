@@ -51,13 +51,9 @@ export default function LandingPage() {
             {/* Top bar */}
             <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-5 bg-[#fafafa]/80 backdrop-blur-xl">
                 <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">Roof</span>
-                <div className="flex items-center gap-5">
-                    <Link href="/why-roof" className="text-[12px] font-medium text-[#999] hover:text-[#111] transition-colors">Why Roof</Link>
-                    <Link href="/price-index" className="text-[12px] font-medium text-[#999] hover:text-[#111] transition-colors">Price Index</Link>
-                    <Link href="/login" className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200">
-                        Log in
-                    </Link>
-                </div>
+                <Link href="/login" className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200">
+                    Log in
+                </Link>
             </header>
 
             {/* Hero */}
