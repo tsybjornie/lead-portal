@@ -1,14 +1,21 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const ROLES = [
-    { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', icon: '✏️' },
-    { id: 'homeowner', label: 'Homeowner', sub: 'Looking for a renovation', href: '/signup/homeowner', icon: '🏠' },
-    { id: 'contractor', label: 'Contractor', sub: 'Builders, workers & foremen', href: '/signup/contractor', icon: '🔨' },
-    { id: 'brand', label: 'Brand / Supplier', sub: 'Material brands & vendors', href: '/signup/brand', icon: '🏷️' },
+const DEMAND = [
+    { id: 'homeowner', label: 'Homeowner', sub: 'HDB, condo, landed', href: '/signup/homeowner', img: '/images/roles/homeowner.png' },
+    { id: 'retail', label: 'Retail', sub: 'Shops & showrooms', href: '/signup/homeowner', img: '/images/roles/retail.png' },
+    { id: 'fnb', label: 'F&B', sub: 'Cafes, restaurants, bars', href: '/signup/homeowner', img: '/images/roles/fnb.png' },
+    { id: 'office', label: 'Office', sub: 'Commercial workspace', href: '/signup/homeowner', img: '/images/roles/office.png' },
+];
+
+const SUPPLY = [
+    { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', img: '/images/roles/design-firm.png' },
+    { id: 'contractor', label: 'Contractor', sub: 'Builders & tradesmen', href: '/signup/contractor', img: '/images/roles/contractor.png' },
+    { id: 'brand', label: 'Brand / Supplier', sub: 'Material brands & vendors', href: '/signup/brand', img: '/images/roles/brand.png' },
 ];
 
 export default function LandingPage() {
@@ -17,10 +24,10 @@ export default function LandingPage() {
 
     return (
         <div
-            className="min-h-screen bg-[#fafafa] text-[#111] overflow-hidden"
+            className="min-h-screen bg-[#fafafa] text-[#111]"
             style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}
         >
-            {/* JSON-LD Structured Data for SEO */}
+            {/* JSON-LD */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -28,95 +35,134 @@ export default function LandingPage() {
                         "@context": "https://schema.org",
                         "@type": "SoftwareApplication",
                         "name": "Roof",
-                        "description": "The operating system for renovation. Manage leads, quotes, projects, schedules, and payments in one platform.",
+                        "description": "Run your renovation without the chaos. Manage leads, quotes, projects, schedules, and payments.",
                         "applicationCategory": "BusinessApplication",
                         "operatingSystem": "Web",
                         "url": "https://roof-builder.vercel.app",
                         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SGD" },
-                        "author": {
-                            "@type": "Organization",
-                            "name": "Roof",
-                            "url": "https://roof-builder.vercel.app",
-                            "areaServed": [
-                                { "@type": "Country", "name": "Singapore" },
-                                { "@type": "Country", "name": "Malaysia" }
-                            ]
-                        }
+                        "author": { "@type": "Organization", "name": "Roof", "areaServed": [{ "@type": "Country", "name": "Singapore" }, { "@type": "Country", "name": "Malaysia" }] }
                     })
                 }}
             />
+
             {/* Top bar */}
             <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-5 bg-[#fafafa]/80 backdrop-blur-xl">
-                <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">
-                    Roof
-                </span>
-                <Link
-                    href="/login"
-                    className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200"
-                >
+                <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">Roof</span>
+                <Link href="/login" className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200">
                     Log in
                 </Link>
             </header>
 
-            {/* Hero — full viewport, just the essentials */}
-            <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-8 md:px-20">
+            {/* Hero */}
+            <div className="pt-32 pb-16 px-8 md:px-20 max-w-[900px] mx-auto text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 30 }}
                     transition={{ duration: 1, ease: [0.25, 0.1, 0, 1] }}
-                    className="text-center w-full max-w-[620px]"
                 >
-                    <h1 className="text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.03em] text-[#111] mb-4">
+                    <h1 className="text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-[1.05] tracking-[-0.03em] text-[#111] mb-4">
                         Roof<span className="text-[#ccc]">.</span>
                     </h1>
-
-                    <p className="text-[16px] text-[#888] leading-relaxed max-w-[380px] mx-auto mb-12">
+                    <p className="text-[16px] text-[#888] leading-relaxed max-w-[380px] mx-auto">
                         Run your renovation without the chaos.
                     </p>
+                </motion.div>
+            </div>
 
-                    {/* Role selector — clean grid, all roles */}
-                    <div className="grid grid-cols-2 gap-3 max-w-[440px] mx-auto mb-8">
-                        {ROLES.map((role, i) => (
+            {/* ═══ DEMAND SIDE ═══ */}
+            <section className="px-8 md:px-20 max-w-[900px] mx-auto mb-16">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: mounted ? 1 : 0 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
+                >
+                    <p className="text-[10px] tracking-[0.25em] uppercase font-medium text-[#bbb] mb-5">
+                        I need a renovation
+                    </p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {DEMAND.map((role, i) => (
                             <motion.div
                                 key={role.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 20 }}
-                                transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+                                initial={{ opacity: 0, y: 15 }}
+                                animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 15 }}
+                                transition={{ delay: 0.4 + i * 0.08, duration: 0.5 }}
                             >
                                 <Link
                                     href={role.href}
-                                    className="block p-5 rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] hover:shadow-sm transition-all duration-200 text-left group"
+                                    className="block rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
                                 >
-                                    <div className="text-lg mb-2">{role.icon}</div>
-                                    <div className="text-[13px] font-semibold text-[#111] group-hover:text-[#111]">
-                                        {role.label}
+                                    <div className="relative h-28 overflow-hidden">
+                                        <Image
+                                            src={role.img}
+                                            alt={role.label}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
                                     </div>
-                                    <div className="text-[11px] text-[#bbb] mt-0.5">
-                                        {role.sub}
+                                    <div className="p-4">
+                                        <div className="text-[13px] font-semibold text-[#111]">{role.label}</div>
+                                        <div className="text-[11px] text-[#bbb] mt-0.5">{role.sub}</div>
                                     </div>
                                 </Link>
                             </motion.div>
                         ))}
                     </div>
-
-                    {/* Already have an account */}
-                    <p className="text-[13px] text-[#bbb]">
-                        Already have an account?{' '}
-                        <Link href="/login" className="text-[#111] font-medium hover:underline">
-                            Log in
-                        </Link>
-                    </p>
                 </motion.div>
+            </section>
+
+            {/* ═══ SUPPLY SIDE ═══ */}
+            <section className="px-8 md:px-20 max-w-[900px] mx-auto mb-24">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: mounted ? 1 : 0 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                >
+                    <p className="text-[10px] tracking-[0.25em] uppercase font-medium text-[#bbb] mb-5">
+                        I&apos;m a professional
+                    </p>
+                    <div className="grid grid-cols-3 gap-3">
+                        {SUPPLY.map((role, i) => (
+                            <motion.div
+                                key={role.id}
+                                initial={{ opacity: 0, y: 15 }}
+                                animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 15 }}
+                                transition={{ delay: 0.7 + i * 0.08, duration: 0.5 }}
+                            >
+                                <Link
+                                    href={role.href}
+                                    className="block rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
+                                >
+                                    <div className="relative h-24 overflow-hidden">
+                                        <Image
+                                            src={role.img}
+                                            alt={role.label}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                    </div>
+                                    <div className="p-4">
+                                        <div className="text-[13px] font-semibold text-[#111]">{role.label}</div>
+                                        <div className="text-[11px] text-[#bbb] mt-0.5">{role.sub}</div>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Already have an account */}
+            <div className="text-center pb-8">
+                <p className="text-[13px] text-[#bbb]">
+                    Already on Roof?{' '}
+                    <Link href="/login" className="text-[#111] font-medium hover:underline">Log in</Link>
+                </p>
             </div>
 
-            {/* Minimal footer */}
-            <footer className="fixed bottom-0 left-0 right-0 flex items-center justify-between px-8 md:px-12 py-6">
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">
-                    Singapore · Malaysia
-                </span>
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">
-                    {new Date().getFullYear()}
-                </span>
+            {/* Footer */}
+            <footer className="border-t border-[#f0f0f0] px-8 md:px-12 py-6 flex items-center justify-between">
+                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">Singapore · Malaysia</span>
+                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">{new Date().getFullYear()}</span>
             </footer>
         </div>
     );
