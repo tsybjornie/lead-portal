@@ -111,7 +111,7 @@ export default function BrandSignup() {
                     color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
                 }}>ROOF</Link>
-                <Link href="/join" style={{ fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}>
+                <Link href="/landing" style={{ fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}>
                     ← Back to role selection
                 </Link>
             </nav>

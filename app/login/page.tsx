@@ -103,7 +103,7 @@ export default function LoginPage() {
                     color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const, textDecoration: 'none',
                 }}>ROOF</Link>
-                <Link href="/join" style={{
+                <Link href="/landing" style={{
                     fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none',
                 }}>
                     Don&apos;t have an account? <span style={{ fontWeight: 600, color: '#111' }}>Sign up</span>
@@ -128,7 +128,7 @@ export default function LoginPage() {
                     <span style={{ color: 'rgba(0,0,0,0.3)', fontStyle: 'italic' }}>back.</span>
                 </h1>
                 <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.5)', margin: '0 0 48px', lineHeight: 1.6 }}>
-                    The operating system for Singapore renovations
+                    The operating system for renovations
                 </p>
 
                 {/* Form */}
@@ -195,7 +195,7 @@ export default function LoginPage() {
                 </button>
 
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
-                    <Link href="/join" style={{
+                    <Link href="/landing" style={{
                         fontSize: 12, color: 'rgba(0,0,0,0.4)', textDecoration: 'none',
                     }}>
                         Don&apos;t have an account? <span style={{ fontWeight: 600, color: '#111' }}>Sign up</span>
@@ -217,7 +217,6 @@ export default function LoginPage() {
                     {[
                         { label: 'Landing', href: '/landing' },
                         { label: 'Platform', href: '/hub' },
-                        { label: 'Founding 20', href: '/founding' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
                             style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}

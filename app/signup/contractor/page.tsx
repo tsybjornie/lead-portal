@@ -269,7 +269,7 @@ export default function ContractorSignup() {
                     {[
                         { label: 'Landing', href: '/landing' },
                         { label: 'Platform', href: '/hub' },
-                        { label: 'All Roles', href: '/join' },
+                        { label: 'All Roles', href: '/landing' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
                             style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none', transition: 'color 0.2s' }}

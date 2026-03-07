@@ -131,7 +131,6 @@ export default function PriceIndexPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                     {[
                         { name: 'Platform', path: '/hub' },
-                        { name: 'Founding 20', path: '/founding' },
                         { name: 'Landing', path: '/landing' },
                     ].map(link => (
                         <Link key={link.name} href={link.path} style={{
@@ -142,7 +141,7 @@ export default function PriceIndexPage() {
                             onMouseLeave={e => e.currentTarget.style.color = 'rgba(0,0,0,0.35)'}
                         >{link.name}</Link>
                     ))}
-                    <Link href="/join" style={{
+                    <Link href="/landing" style={{
                         fontSize: 12, fontWeight: 500, color: '#111',
                         textDecoration: 'none', padding: '6px 16px', borderRadius: 6,
                         border: '1px solid rgba(0,0,0,0.12)', transition: 'all 0.2s',
@@ -332,7 +331,6 @@ export default function PriceIndexPage() {
                     {[
                         { label: 'Landing', href: '/landing' },
                         { label: 'Platform', href: '/hub' },
-                        { label: 'Founding 20', href: '/founding' },
                     ].map(link => (
                         <Link key={link.label} href={link.href}
                             style={{ fontSize: 11, color: 'rgba(0,0,0,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
