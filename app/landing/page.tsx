@@ -240,21 +240,10 @@ export default function LandingPage() {
                         </div>
                     </div>
                     <div>
-                        <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Platform</div>
-                        <div className="flex flex-col gap-2">
-                            <Link href="/why-roof" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Why Roof</Link>
-                            <Link href="/price-index" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Price Index</Link>
-                            <Link href="/founding" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Founding 20</Link>
-                            <Link href="/hub" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Product Hub</Link>
-                        </div>
-                    </div>
-                    <div>
                         <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Admin</div>
                         <div className="flex flex-col gap-2">
                             <Link href="/login" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Firm Login</Link>
                             <Link href="/admin" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Dashboard</Link>
-                            <Link href="/admin/matches" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Match Briefs</Link>
-                            <Link href="/admin/ratings" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Ratings</Link>
                         </div>
                     </div>
                 </div>
