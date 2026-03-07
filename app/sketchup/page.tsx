@@ -306,13 +306,14 @@ export default function SketchUpPage() {
                 {tab === 'viewer' && uploaded && (
                     <div className="animate-in">
                         <div style={{
-                            background: '#1a1a2e', borderRadius: 16, overflow: 'hidden', position: 'relative',
+                            background: 'white', borderRadius: 16, overflow: 'hidden', position: 'relative',
                             height: 420, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            border: '1px solid rgba(0,0,0,0.06)',
                         }}>
                             {/* Grid floor — hide in plan view */}
                             {viewMode !== 'plan' && (
-                                <div style={{ position: 'absolute', bottom: 60, width: '100%', height: 120, background: 'linear-gradient(transparent, rgba(37,99,235,0.05))', perspective: '500px' }}>
-                                    <div style={{ width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(37,99,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'rotateX(60deg)', transformOrigin: 'bottom' }} />
+                                <div style={{ position: 'absolute', bottom: 60, width: '100%', height: 120, background: 'linear-gradient(transparent, rgba(0,0,0,0.02))', perspective: '500px' }}>
+                                    <div style={{ width: '100%', height: '100%', backgroundImage: 'linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)', backgroundSize: '40px 40px', transform: 'rotateX(60deg)', transformOrigin: 'bottom' }} />
                                 </div>
                             )}
 
@@ -325,28 +326,18 @@ export default function SketchUpPage() {
                                                 : 'rotateX(15deg) rotateY(-20deg) scale(1)',
                                 position: 'relative', perspective: '800px',
                             }}>
-                                <div style={{ width: 280, height: 180, background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.2)', borderRadius: 4, position: 'relative' }}>
-                                    <div style={{ position: 'absolute', top: 10, left: 10, right: 10, bottom: 10, border: '1px solid rgba(37,99,235,0.3)', borderRadius: 2 }}>
-                                        <div style={{ fontFamily: mono, fontSize: 8, color: 'rgba(37,99,235,0.5)', position: 'absolute', top: 4, left: 6 }}>LIVING</div>
-                                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, borderTop: '1px dashed rgba(37,99,235,0.2)' }} />
-                                        <div style={{ fontFamily: mono, fontSize: 8, color: 'rgba(37,99,235,0.5)', position: 'absolute', bottom: 4, left: 6 }}>KITCHEN</div>
-                                        <div style={{ position: 'absolute', top: 0, left: '60%', bottom: 0, borderLeft: '1px dashed rgba(37,99,235,0.2)' }} />
-                                        <div style={{ fontFamily: mono, fontSize: 7, color: 'rgba(37,99,235,0.4)', position: 'absolute', top: 4, right: 6 }}>BR1</div>
-                                        <div style={{ fontFamily: mono, fontSize: 7, color: 'rgba(37,99,235,0.4)', position: 'absolute', bottom: 4, right: 6 }}>BR2</div>
+                                <div style={{ width: 280, height: 180, background: 'rgba(0,0,0,0.02)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 4, position: 'relative' }}>
+                                    <div style={{ position: 'absolute', top: 10, left: 10, right: 10, bottom: 10, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 2 }}>
+                                        <div style={{ fontFamily: mono, fontSize: 8, color: 'rgba(0,0,0,0.3)', position: 'absolute', top: 4, left: 6 }}>LIVING</div>
+                                        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, borderTop: '1px dashed rgba(0,0,0,0.08)' }} />
+                                        <div style={{ fontFamily: mono, fontSize: 8, color: 'rgba(0,0,0,0.3)', position: 'absolute', bottom: 4, left: 6 }}>KITCHEN</div>
+                                        <div style={{ position: 'absolute', top: 0, left: '60%', bottom: 0, borderLeft: '1px dashed rgba(0,0,0,0.08)' }} />
+                                        <div style={{ fontFamily: mono, fontSize: 7, color: 'rgba(0,0,0,0.25)', position: 'absolute', top: 4, right: 6 }}>BR1</div>
+                                        <div style={{ fontFamily: mono, fontSize: 7, color: 'rgba(0,0,0,0.25)', position: 'absolute', bottom: 4, right: 6 }}>BR2</div>
                                     </div>
-                                    {/* Elevation heights — visible in front/side/iso/persp */}
-                                    {viewMode !== 'plan' && (
-                                        <>
-                                            <div style={{ position: 'absolute', bottom: -20, width: '100%', textAlign: 'center', fontFamily: mono, fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>9,200mm</div>
-                                            <div style={{ position: 'absolute', right: -40, top: '50%', transform: 'rotate(90deg)', fontFamily: mono, fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{viewMode === 'front' || viewMode === 'side' ? '2,800mm (FFL→Ceiling)' : '6,400mm'}</div>
-                                        </>
-                                    )}
-                                    {viewMode === 'plan' && (
-                                        <>
-                                            <div style={{ position: 'absolute', bottom: -20, width: '100%', textAlign: 'center', fontFamily: mono, fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>9,200mm</div>
-                                            <div style={{ position: 'absolute', right: -40, top: '50%', transform: 'rotate(90deg)', fontFamily: mono, fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>6,400mm</div>
-                                        </>
-                                    )}
+                                    {/* Dimension labels */}
+                                    <div style={{ position: 'absolute', bottom: -20, width: '100%', textAlign: 'center', fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.25)' }}>9,200mm</div>
+                                    <div style={{ position: 'absolute', right: -40, top: '50%', transform: 'rotate(90deg)', fontFamily: mono, fontSize: 9, color: 'rgba(0,0,0,0.25)' }}>{viewMode === 'front' || viewMode === 'side' ? '2,800mm (FFL→Ceiling)' : '6,400mm'}</div>
                                 </div>
                             </div>
 
@@ -361,29 +352,29 @@ export default function SketchUpPage() {
                                 ].map(mode => (
                                     <button key={mode.id} onClick={() => setViewMode(mode.id)} style={{
                                         padding: '6px 12px', fontSize: 9, fontFamily: mono, fontWeight: 600,
-                                        background: viewMode === mode.id ? 'rgba(37,99,235,0.8)' : 'rgba(255,255,255,0.06)',
-                                        color: viewMode === mode.id ? 'white' : 'rgba(255,255,255,0.35)',
-                                        border: `1px solid ${viewMode === mode.id ? 'rgba(37,99,235,0.6)' : 'rgba(255,255,255,0.06)'}`,
+                                        background: viewMode === mode.id ? '#111' : 'rgba(0,0,0,0.03)',
+                                        color: viewMode === mode.id ? 'white' : 'rgba(0,0,0,0.35)',
+                                        border: `1px solid ${viewMode === mode.id ? '#111' : 'rgba(0,0,0,0.06)'}`,
                                         borderRadius: 6, cursor: 'pointer', letterSpacing: '0.03em',
                                     }}>{mode.icon} {mode.label}</button>
                                 ))}
                             </div>
 
                             {/* Active view label */}
-                            <div style={{ position: 'absolute', top: 50, left: '50%', transform: 'translateX(-50%)', fontFamily: mono, fontSize: 8, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em' }}>
+                            <div style={{ position: 'absolute', top: 50, left: '50%', transform: 'translateX(-50%)', fontFamily: mono, fontSize: 8, color: 'rgba(0,0,0,0.15)', letterSpacing: '0.15em' }}>
                                 {viewMode === 'plan' ? 'TOP-DOWN PLAN VIEW' : viewMode === 'front' ? 'FRONT ELEVATION' : viewMode === 'side' ? 'SIDE ELEVATION' : viewMode === 'iso' ? 'ISOMETRIC VIEW' : 'PERSPECTIVE VIEW'}
                             </div>
 
                             {/* Info badge */}
                             <div style={{ position: 'absolute', top: 16, left: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <span style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', borderRadius: 4, background: 'rgba(37,99,235,0.15)', color: '#7DD3FC', fontFamily: mono }}>4-ROOM BTO</span>
-                                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', fontFamily: mono }}>Tampines N9 · 93 sqm</span>
+                                <span style={{ fontSize: 8, fontWeight: 700, padding: '3px 8px', borderRadius: 4, background: 'rgba(0,0,0,0.04)', color: 'rgba(0,0,0,0.4)', fontFamily: mono }}>4-ROOM BTO</span>
+                                <span style={{ fontSize: 9, color: 'rgba(0,0,0,0.25)', fontFamily: mono }}>Tampines N9 · 93 sqm</span>
                             </div>
                             <div style={{ position: 'absolute', top: 16, right: 16 }}>
-                                <button style={{ padding: '6px 14px', fontSize: 10, fontWeight: 600, background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, cursor: 'pointer', fontFamily: f }}>Share with Client →</button>
+                                <button style={{ padding: '6px 14px', fontSize: 10, fontWeight: 600, background: '#111', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontFamily: f }}>Share with Client →</button>
                             </div>
                         </div>
-                        <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(37,99,235,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
+                        <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(0,0,0,0.02)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
                             🏠 In production, this renders the full 3D SketchUp model via Three.js. Homeowners get a shareable link. Supports Plan, Elevation, Isometric, and Perspective views.
                         </div>
                     </div>
@@ -435,38 +426,6 @@ export default function SketchUpPage() {
                         </div>
                     </div>
                 )}
-                {/* ═══ NEED A DRAFTER? ═══ */}
-                <div style={{ marginTop: 40, background: 'white', borderRadius: 16, padding: 28, border: '1px solid rgba(139,92,246,0.1)' }}>
-                    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-                        <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(139,92,246,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>✏️</div>
-                        <div style={{ flex: 1 }}>
-                            <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 6px' }}>Don't use SketchUp? Need a drafter?</h3>
-                            <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.4)', margin: '0 0 16px', lineHeight: 1.6 }}>
-                                Not every designer does their own 3D — and that's fine. Roof connects you with verified freelance drafters who'll turn your hand sketches or mood boards into SketchUp models, ready for auto-BOQ extraction.
-                            </p>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 16 }}>
-                                {[
-                                    { label: 'Solo Designers', desc: 'Outsource drafting per project', price: 'S$350/project', tag: 'POPULAR' },
-                                    { label: 'Firm (Studio Plan)', desc: 'Dedicated drafter for your team', price: 'S$250/project', tag: 'BULK' },
-                                    { label: 'Rush Jobs', desc: '48-hour turnaround', price: 'S$500/project', tag: 'EXPRESS' },
-                                ].map(tier => (
-                                    <div key={tier.label} style={{ padding: '14px', borderRadius: 10, border: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                                            <span style={{ fontSize: 12, fontWeight: 600 }}>{tier.label}</span>
-                                            <span style={{ fontSize: 7, fontWeight: 700, padding: '1px 5px', borderRadius: 3, background: 'rgba(139,92,246,0.06)', color: '#8B5CF6' }}>{tier.tag}</span>
-                                        </div>
-                                        <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)', marginBottom: 6 }}>{tier.desc}</div>
-                                        <div style={{ fontFamily: mono, fontSize: 14, fontWeight: 700, color: '#8B5CF6' }}>{tier.price}</div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div style={{ display: 'flex', gap: 8 }}>
-                                <button style={{ padding: '8px 20px', fontSize: 12, fontWeight: 600, background: '#8B5CF6', color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: f }}>Find a Drafter</button>
-                                <button style={{ padding: '8px 20px', fontSize: 12, fontWeight: 600, background: 'rgba(0,0,0,0.04)', color: 'rgba(0,0,0,0.4)', border: 'none', borderRadius: 8, cursor: 'pointer', fontFamily: f }}>Become a Drafter</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <footer style={{ padding: '28px 48px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 60 }}>
