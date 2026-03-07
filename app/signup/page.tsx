@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
     const router = useRouter();
-    const [formData, setFormData] = useState({ name: '', email: '', firmName: '', role: '', phone: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', firmName: '', role: '', phone: '', password: '', education: '', country: '', portfolio: '', completedProjects: '', credentials: [] as string[] });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState<'success' | 'error'>('success');
@@ -55,6 +55,11 @@ export default function SignupPage() {
                     role: 'designer',
                     firm_name: formData.firmName,
                     job_title: formData.role,
+                    portfolio: formData.portfolio,
+                    completed_projects: formData.completedProjects,
+                    credentials: formData.credentials,
+                    education: formData.education,
+                    country: formData.country,
                     approved: false,  // Requires admin approval
                 });
             }
@@ -136,6 +141,93 @@ export default function SignupPage() {
                                 <option value="pm">Project Manager</option>
                                 <option value="drafter">Drafter / 3D Artist</option>
                                 <option value="admin">Admin / Operations</option>
+                            </select>
+                        </div>
+
+                        {/* Portfolio — what matters most */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Portfolio link (optional)
+                            </label>
+                            <input
+                                type="url"
+                                placeholder="Website, Instagram, or Behance link"
+                                value={formData.portfolio}
+                                onChange={e => setFormData({ ...formData, portfolio: e.target.value })}
+                                className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors placeholder:text-[#ccc]"
+                            />
+                        </div>
+
+                        {/* Completed Projects */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Completed projects (approx)
+                            </label>
+                            <select
+                                value={formData.completedProjects}
+                                onChange={e => setFormData({ ...formData, completedProjects: e.target.value })}
+                                className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors appearance-none cursor-pointer"
+                                style={{ color: formData.completedProjects ? '#111' : '#ccc' }}
+                            >
+                                <option value="" disabled>How many projects have you completed?</option>
+                                <option value="1-10">1 – 10 projects</option>
+                                <option value="11-50">11 – 50 projects</option>
+                                <option value="51-100">51 – 100 projects</option>
+                                <option value="101-500">101 – 500 projects</option>
+                                <option value="500+">500+ projects</option>
+                            </select>
+                        </div>
+
+                        {/* Optional Credentials — badges, not gatekeepers */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Credentials (optional — select all that apply)
+                            </label>
+                            <div className="flex flex-wrap gap-1.5 mt-1">
+                                {['SIDAC Accredited', 'BOA Registered', 'BCA Licensed', 'SIDA Award Winner', 'PAM Member', 'CIDA (China)', 'None / Self-taught'].map(cred => {
+                                    const active = formData.credentials.includes(cred);
+                                    return (
+                                        <button key={cred} type="button"
+                                            className={`text-[11px] px-3 py-1.5 rounded-full border transition-all ${active ? 'bg-[#111] text-white border-[#111]' : 'bg-transparent text-[#888] border-[#e5e5e5] hover:border-[#111]'}`}
+                                            onClick={() => setFormData(prev => ({
+                                                ...prev,
+                                                credentials: active ? prev.credentials.filter(c => c !== cred) : [...prev.credentials, cred],
+                                            }))}
+                                        >{cred}</button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Education */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Design education (optional)
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="e.g. NAFA, NUS Architecture, UTM, Self-taught"
+                                value={formData.education}
+                                onChange={e => setFormData({ ...formData, education: e.target.value })}
+                                className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors placeholder:text-[#ccc]"
+                            />
+                        </div>
+
+                        {/* Country */}
+                        <div>
+                            <label className="block text-[11px] font-medium text-[#999] uppercase tracking-[0.1em] mb-1.5">
+                                Country
+                            </label>
+                            <select
+                                value={formData.country}
+                                onChange={e => setFormData({ ...formData, country: e.target.value })}
+                                className="w-full px-4 py-3 text-[13px] border border-[#e5e5e5] rounded-lg bg-transparent focus:border-[#111] focus:outline-none transition-colors appearance-none cursor-pointer"
+                                style={{ color: formData.country ? '#111' : '#ccc' }}
+                            >
+                                <option value="" disabled>Where are you based?</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="MY">🇲🇾 Malaysia</option>
+                                <option value="OTHER">Other</option>
                             </select>
                         </div>
                     </div>

@@ -44,6 +44,16 @@ const BUDGET_ME = ['Not needed', 'Below $3k', '$3k – $8k', '$8k – $15k', '$1
 const BUDGET_FFE = ['Not needed', 'Below $5k', '$5k – $15k', '$15k – $30k', '$30k – $60k', 'Above $60k'];
 const BUDGET_TOTAL = ['Below $30k', '$30k – $50k', '$50k – $80k', '$80k – $120k', '$120k – $200k', '$200k – $500k', 'Above $500k'];
 const STYLES = ['Wabi-Sabi', 'Bauhaus', 'De Stijl', 'Brutalism', 'Art Nouveau', 'Peranakan', 'Hygge', 'Art Deco', 'Luxury', 'Not sure — help me decide'];
+const CULTURAL_NEEDS = [
+    '风水 Feng Shui (Chinese geomancy)',
+    'Vastu Shastra (Indian orientation)',
+    'Islamic / Halal (qibla, wudu, prayer room)',
+    '神台 Altar placement (Buddhist / Taoist)',
+    'Prayer / Meditation room',
+    'Pantang Larang (Malay / Chinese taboos)',
+    'Wheelchair / Universal Design',
+    'None of the above',
+];
 const TIMELINES = ['ASAP (keys received)', 'Within 3 months', '3–6 months', '6–12 months', 'Just exploring'];
 const PROJECT_REASONS = [
     'New renovation (moving in)',
@@ -98,7 +108,7 @@ const ROOM_LAYOUTS: Record<string, string[]> = {
 };
 
 export default function HomeownerSignup() {
-    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '' });
+    const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {} as Record<string, string>, reason: '', cultural: [] as string[] });
     const [honeypot, setHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
@@ -136,6 +146,7 @@ export default function HomeownerSignup() {
                     timeline: form.timeline,
                     preferred_style: form.style,
                     rooms: form.rooms,
+                    cultural_requirements: form.cultural,
                     notes: form.notes,
                     _website: honeypot,
                 }),
@@ -147,7 +158,7 @@ export default function HomeownerSignup() {
             } else {
                 setMessage('Submitted! We will match you with 3 designers within 24 hours.');
                 setMessageType('success');
-                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {}, reason: '' });
+                setForm({ name: '', email: '', phone: '', country: '', property: '', address: '', budgetReno: '', budgetME: '', budgetFFE: '', budgetTotal: '', style: '', timeline: '', notes: '', rooms: {}, reason: '', cultural: [] });
             }
         } catch {
             setMessage('Connection error. Please try again.');
@@ -388,6 +399,27 @@ export default function HomeownerSignup() {
                             {STYLES.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                     </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                        <label style={labelStyle}>Cultural / Religious Requirements</label>
+                        <p style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', margin: '0 0 10px', lineHeight: 1.4 }}>
+                            These affect layout, orientation, and room placement. Select all that apply.
+                        </p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                            {CULTURAL_NEEDS.map(c => {
+                                const active = form.cultural.includes(c);
+                                return (
+                                    <button key={c} type="button" style={chipStyle(active)} onClick={() => {
+                                        setForm(p => ({
+                                            ...p,
+                                            cultural: active ? p.cultural.filter(x => x !== c) : [...p.cultural, c],
+                                        }));
+                                    }}>{c}</button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     <div>
                         <label style={labelStyle}>Anything else we should know?</label>
                         <textarea style={{ ...inputStyle, height: 80, resize: 'vertical' as const }} value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} placeholder="E.g. Must have home office, prefer open kitchen, need extra storage..." />
