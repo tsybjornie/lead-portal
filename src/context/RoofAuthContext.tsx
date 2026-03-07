@@ -1,6 +1,8 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import type { User, Session } from '@supabase/supabase-js';
 
 // ============================================================
 // TYPES
@@ -15,169 +17,9 @@ export interface RoofUser {
     avatar?: string;
     roles: UserRole[];
     activeRole: UserRole;
-    firm?: {
-        name: string;
-        uen: string;
-    };
+    firm?: { name: string; uen: string };
     code: string;
 }
-
-// ============================================================
-// USER DIRECTORY — Code-based login
-// When Supabase is connected, this lookups from the `users` table instead
-// ============================================================
-
-export interface UserEntry {
-    user: RoofUser;
-    defaultRoute: string;
-    username: string;
-    password: string;
-}
-
-const USER_DIRECTORY: Record<string, UserEntry> = {
-    // Designers
-    'BJORN': {
-        username: 'bjorn', password: 'roof123',
-        user: {
-            id: 'u_designer_1', code: 'BJORN',
-            name: 'Bjorn Teo', email: 'bjorn@vinterior.sg',
-            roles: ['designer'], activeRole: 'designer',
-            firm: { name: 'Vinterior Pte Ltd', uen: '202312345X' },
-        },
-        defaultRoute: '/hub',
-    },
-    'TINA': {
-        username: 'tina', password: 'roof123',
-        user: {
-            id: 'u_designer_2', code: 'TINA',
-            name: 'Tina Wong', email: 'tina@vinterior.sg',
-            roles: ['designer'], activeRole: 'designer',
-            firm: { name: 'Vinterior Pte Ltd', uen: '202312345X' },
-        },
-        defaultRoute: '/hub',
-    },
-
-    // Admin / Boss
-    'BOSS': {
-        username: 'admin', password: 'roof123',
-        user: {
-            id: 'u_admin_1', code: 'BOSS',
-            name: 'Roof Admin', email: 'admin@roof.sg',
-            roles: ['designer', 'vendor', 'client', 'prospect', 'developer', 'admin', 'worker'],
-            activeRole: 'admin',
-        },
-        defaultRoute: '/hub',
-    },
-
-    // Vendors
-    'AHMAD': {
-        username: 'ahmad', password: 'roof123',
-        user: {
-            id: 'u_vendor_1', code: 'AHMAD',
-            name: 'Ahmad Bin Hassan', email: 'ahmad@woodworksg.com',
-            roles: ['vendor'], activeRole: 'vendor',
-            firm: { name: 'WoodWork SG', uen: '202198765Y' },
-        },
-        defaultRoute: '/vendor/dashboard',
-    },
-    'LEONG': {
-        username: 'leong', password: 'roof123',
-        user: {
-            id: 'u_vendor_2', code: 'LEONG',
-            name: 'Leong Electrical', email: 'leong@sparkssg.com',
-            roles: ['vendor'], activeRole: 'vendor',
-            firm: { name: 'Sparks Electrical Pte Ltd', uen: '201987654Z' },
-        },
-        defaultRoute: '/vendor/dashboard',
-    },
-
-    // Workers
-    'KUMAR': {
-        username: 'kumar', password: 'roof123',
-        user: {
-            id: 'u_worker_1', code: 'KUMAR',
-            name: 'Kumar Saravanan', email: 'kumar@woodworksg.com',
-            roles: ['worker'], activeRole: 'worker',
-            firm: { name: 'WoodWork SG', uen: '202198765Y' },
-        },
-        defaultRoute: '/worker/tasks',
-    },
-
-    // Clients
-    'DAVID': {
-        username: 'david', password: 'roof123',
-        user: {
-            id: 'u_client_1', code: 'DAVID',
-            name: 'David Lim', email: 'david.lim@gmail.com',
-            roles: ['client'], activeRole: 'client',
-        },
-        defaultRoute: '/client-dashboard',
-    },
-
-    // Prospects
-    'SARAH': {
-        username: 'sarah', password: 'roof123',
-        user: {
-            id: 'u_prospect_1', code: 'SARAH',
-            name: 'Sarah Chen', email: 'sarah.chen@gmail.com',
-            roles: ['prospect'], activeRole: 'prospect',
-        },
-        defaultRoute: '/prospect',
-    },
-
-    // Developer
-    'CAPITA': {
-        username: 'capita', password: 'roof123',
-        user: {
-            id: 'u_dev_1', code: 'CAPITA',
-            name: 'CapitaLand Dev', email: 'projects@capitaland.com',
-            roles: ['developer'], activeRole: 'developer',
-            firm: { name: 'CapitaLand Residential', uen: '198301876K' },
-        },
-        defaultRoute: '/hub',
-    },
-};
-
-// Lookup by code (case-insensitive)
-export function lookupUserByCode(code: string): UserEntry | null {
-    return USER_DIRECTORY[code.toUpperCase().trim()] || null;
-}
-
-// Lookup by username (case-insensitive)
-export function lookupUserByUsername(username: string): UserEntry | null {
-    const entry = Object.values(USER_DIRECTORY).find(
-        e => e.username.toLowerCase() === username.toLowerCase().trim()
-    );
-    return entry || null;
-}
-
-// Validate username + password
-export function validateCredentials(username: string, password: string): UserEntry | null {
-    const entry = lookupUserByUsername(username);
-    if (entry && entry.password === password) return entry;
-    return null;
-}
-
-// Get all users for display
-export function getAllUsers(): { username: string; name: string; role: UserRole; code: string }[] {
-    return Object.entries(USER_DIRECTORY).map(([code, entry]) => ({
-        code,
-        username: entry.username,
-        name: entry.user.name,
-        role: entry.user.activeRole,
-    }));
-}
-
-// Legacy compatibility — still kept for components that use role-based login
-const DEMO_USERS: Record<UserRole, RoofUser> = {
-    designer: USER_DIRECTORY['BJORN'].user,
-    vendor: USER_DIRECTORY['AHMAD'].user,
-    client: USER_DIRECTORY['DAVID'].user,
-    prospect: USER_DIRECTORY['SARAH'].user,
-    developer: USER_DIRECTORY['CAPITA'].user,
-    admin: USER_DIRECTORY['BOSS'].user,
-    worker: USER_DIRECTORY['KUMAR'].user,
-};
 
 // ============================================================
 // NAVIGATION CONFIG PER ROLE
@@ -253,44 +95,118 @@ export const ROLE_COLORS: Record<UserRole, string> = {
     worker: '#14B8A6',
 };
 
+// Route mapping per role
+const ROLE_DEFAULT_ROUTES: Record<UserRole, string> = {
+    designer: '/hub',
+    vendor: '/vendor/dashboard',
+    client: '/client-dashboard',
+    prospect: '/prospect',
+    developer: '/hub',
+    admin: '/hub',
+    worker: '/worker/tasks',
+};
+
 // ============================================================
 // CONTEXT
 // ============================================================
 
 interface RoofAuthContextType {
     user: RoofUser | null;
+    supabaseUser: User | null;
     isLoggedIn: boolean;
+    isLoading: boolean;
     login: (role: UserRole) => void;
     loginByCode: (code: string) => { success: boolean; route: string };
-    logout: () => void;
+    logout: () => Promise<void>;
     switchRole: (role: UserRole) => void;
     sidebarCollapsed: boolean;
     setSidebarCollapsed: (v: boolean) => void;
+    defaultRoute: string;
 }
 
 const RoofAuthContext = createContext<RoofAuthContextType | null>(null);
 
+// Build a RoofUser from a Supabase user + profile
+function buildRoofUser(supaUser: User, profile: any): RoofUser {
+    const role = (profile?.role || 'designer') as UserRole;
+    return {
+        id: supaUser.id,
+        name: profile?.full_name || supaUser.user_metadata?.full_name || supaUser.email?.split('@')[0] || 'User',
+        email: supaUser.email || '',
+        roles: [role],
+        activeRole: role,
+        firm: profile?.firm_name ? { name: profile.firm_name, uen: profile.uen || '' } : undefined,
+        code: supaUser.id.substring(0, 6).toUpperCase(),
+    };
+}
+
 export function RoofAuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<RoofUser | null>(null);
+    const [supabaseUser, setSupabaseUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-    // Legacy: login by role (for backward compat)
+    // Hydrate user from Supabase session on mount
+    useEffect(() => {
+        const hydrate = async () => {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) {
+                    setSupabaseUser(session.user);
+                    // Fetch profile
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', session.user.id)
+                        .single();
+                    setUser(buildRoofUser(session.user, profile));
+                }
+            } catch (err) {
+                console.error('Auth hydration failed:', err);
+            }
+            setIsLoading(false);
+        };
+
+        hydrate();
+
+        // Listen for auth state changes (login, logout, token refresh)
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session?.user) {
+                setSupabaseUser(session.user);
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                setUser(buildRoofUser(session.user, profile));
+            } else if (event === 'SIGNED_OUT') {
+                setUser(null);
+                setSupabaseUser(null);
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    // Legacy: login by role (for backward compat — sets role but uses current user)
     const login = (role: UserRole) => {
-        setUser(DEMO_USERS[role]);
+        if (user) {
+            setUser({ ...user, activeRole: role, roles: [...new Set([...user.roles, role])] });
+        }
     };
 
-    // New: login by unique code
+    // Legacy: login by code (kept for compat, no-op since we use Supabase now)
     const loginByCode = (code: string): { success: boolean; route: string } => {
-        const entry = lookupUserByCode(code);
-        if (entry) {
-            setUser(entry.user);
-            return { success: true, route: entry.defaultRoute };
+        if (user) {
+            return { success: true, route: ROLE_DEFAULT_ROUTES[user.activeRole] || '/hub' };
         }
         return { success: false, route: '/login' };
     };
 
-    const logout = () => {
+    const logout = async () => {
+        await supabase.auth.signOut();
         setUser(null);
+        setSupabaseUser(null);
     };
 
     const switchRole = (role: UserRole) => {
@@ -299,8 +215,14 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const defaultRoute = user ? ROLE_DEFAULT_ROUTES[user.activeRole] || '/hub' : '/login';
+
     return (
-        <RoofAuthContext.Provider value={{ user, isLoggedIn: !!user, login, loginByCode, logout, switchRole, sidebarCollapsed, setSidebarCollapsed }}>
+        <RoofAuthContext.Provider value={{
+            user, supabaseUser, isLoggedIn: !!user, isLoading,
+            login, loginByCode, logout, switchRole,
+            sidebarCollapsed, setSidebarCollapsed, defaultRoute,
+        }}>
             {children}
         </RoofAuthContext.Provider>
     );
@@ -311,4 +233,3 @@ export function useRoofAuth() {
     if (!ctx) throw new Error('useRoofAuth must be inside RoofAuthProvider');
     return ctx;
 }
-
