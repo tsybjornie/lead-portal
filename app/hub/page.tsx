@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRoofAuth } from "@/context/RoofAuthContext";
+import { getProjects, getQuotes, getLeads } from "@/lib/supabase-data";
 
 interface Product {
     id: string;
@@ -10,98 +12,124 @@ interface Product {
     index: string;
     href: string;
     external?: boolean;
+    stat?: string; // Live stat badge
 }
 
-const products: Product[] = [
-    {
-        id: "pipeline",
-        name: "Roof Pipeline",
-        tagline: "Capture and convert every lead",
-        index: "01",
-        href: "/follow-up",
-    },
-    {
-        id: "numbers",
-        name: "Roof Numbers",
-        tagline: "Build quotes that protect your margin",
-        index: "02",
-        href: "/",
-    },
-    {
-        id: "dispatch",
-        name: "Roof Dispatch",
-        tagline: "Auto-price, source, and deploy",
-        index: "03",
-        href: "/dispatch",
-    },
-    {
-        id: "sequence",
-        name: "Roof Sequence",
-        tagline: "Your design studio, codified",
-        index: "04",
-        href: "/sequence",
-    },
-    {
-        id: "ledger",
-        name: "Roof Ledger",
-        tagline: "Track every dollar in and out",
-        index: "05",
-        href: "/ledger",
-    },
-    {
-        id: "pos",
-        name: "Hardware POS",
-        tagline: "Your renovation supply counter",
-        index: "06",
-        href: "/hardware-pos",
-    },
-    {
-        id: "forecast",
-        name: "Roof Forecast",
-        tagline: "Project pipeline and revenue projections",
-        index: "07",
-        href: "/forecast",
-    },
-    {
-        id: "chat",
-        name: "Roof Chat",
-        tagline: "Masked communication between parties",
-        index: "08",
-        href: "/chat",
-    },
-    {
-        id: "inspect",
-        name: "Roof Inspect",
-        tagline: "Site verification and defect tracking",
-        index: "09",
-        href: "/inspect",
-    },
-    {
-        id: "measure",
-        name: "Roof Measure",
-        tagline: "Site measurement and survey tool",
-        index: "10",
-        href: "/measure",
-    },
-    {
-        id: "price-index",
-        name: "Price Index",
-        tagline: "113 materials at SG market rates",
-        index: "11",
-        href: "/price-index",
-    },
-    {
-        id: "vendor-rates",
-        name: "Vendor Rates",
-        tagline: "Supplier pricing comparison engine",
-        index: "12",
-        href: "/vendor-rates",
-    },
-];
-
 export default function HubPage() {
+    const { user } = useRoofAuth();
     const [hoveredId, setHoveredId] = useState<string | null>(null);
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+    const [stats, setStats] = useState<Record<string, string>>({});
+
+    // Fetch live stats
+    useEffect(() => {
+        async function fetchStats() {
+            try {
+                const [projects, quotes, leads] = await Promise.all([
+                    getProjects(),
+                    getQuotes(),
+                    getLeads(),
+                ]);
+                const activeProjects = projects.filter(p => p.status === 'active' || p.status === 'signed');
+                const draftQuotes = quotes.filter(q => q.status === 'DRAFT');
+                setStats({
+                    pipeline: leads.length > 0 ? `${leads.length} leads` : '',
+                    numbers: quotes.length > 0 ? `${quotes.length} quotes` : '',
+                    forecast: projects.length > 0 ? `${projects.length} projects` : '',
+                });
+            } catch (err) {
+                console.error('Stats fetch error:', err);
+            }
+        }
+        fetchStats();
+    }, []);
+
+    const products: Product[] = [
+        {
+            id: "pipeline",
+            name: "Roof Pipeline",
+            tagline: "Capture and convert every lead",
+            index: "01",
+            href: "/follow-up",
+        },
+        {
+            id: "numbers",
+            name: "Roof Numbers",
+            tagline: "Build quotes that protect your margin",
+            index: "02",
+            href: "/quote-builder",
+        },
+        {
+            id: "dispatch",
+            name: "Roof Dispatch",
+            tagline: "Auto-price, source, and deploy",
+            index: "03",
+            href: "/dispatch",
+        },
+        {
+            id: "sequence",
+            name: "Roof Sequence",
+            tagline: "Your design studio, codified",
+            index: "04",
+            href: "/sequence",
+        },
+        {
+            id: "ledger",
+            name: "Roof Ledger",
+            tagline: "Track every dollar in and out",
+            index: "05",
+            href: "/ledger",
+        },
+        {
+            id: "pos",
+            name: "Hardware POS",
+            tagline: "Your renovation supply counter",
+            index: "06",
+            href: "/hardware-pos",
+        },
+        {
+            id: "forecast",
+            name: "Roof Forecast",
+            tagline: "Project pipeline and revenue projections",
+            index: "07",
+            href: "/forecast",
+        },
+        {
+            id: "chat",
+            name: "Roof Chat",
+            tagline: "Masked communication between parties",
+            index: "08",
+            href: "/chat",
+        },
+        {
+            id: "inspect",
+            name: "Roof Inspect",
+            tagline: "Site verification and defect tracking",
+            index: "09",
+            href: "/inspect",
+        },
+        {
+            id: "measure",
+            name: "Roof Measure",
+            tagline: "Site measurement and survey tool",
+            index: "10",
+            href: "/measure",
+        },
+        {
+            id: "price-index",
+            name: "Price Index",
+            tagline: "113 materials at SG market rates",
+            index: "11",
+            href: "/price-index",
+        },
+        {
+            id: "vendor-rates",
+            name: "Vendor Rates",
+            tagline: "Supplier pricing comparison engine",
+            index: "12",
+            href: "/vendor-rates",
+        },
+    ];
 
     return (
         <div
@@ -203,7 +231,7 @@ export default function HubPage() {
                                         </div>
 
                                         {/* Name */}
-                                        <div className="flex-1">
+                                        <div className="flex-1 flex items-baseline gap-3">
                                             <motion.span
                                                 className="text-[clamp(1.5rem,3.5vw,3.5rem)] font-extralight tracking-[-0.03em] transition-colors duration-500 inline-block"
                                                 style={{ color: isHovered ? "#111" : "#888" }}
@@ -214,6 +242,11 @@ export default function HubPage() {
                                             >
                                                 {product.name}
                                             </motion.span>
+                                            {stats[product.id] && (
+                                                <span className="text-[10px] font-bold tracking-[0.1em] uppercase px-2 py-1 rounded-full bg-[#111] text-white">
+                                                    {stats[product.id]}
+                                                </span>
+                                            )}
                                         </div>
 
                                         {/* Tagline */}

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Search, Filter, Phone, Mail, Clock, Plus, TrendingUp, Users, AlertCircle } from 'lucide-react';
+import { getLeads } from '@/lib/supabase-data';
 
 type LeadStatus = 'NEW' | 'CONTACTED' | 'SITE_VISIT' | 'QUOTING' | 'NEGOTIATING' | 'WON' | 'LOST';
 
@@ -54,11 +55,55 @@ const DEMO_LEADS_INIT: Lead[] = [
     { id: 'L006', name: 'Raymond Goh', phone: '+65 8678 9012', source: 'Referral', propertyType: 'Condo', location: 'Novena', budgetRange: '$60k-$80k', status: 'WON', lastContact: '1 week ago', nextAction: 'Start project kickoff', assignedTo: 'Jenny', commitmentLevel: 'committed' },
 ];
 
+function timeAgo(dateStr: string): string {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    const diffDay = Math.floor(diffHr / 24);
+    return `${diffDay}d ago`;
+}
+
 export default function FollowUpPage() {
     const [filter, setFilter] = useState<LeadStatus | 'ALL'>('ALL');
     const [staffFilter, setStaffFilter] = useState<string>('ALL');
     const [searchQuery, setSearchQuery] = useState('');
     const [leads, setLeads] = useState(DEMO_LEADS_INIT);
+    const [loadingLeads, setLoadingLeads] = useState(true);
+
+    // Load real leads from Supabase, merge with demo if needed
+    useEffect(() => {
+        async function loadLeads() {
+            try {
+                const supaLeads = await getLeads();
+                if (supaLeads.length > 0) {
+                    const mapped: Lead[] = supaLeads.map((sl, i) => ({
+                        id: sl.id,
+                        name: sl.full_name,
+                        phone: sl.phone || '',
+                        source: 'Website',
+                        propertyType: (sl.property_type as Lead['propertyType']) || 'HDB',
+                        location: sl.property_address || 'Singapore',
+                        budgetRange: sl.budget || 'TBD',
+                        status: 'NEW' as LeadStatus,
+                        lastContact: timeAgo(sl.created_at),
+                        nextAction: 'Call within 15 min',
+                        assignedTo: 'Unassigned',
+                        commitmentLevel: 'just_looking' as const,
+                    }));
+                    setLeads([...mapped, ...DEMO_LEADS_INIT]);
+                }
+            } catch (err) {
+                console.error('Failed to load leads:', err);
+            } finally {
+                setLoadingLeads(false);
+            }
+        }
+        loadLeads();
+    }, []);
 
     const reassignLead = (leadId: string) => {
         setLeads(prev => prev.map(l => {
