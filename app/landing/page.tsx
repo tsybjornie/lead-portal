@@ -90,9 +90,9 @@ export default function LandingPage() {
                             >
                                 <Link
                                     href={role.href}
-                                    className="block rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
+                                    className="block h-full rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
                                 >
-                                    <div className="relative h-28 overflow-hidden">
+                                    <div className="relative h-32 overflow-hidden">
                                         <Image
                                             src={role.img}
                                             alt={role.label}
@@ -100,7 +100,7 @@ export default function LandingPage() {
                                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
                                     </div>
-                                    <div className="p-4">
+                                    <div className="p-4 min-h-[72px]">
                                         <div className="text-[13px] font-semibold text-[#111]">{role.label}</div>
                                         <div className="text-[11px] text-[#bbb] mt-0.5">{role.sub}</div>
                                     </div>
@@ -131,9 +131,9 @@ export default function LandingPage() {
                             >
                                 <Link
                                     href={role.href}
-                                    className="block rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
+                                    className="block h-full rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] overflow-hidden transition-all duration-200 group"
                                 >
-                                    <div className="relative h-24 overflow-hidden">
+                                    <div className="relative h-32 overflow-hidden">
                                         <Image
                                             src={role.img}
                                             alt={role.label}
@@ -141,7 +141,7 @@ export default function LandingPage() {
                                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                                         />
                                     </div>
-                                    <div className="p-4">
+                                    <div className="p-4 min-h-[72px]">
                                         <div className="text-[13px] font-semibold text-[#111]">{role.label}</div>
                                         <div className="text-[11px] text-[#bbb] mt-0.5">{role.sub}</div>
                                     </div>
