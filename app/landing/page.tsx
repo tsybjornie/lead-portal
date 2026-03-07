@@ -4,16 +4,23 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+const ROLES = [
+    { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', icon: '✏️' },
+    { id: 'homeowner', label: 'Homeowner', sub: 'Looking for a renovation', href: '/signup/homeowner', icon: '🏠' },
+    { id: 'contractor', label: 'Contractor', sub: 'Builders, workers & foremen', href: '/signup/contractor', icon: '🔨' },
+    { id: 'brand', label: 'Brand / Supplier', sub: 'Material brands & vendors', href: '/signup/brand', icon: '🏷️' },
+];
+
 export default function LandingPage() {
     const [mounted, setMounted] = useState(false);
     useEffect(() => { setMounted(true); }, []);
 
     return (
         <div
-            className="min-h-screen bg-[#fafafa] text-[#111] overflow-hidden relative"
+            className="min-h-screen bg-[#fafafa] text-[#111] overflow-hidden"
             style={{ fontFamily: "'Inter', 'Helvetica Neue', sans-serif" }}
         >
-            {/* Top bar — simple, just the brand and login */}
+            {/* Top bar */}
             <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-5 bg-[#fafafa]/80 backdrop-blur-xl">
                 <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">
                     Roof
@@ -26,89 +33,63 @@ export default function LandingPage() {
                 </Link>
             </header>
 
-            {/* Hero — centered, breathing room, friendly language */}
+            {/* Hero — full viewport, just the essentials */}
             <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-8 md:px-20">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 30 }}
                     transition={{ duration: 1, ease: [0.25, 0.1, 0, 1] }}
-                    className="text-center max-w-[560px]"
+                    className="text-center w-full max-w-[620px]"
                 >
-                    {/* Big friendly title */}
-                    <h1 className="text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.03em] text-[#111] mb-6">
-                        Run your renovation firm
-                        <br />
-                        <span className="text-[#bbb] italic">without the chaos.</span>
+                    <h1 className="text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.03em] text-[#111] mb-4">
+                        Roof<span className="text-[#ccc]">.</span>
                     </h1>
 
-                    <p className="text-[16px] text-[#888] leading-relaxed max-w-[400px] mx-auto mb-10">
-                        Quotes, leads, schedules, payments — everything your design firm needs, in one place.
+                    <p className="text-[16px] text-[#888] leading-relaxed max-w-[380px] mx-auto mb-12">
+                        Run your renovation without the chaos.
                     </p>
 
-                    {/* Two clear paths */}
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6">
-                        <Link
-                            href="/signup"
-                            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#111] text-white text-[14px] font-semibold hover:bg-[#333] transition-all text-center"
-                        >
-                            Start free as a Designer
-                        </Link>
-                        <Link
-                            href="/signup/homeowner"
-                            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white text-[#666] text-[14px] font-medium border border-[#e5e5e5] hover:border-[#111] hover:text-[#111] transition-all text-center"
-                        >
-                            I need a renovation
-                        </Link>
+                    {/* Role selector — clean grid, all roles */}
+                    <div className="grid grid-cols-2 gap-3 max-w-[440px] mx-auto mb-8">
+                        {ROLES.map((role, i) => (
+                            <motion.div
+                                key={role.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 20 }}
+                                transition={{ delay: 0.3 + i * 0.1, duration: 0.6 }}
+                            >
+                                <Link
+                                    href={role.href}
+                                    className="block p-5 rounded-xl bg-white border border-[#f0f0f0] hover:border-[#111] hover:shadow-sm transition-all duration-200 text-left group"
+                                >
+                                    <div className="text-lg mb-2">{role.icon}</div>
+                                    <div className="text-[13px] font-semibold text-[#111] group-hover:text-[#111]">
+                                        {role.label}
+                                    </div>
+                                    <div className="text-[11px] text-[#bbb] mt-0.5">
+                                        {role.sub}
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        ))}
                     </div>
 
-                    {/* Already have an account? Super obvious */}
+                    {/* Already have an account */}
                     <p className="text-[13px] text-[#bbb]">
                         Already have an account?{' '}
                         <Link href="/login" className="text-[#111] font-medium hover:underline">
-                            Log in here
+                            Log in
                         </Link>
                     </p>
                 </motion.div>
             </div>
 
-            {/* Subtle bottom section — what Roof does, no pricing */}
-            <motion.section
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8 }}
-                className="max-w-[700px] mx-auto px-8 pb-24"
-            >
-                <div className="border-t border-[#e5e5e5] pt-12">
-                    <p className="text-[11px] tracking-[0.2em] uppercase font-medium text-[#ccc] mb-6">
-                        Everything you need
-                    </p>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        {[
-                            { icon: '📋', title: 'Lead Tracking', desc: 'Never lose a prospect' },
-                            { icon: '🧮', title: 'Auto-Pricing', desc: 'Quotes in minutes, not days' },
-                            { icon: '📊', title: 'Project P&L', desc: 'Know your margin instantly' },
-                            { icon: '🔨', title: 'Trade Dispatch', desc: 'Deploy verified tradesmen' },
-                            { icon: '📅', title: 'Scheduling', desc: 'Gantt timelines, auto-sorted' },
-                            { icon: '💰', title: 'Payments', desc: 'Milestone billing & escrow' },
-                        ].map((item, i) => (
-                            <div key={i} className="py-3">
-                                <div className="text-xl mb-2">{item.icon}</div>
-                                <div className="text-[13px] font-semibold text-[#111] mb-1">{item.title}</div>
-                                <div className="text-[12px] text-[#999]">{item.desc}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </motion.section>
-
             {/* Minimal footer */}
-            <footer className="border-t border-[#f0f0f0] px-8 md:px-12 py-6 flex items-center justify-between">
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ccc]">
-                    Roof · Singapore & Malaysia
+            <footer className="fixed bottom-0 left-0 right-0 flex items-center justify-between px-8 md:px-12 py-6">
+                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">
+                    Singapore · Malaysia
                 </span>
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ccc]">
+                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">
                     {new Date().getFullYear()}
                 </span>
             </footer>

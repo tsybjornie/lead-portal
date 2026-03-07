@@ -186,3 +186,134 @@ export async function updateProfile(updates: Record<string, any>) {
     if (error) { console.error('updateProfile error:', error); return null; }
     return data;
 }
+
+// ============================================================
+// PROJECT FILES (Supabase Storage)
+// ============================================================
+
+export type FileCategory = 'site_scan' | 'floorplan' | 'render' | 'drawing' | 'document' | 'photo';
+
+export interface ProjectFile {
+    id: string;
+    project_id: string;
+    designer_id: string;
+    file_name: string;
+    file_path: string;
+    file_size: number;
+    file_type: string;
+    category: FileCategory;
+    notes?: string;
+    created_at: string;
+    public_url?: string;
+}
+
+export async function uploadProjectFile(
+    projectId: string,
+    file: File,
+    category: FileCategory = 'document',
+    notes?: string
+): Promise<ProjectFile | null> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    // Upload to Supabase Storage
+    const ext = file.name.split('.').pop() || 'bin';
+    const filePath = `${user.id}/${projectId}/${category}/${Date.now()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from('project-files')
+        .upload(filePath, file, { cacheControl: '3600', upsert: false });
+
+    if (uploadError) { console.error('Upload error:', uploadError); return null; }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+        .from('project-files')
+        .getPublicUrl(filePath);
+
+    // Save metadata
+    const { data, error } = await supabase
+        .from('project_files')
+        .insert({
+            project_id: projectId,
+            designer_id: user.id,
+            file_name: file.name,
+            file_path: filePath,
+            file_size: file.size,
+            file_type: file.type,
+            category,
+            notes,
+        })
+        .select()
+        .single();
+
+    if (error) { console.error('File metadata save error:', error); return null; }
+    return { ...data, public_url: urlData.publicUrl };
+}
+
+export async function getProjectFiles(projectId: string): Promise<ProjectFile[]> {
+    const { data, error } = await supabase
+        .from('project_files')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('created_at', { ascending: false });
+
+    if (error) { console.error('getProjectFiles error:', error); return []; }
+
+    // Attach public URLs
+    return (data || []).map(f => {
+        const { data: urlData } = supabase.storage
+            .from('project-files')
+            .getPublicUrl(f.file_path);
+        return { ...f, public_url: urlData.publicUrl };
+    });
+}
+
+export async function deleteProjectFile(fileId: string, filePath: string): Promise<boolean> {
+    // Delete from storage
+    await supabase.storage.from('project-files').remove([filePath]);
+
+    // Delete metadata
+    const { error } = await supabase
+        .from('project_files')
+        .delete()
+        .eq('id', fileId);
+
+    if (error) { console.error('deleteProjectFile error:', error); return false; }
+    return true;
+}
+
+// ============================================================
+// PENDING SIGNUPS (admin approval)
+// ============================================================
+
+export async function getPendingSignups() {
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('approved', false)
+        .order('created_at', { ascending: false });
+    if (error) { console.error('getPendingSignups error:', error); return []; }
+    return data || [];
+}
+
+export async function approveSignup(profileId: string) {
+    const { data, error } = await supabase
+        .from('profiles')
+        .update({ approved: true, approved_at: new Date().toISOString() })
+        .eq('id', profileId)
+        .select()
+        .single();
+    if (error) { console.error('approveSignup error:', error); return null; }
+    return data;
+}
+
+export async function rejectSignup(profileId: string) {
+    const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', profileId);
+    if (error) { console.error('rejectSignup error:', error); return false; }
+    return true;
+}
+
