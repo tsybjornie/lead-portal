@@ -36,6 +36,17 @@ export default function AutopilotPage() {
     const [reason, setReason] = useState('');
     const [step, setStep] = useState<'select' | 'confirm' | 'active'>('select');
     const [emergencyContact, setEmergencyContact] = useState('');
+    const [leadCapture, setLeadCapture] = useState(true);
+    const [preset, setPreset] = useState<'personal' | 'vacation' | 'festive' | 'upskill'>('personal');
+
+    const PRESETS = {
+        personal: { icon: '🛡️', label: 'Personal Leave', sub: 'Grief, health, family — take the time you need.', defaultWeeks: 2, leadDefault: false },
+        vacation: { icon: '🏖️', label: 'Vacation', sub: 'You\'re on a beach. Your projects aren\'t.', defaultWeeks: 2, leadDefault: true },
+        festive: { icon: '🎆', label: 'Festive Season', sub: 'CNY, Hari Raya, Deepavali — the whole industry rests. Your pipeline doesn\'t.', defaultWeeks: 2, leadDefault: true },
+        upskill: { icon: '🎓', label: 'Upskill', sub: 'Courses, certifications, study trips — invest in yourself.', defaultWeeks: 4, leadDefault: true },
+    };
+
+    const activePreset = PRESETS[preset];
 
     const toggleProject = (id: string) => {
         setSelectedProjects(prev =>
@@ -45,7 +56,9 @@ export default function AutopilotPage() {
 
     const selectedProjectData = ACTIVE_PROJECTS.filter(p => selectedProjects.includes(p.id));
     const totalRemaining = selectedProjectData.reduce((sum, p) => sum + p.remaining, 0);
-    const weeklyFee = Math.min(500 * selectedProjectData.length, totalRemaining * 0.05);
+    const baseWeeklyFee = Math.min(500 * selectedProjectData.length, totalRemaining * 0.05);
+    const leadCaptureWeeklyFee = leadCapture ? 200 : 0;
+    const weeklyFee = baseWeeklyFee + leadCaptureWeeklyFee;
     const totalFee = weeklyFee * duration;
 
     // Meetings affected by selected projects
@@ -103,15 +116,29 @@ export default function AutopilotPage() {
                 {/* ═══ STEP 1: SELECT PROJECTS ═══ */}
                 {step === 'select' && (
                     <>
-                        <div style={{ marginBottom: 40 }}>
+                        <div style={{ marginBottom: 32 }}>
                             <div style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.15em', textTransform: 'uppercase' as const, marginBottom: 12 }}>DESIGNER SAFETY NET</div>
                             <h1 style={{ fontSize: 28, fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 8px' }}>
                                 Autopilot <span style={{ color: 'rgba(0,0,0,0.2)', fontStyle: 'italic' }}>Mode</span>
                             </h1>
                             <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.4)', margin: 0, lineHeight: 1.7 }}>
-                                Life happens. When you need to step away, Roof keeps your projects moving.<br />
-                                Your clients stay informed. Your reputation stays intact. You heal.
+                                {activePreset.sub}
                             </p>
+                        </div>
+
+                        {/* Preset Selector */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 8, marginBottom: 28 }}>
+                            {(Object.entries(PRESETS) as [string, typeof PRESETS.personal][]).map(([key, p]) => (
+                                <div key={key} onClick={() => { setPreset(key as typeof preset); setDuration(p.defaultWeeks); setLeadCapture(p.leadDefault); }} style={{
+                                    background: preset === key ? 'white' : 'rgba(0,0,0,0.01)', borderRadius: 10, padding: '14px 12px',
+                                    border: `1.5px solid ${preset === key ? '#111' : 'rgba(0,0,0,0.06)'}`,
+                                    cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s',
+                                    boxShadow: preset === key ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                                }}>
+                                    <div style={{ fontSize: 22, marginBottom: 4 }}>{p.icon}</div>
+                                    <div style={{ fontSize: 11, fontWeight: 600, color: preset === key ? '#111' : 'rgba(0,0,0,0.35)' }}>{p.label}</div>
+                                </div>
+                            ))}
                         </div>
 
                         {/* How it works */}
@@ -198,6 +225,34 @@ export default function AutopilotPage() {
                                     cursor: 'pointer', fontFamily: f,
                                 }}>{d.label}</button>
                             ))}
+                        </div>
+
+                        {/* Lead Capture Toggle */}
+                        <div style={{ marginBottom: 28 }}>
+                            <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.3)', letterSpacing: '0.1em', marginBottom: 12 }}>SALES PIPELINE</div>
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <div onClick={() => setLeadCapture(false)} style={{
+                                    flex: 1, background: 'white', borderRadius: 12, padding: '16px 18px', cursor: 'pointer',
+                                    border: `1.5px solid ${!leadCapture ? '#111' : 'rgba(0,0,0,0.06)'}`,
+                                    transition: 'all 0.2s',
+                                }}>
+                                    <div style={{ fontSize: 13, fontWeight: 600, color: !leadCapture ? '#111' : 'rgba(0,0,0,0.4)', marginBottom: 4 }}>Pause Leads</div>
+                                    <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.3)', lineHeight: 1.5 }}>New leads queued. You review them when you return.</div>
+                                    <div style={{ fontFamily: mono, fontSize: 11, fontWeight: 600, color: 'rgba(0,0,0,0.2)', marginTop: 8 }}>+S$0/wk</div>
+                                </div>
+                                <div onClick={() => setLeadCapture(true)} style={{
+                                    flex: 1, background: leadCapture ? 'rgba(37,99,235,0.02)' : 'white', borderRadius: 12, padding: '16px 18px', cursor: 'pointer',
+                                    border: `1.5px solid ${leadCapture ? '#2563EB' : 'rgba(0,0,0,0.06)'}`,
+                                    transition: 'all 0.2s',
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                                        <span style={{ fontSize: 13, fontWeight: 600, color: leadCapture ? '#2563EB' : 'rgba(0,0,0,0.4)' }}>Lead Capture</span>
+                                        <span style={{ fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: 'rgba(5,150,105,0.08)', color: '#059669' }}>RECOMMENDED</span>
+                                    </div>
+                                    <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.3)', lineHeight: 1.5 }}>Roof qualifies & warms leads. Come back to a full pipeline.</div>
+                                    <div style={{ fontFamily: mono, fontSize: 11, fontWeight: 600, color: leadCapture ? '#2563EB' : 'rgba(0,0,0,0.2)', marginTop: 8 }}>+S$200/wk</div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Reason (optional) */}
@@ -324,6 +379,7 @@ export default function AutopilotPage() {
                                 { icon: '📸', title: 'Milestone Tracking', desc: 'Photo verification and progress updates continue. Payments release on schedule.' },
                                 { icon: '📋', title: 'Weekly Digest', desc: `Every Sunday you receive a one-page digest of decisions that need your input. Everything else handled.` },
                                 { icon: '📅', title: 'Meeting Reschedule', desc: `${affectedMeetings.length} meeting${affectedMeetings.length !== 1 ? 's' : ''} auto-rescheduled to after your return. New requests auto-declined with your return date.` },
+                                ...(leadCapture ? [{ icon: '🔥', title: 'Lead Capture Active', desc: 'Roof responds to new leads within 4 hours, qualifies budget/property/timeline, and schedules first meetings for your return date. You come back to a warm pipeline.' }] : []),
                             ].map((item, i) => (
                                 <div key={i} style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: i < 3 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
                                     <div style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{item.icon}</div>
@@ -366,7 +422,7 @@ export default function AutopilotPage() {
                         <div style={{ textAlign: 'center', marginBottom: 40, paddingTop: 20 }}>
                             <div style={{ fontSize: 56, marginBottom: 16, animation: 'pulse-soft 3s infinite' }}>🛡️</div>
                             <h1 style={{ fontSize: 28, fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 8px' }}>
-                                Autopilot <span style={{ color: '#2563EB', fontWeight: 600 }}>Active</span>
+                                {activePreset.icon} Autopilot <span style={{ color: '#2563EB', fontWeight: 600 }}>Active</span>
                             </h1>
                             <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.4)', margin: '0 0 6px' }}>
                                 Take all the time you need. We've got this.
@@ -425,6 +481,51 @@ export default function AutopilotPage() {
                                 ))}
                                 <div style={{ marginTop: 12, padding: '8px 12px', background: 'rgba(37,99,235,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
                                     💡 New meeting requests are auto-declined with message: <em>&quot;Designer returning {resumeDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}. Roof is managing the project.&quot;</em>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Warm Pipeline (Lead Capture) */}
+                        {leadCapture && (
+                            <div style={{
+                                background: 'white', borderRadius: 14, padding: 24,
+                                border: '1px solid rgba(5,150,105,0.1)', marginBottom: 28,
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                                    <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 600, color: '#059669', letterSpacing: '0.1em' }}>WARM PIPELINE</div>
+                                    <span style={{ fontSize: 8, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: 'rgba(5,150,105,0.08)', color: '#059669' }}>LEAD CAPTURE ON</span>
+                                </div>
+                                {[
+                                    { name: 'Amanda Koh', property: '4-Room BTO · Sengkang', budget: 'S$40-55k', status: 'Qualified', meeting: getRescheduledDate('', 0) },
+                                    { name: 'Jason Lee', property: 'Condo 2-Bed · Clementi', budget: 'S$60-80k', status: 'First response sent', meeting: getRescheduledDate('', 1) },
+                                    { name: 'Priya Nair', property: '5-Room Resale · Bishan', budget: 'S$50-65k', status: 'Budget confirmed', meeting: getRescheduledDate('', 2) },
+                                ].map((lead, i) => (
+                                    <div key={i} style={{
+                                        display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0',
+                                        borderBottom: i < 2 ? '1px solid rgba(0,0,0,0.04)' : 'none',
+                                    }}>
+                                        <div style={{
+                                            width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
+                                            background: ['#E0F2FE', '#FEF3C7', '#FCE7F3'][i],
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: 11, fontWeight: 700, color: ['#0369A1', '#A16207', '#BE185D'][i],
+                                        }}>{lead.name.split(' ').map(n => n[0]).join('')}</div>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontSize: 12, fontWeight: 600 }}>{lead.name}</div>
+                                            <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>{lead.property} · {lead.budget}</div>
+                                        </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div style={{
+                                                fontSize: 9, fontWeight: 600, padding: '2px 8px', borderRadius: 10,
+                                                background: lead.status === 'Qualified' ? 'rgba(5,150,105,0.06)' : 'rgba(37,99,235,0.06)',
+                                                color: lead.status === 'Qualified' ? '#059669' : '#2563EB',
+                                            }}>{lead.status}</div>
+                                            <div style={{ fontSize: 9, color: 'rgba(0,0,0,0.25)', fontFamily: mono, marginTop: 3 }}>Meeting {lead.meeting}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div style={{ marginTop: 12, padding: '8px 12px', background: 'rgba(5,150,105,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
+                                    🔥 3 leads qualified while you were away · S${(60000 + 80000 + 55000).toLocaleString()} potential project value
                                 </div>
                             </div>
                         )}
