@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import RoofNav from '@/components/RoofNav';
 
 /* ═══════ MOCK DATA — Designer's active projects ═══════ */
 const ACTIVE_PROJECTS = [
@@ -93,23 +94,7 @@ export default function AutopilotPage() {
                 @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
             `}</style>
 
-            {/* Nav */}
-            <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
-                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>AUTOPILOT</span>
-                </div>
-                <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-                    {navLinks.map(link => (
-                        <Link key={link.label} href={link.href} style={{
-                            fontSize: 11, fontWeight: link.active ? 600 : 400,
-                            color: link.active ? '#111' : 'rgba(0,0,0,0.35)',
-                            textDecoration: 'none', borderBottom: link.active ? '2px solid #111' : '2px solid transparent', paddingBottom: 2,
-                        }}>{link.label}</Link>
-                    ))}
-                </div>
-            </nav>
+            <RoofNav />
 
             <div style={{ maxWidth: 800, margin: '0 auto', padding: '48px 48px' }}>
 

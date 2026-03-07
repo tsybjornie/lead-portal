@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Search, FolderOpen, Clock, Plus, MoreHorizontal, TrendingUp, AlertCircle } from 'lucide-react';
+import { Search, FolderOpen, Clock, Plus, MoreHorizontal, TrendingUp, AlertCircle } from 'lucide-react';
 import { getProjects, Project } from '@/lib/supabase-data';
 import { useRouter } from 'next/navigation';
+import RoofNav from '@/components/RoofNav';
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
     lead: { label: 'Lead', bg: 'bg-blue-50', text: 'text-blue-700', dot: 'bg-blue-400' },
@@ -70,30 +71,7 @@ export default function ProjectsPage() {
 
     return (
         <div className="min-h-screen bg-[#fafafa]" style={{ fontFamily: "'Inter', sans-serif" }}>
-            {/* Header */}
-            <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-30">
-                <div className="flex items-center gap-4">
-                    <Link href="/admin" className="text-[#999] hover:text-[#111] transition-colors">
-                        <ArrowLeft className="w-5 h-5" />
-                    </Link>
-                    <div>
-                        <h1 className="text-xl font-semibold tracking-tight text-[#111]">Projects</h1>
-                        <p className="text-[11px] text-[#999] tracking-widest uppercase font-medium">Collaboration Hub</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4">
-                    {[{ label: 'Dashboard', href: '/admin' }, { label: 'Autopilot', href: '/autopilot' }, { label: 'Intelligence', href: '/intelligence' }, { label: 'SketchUp', href: '/sketchup' }].map(l => (
-                        <Link key={l.label} href={l.href} className="text-[12px] text-[#999] hover:text-[#111] transition-colors">{l.label}</Link>
-                    ))}
-                    <Link
-                        href="/quote-builder"
-                        className="flex items-center gap-2 bg-[#111] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#333] transition-colors ml-4"
-                    >
-                        <Plus className="w-4 h-4" />
-                        New Quote
-                    </Link>
-                </div>
-            </header>
+            <RoofNav />
 
             {/* Stats */}
             <div className="px-8 py-4 flex gap-4">

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import RoofNav from '@/components/RoofNav';
 
 const f = "'Inter', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif";
 const mono = "'JetBrains Mono', 'SF Mono', 'Consolas', monospace";
@@ -211,26 +212,7 @@ export default function ProjectDetailPage() {
                 .animate-in { animation: fade-in 0.3s ease forwards; }
             `}</style>
 
-            {/* Nav */}
-            <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textDecoration: 'none' }}>ROOF</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
-                    <Link href="/projects" style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textDecoration: 'none' }}>PROJECTS</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
-                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em' }}>{project.client.toUpperCase()}</span>
-                </div>
-                <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-                    {[
-                        { label: 'Dashboard', href: '/admin', active: false },
-                        { label: 'Projects', href: '/projects', active: true },
-                        { label: 'Intelligence', href: '/intelligence', active: false },
-                        { label: 'SketchUp', href: '/sketchup', active: false },
-                    ].map(link => (
-                        <Link key={link.label} href={link.href} style={{ fontSize: 12, fontWeight: link.active ? 600 : 400, color: link.active ? '#111' : 'rgba(0,0,0,0.35)', textDecoration: link.active ? 'underline' : 'none', textUnderlineOffset: '4px' }}>{link.label}</Link>
-                    ))}
-                </div>
-            </nav>
+            <RoofNav />
 
             <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 48px' }}>
                 {/* Project Header */}

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import RoofNav from '@/components/RoofNav';
 
 /* ── Seed data (Bjorn's real network) ── */
 const FIRMS = [
@@ -66,37 +67,13 @@ export default function AdminDashboard() {
         background: `${color}12`, color, display: 'inline-block' as const,
     });
 
-    const navLinks = [
-        { label: 'Dashboard', href: '/admin', active: true },
-        { label: 'Match Briefs', href: '/admin/matches', active: false },
-        { label: 'Ratings', href: '/admin/ratings', active: false },
-    ];
-
     return (
         <div style={{ fontFamily: f, background: '#fafafa', minHeight: '100vh', color: '#111' }}>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-            {/* Nav */}
-            <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
-                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ADMIN</span>
-                </div>
-                <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-                    {navLinks.map(link => (
-                        <Link key={link.label} href={link.href} style={{
-                            fontSize: 11, fontWeight: link.active ? 600 : 400,
-                            color: link.active ? '#111' : 'rgba(0,0,0,0.35)',
-                            textDecoration: 'none', transition: 'color 0.2s',
-                            borderBottom: link.active ? '2px solid #111' : '2px solid transparent',
-                            paddingBottom: 2,
-                        }}>{link.label}</Link>
-                    ))}
-                </div>
-            </nav>
+            <RoofNav />
 
             <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 48px' }}>
                 {/* Header */}

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import RoofNav from '@/components/RoofNav';
 
 /* ═══ MOCK DATA ═══ */
 const DESIGNER_STATS = {
@@ -225,34 +226,7 @@ export default function IntelligencePage() {
                 .animate-in { animation: fade-in 0.3s ease forwards; }
             `}</style>
 
-            {/* Nav */}
-            <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textDecoration: 'none' }}>ROOF</Link>
-                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
-                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em' }}>INTELLIGENCE</span>
-                </div>
-                <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-                    {[
-                        { label: 'Dashboard', href: '/admin', active: false },
-                        { label: 'Autopilot', href: '/autopilot', active: false },
-                        { label: 'Intelligence', href: '/intelligence', active: true },
-                        { label: 'SketchUp', href: '/sketchup', active: false },
-                    ].map(link => (
-                        <Link key={link.label} href={link.href} style={{ fontSize: 12, fontWeight: link.active ? 600 : 400, color: link.active ? '#111' : 'rgba(0,0,0,0.35)', textDecoration: link.active ? 'underline' : 'none', textUnderlineOffset: '4px' }}>{link.label}</Link>
-                    ))}
-                    <span style={{ width: 1, height: 16, background: 'rgba(0,0,0,0.08)' }} />
-                    {(['free', 'pro', 'studio'] as const).map(t => (
-                        <button key={t} onClick={() => setTier(t)} style={{
-                            padding: '4px 12px', fontSize: 10, fontWeight: 600, borderRadius: 6, fontFamily: mono,
-                            border: `1px solid ${tier === t ? '#111' : 'rgba(0,0,0,0.08)'}`,
-                            background: tier === t ? '#111' : 'transparent',
-                            color: tier === t ? 'white' : 'rgba(0,0,0,0.3)',
-                            cursor: 'pointer', letterSpacing: '0.05em', textTransform: 'uppercase' as const,
-                        }}>{t}</button>
-                    ))}
-                </div>
-            </nav>
+            <RoofNav />
 
             <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 48px' }}>
                 {/* Header */}
