@@ -97,10 +97,10 @@ export default function SignupPage() {
 
                     <div className="flex flex-col gap-4">
                         {[
-                            { key: 'name', label: 'Your name', placeholder: 'Bjorn Teo', type: 'text' },
-                            { key: 'email', label: 'Work email', placeholder: 'bjorn@vinterior.sg', type: 'email' },
-                            { key: 'firmName', label: 'Firm name', placeholder: 'Vinterior Pte Ltd', type: 'text' },
-                            { key: 'phone', label: 'Phone', placeholder: '+65 9123 4567', type: 'tel' },
+                            { key: 'name', label: 'Your name', placeholder: 'Full name', type: 'text' },
+                            { key: 'email', label: 'Work email', placeholder: 'you@yourfirm.com', type: 'email' },
+                            { key: 'firmName', label: 'Firm name', placeholder: 'Your firm name', type: 'text' },
+                            { key: 'phone', label: 'Phone', placeholder: '+65 / +60', type: 'tel' },
                             { key: 'password', label: 'Password', placeholder: 'Choose a password', type: 'password' },
                         ].map(field => (
                             <div key={field.key}>
@@ -150,8 +150,8 @@ export default function SignupPage() {
 
                     {message && (
                         <div className={`mt-4 px-4 py-3 rounded-lg text-[12px] font-medium ${messageType === 'success'
-                                ? 'bg-green-50 text-green-700 border border-green-100'
-                                : 'bg-red-50 text-red-600 border border-red-100'
+                            ? 'bg-green-50 text-green-700 border border-green-100'
+                            : 'bg-red-50 text-red-600 border border-red-100'
                             }`}>
                             {message}
                         </div>
