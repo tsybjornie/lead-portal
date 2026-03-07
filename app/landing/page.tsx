@@ -16,6 +16,7 @@ const DEMAND = [
 const SUPPLY = [
     { id: 'designer', label: 'Design Firm', sub: 'Interior designers & architects', href: '/signup', img: '/images/roles/design-firm.png', featured: true },
     { id: 'consultant', label: 'Consultant / QP', sub: 'Architects (PE), engineers, LEW, surveyors', href: '/signup/consultant', img: '/images/roles/consultant.png', featured: false },
+    { id: 'drafter', label: 'Drafter / 3D Artist', sub: 'SketchUp, AutoCAD, renders & shop drawings', href: '/signup/drafter', img: '/images/roles/consultant.png', featured: false },
     { id: 'contractor', label: 'Contractor', sub: 'Builders, tradesmen & site crew', href: '/signup/contractor', img: '/images/roles/contractor.png', featured: false },
     { id: 'specialist', label: 'Specialist', sub: 'Landscape, smart home, pest, cleaning, movers', href: '/signup/specialist', img: '/images/roles/specialist.png', featured: false },
     { id: 'brand', label: 'Brand / Distributor', sub: 'Materials, equipment & plant', href: '/signup/brand', img: '/images/roles/brand.png', featured: false },
@@ -232,6 +233,7 @@ export default function LandingPage() {
                         <div className="flex flex-col gap-2">
                             <Link href="/signup" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Design Firms</Link>
                             <Link href="/signup/contractor" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Contractors</Link>
+                            <Link href="/signup/drafter" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Drafters</Link>
                             <Link href="/signup/specialist" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Specialists</Link>
                             <Link href="/signup/brand" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Brands</Link>
                             <Link href="/signup/vendor" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Vendors</Link>
