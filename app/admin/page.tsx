@@ -84,7 +84,6 @@ export default function AdminDashboard() {
                     <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
                     <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
                     <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>ADMIN</span>
-                    <span style={{ padding: '2px 8px', borderRadius: 4, background: 'rgba(5,150,105,0.08)', color: '#059669', fontSize: 9, fontWeight: 600, letterSpacing: '0.08em' }}>FOUNDER</span>
                 </div>
                 <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
                     {navLinks.map(link => (
@@ -140,27 +139,7 @@ export default function AdminDashboard() {
                             ))}
                         </div>
 
-                        {/* Founding 20 Visual */}
-                        <div style={{ ...cardStyle, marginBottom: 28 }}>
-                            <div style={{ fontFamily: mono, fontSize: 9, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: 14 }}>FOUNDING 20 SLOTS</div>
-                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                {Array.from({ length: 20 }).map((_, i) => {
-                                    const firm = FIRMS[i];
-                                    return (
-                                        <div key={i} title={firm ? `${firm.name} (${firm.owner})` : `Slot ${i + 1} — Available`} style={{
-                                            width: 44, height: 44, borderRadius: 10,
-                                            background: firm ? '#059669' : 'rgba(0,0,0,0.03)',
-                                            border: firm ? '2px solid rgba(5,150,105,0.3)' : '2px dashed rgba(0,0,0,0.1)',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            fontSize: 11, fontWeight: 700, color: firm ? 'white' : 'rgba(0,0,0,0.15)',
-                                            cursor: 'default', transition: 'transform 0.2s',
-                                        }}>
-                                            {firm ? firm.name.charAt(0) : i + 1}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+
 
                         {/* Revenue Breakdown */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
