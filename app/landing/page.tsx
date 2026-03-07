@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const DEMAND = [
-    { id: 'homeowner', label: 'Homeowner', sub: 'HDB, condo, landed', href: '/signup/homeowner', img: '/images/roles/homeowner.png', featured: true },
+    { id: 'homeowner', label: 'Homeowner', sub: 'HDB, condo, landed', href: '/signup/homeowner/taste', img: '/images/roles/homeowner.png', featured: true },
     { id: 'business', label: 'Business Owner', sub: 'Retail, F&B, hotel, industrial', href: '/signup/homeowner', img: '/images/roles/business.png', featured: false },
     { id: 'investor', label: 'Property Investor', sub: 'Shophouses, flips & portfolios', href: '/signup/homeowner', img: '/images/roles/investor.png', featured: false },
     { id: 'developer', label: 'Property Developer', sub: 'New builds & conversions', href: '/signup/homeowner', img: '/images/roles/office.png', featured: false },
@@ -51,9 +51,13 @@ export default function LandingPage() {
             {/* Top bar */}
             <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-5 bg-[#fafafa]/80 backdrop-blur-xl">
                 <span className="text-[13px] font-semibold tracking-[-0.01em] text-[#111]">Roof</span>
-                <Link href="/login" className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200">
-                    Log in
-                </Link>
+                <div className="flex items-center gap-5">
+                    <Link href="/why-roof" className="text-[12px] font-medium text-[#999] hover:text-[#111] transition-colors">Why Roof</Link>
+                    <Link href="/price-index" className="text-[12px] font-medium text-[#999] hover:text-[#111] transition-colors">Price Index</Link>
+                    <Link href="/login" className="text-[13px] font-medium text-[#111] px-5 py-2 rounded-lg border border-[#111]/10 hover:bg-[#111] hover:text-white transition-all duration-200">
+                        Log in
+                    </Link>
+                </div>
             </header>
 
             {/* Hero */}
@@ -217,9 +221,49 @@ export default function LandingPage() {
             </div>
 
             {/* Footer */}
-            <footer className="border-t border-[#f0f0f0] px-8 md:px-12 py-6 flex items-center justify-between">
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">Singapore · Malaysia</span>
-                <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">{new Date().getFullYear()}</span>
+            <footer className="border-t border-[#f0f0f0] px-8 md:px-12 py-10">
+                <div className="max-w-[1100px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                    <div>
+                        <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Homeowners</div>
+                        <div className="flex flex-col gap-2">
+                            <Link href="/signup/homeowner/taste" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Take Taste Quiz</Link>
+                            <Link href="/signup/homeowner" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Sign Up</Link>
+                            <Link href="/client/login" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Client Login</Link>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Professionals</div>
+                        <div className="flex flex-col gap-2">
+                            <Link href="/signup" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Design Firms</Link>
+                            <Link href="/signup/contractor" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Contractors</Link>
+                            <Link href="/signup/specialist" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Specialists</Link>
+                            <Link href="/signup/brand" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Brands</Link>
+                            <Link href="/signup/vendor" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Vendors</Link>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Platform</div>
+                        <div className="flex flex-col gap-2">
+                            <Link href="/why-roof" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Why Roof</Link>
+                            <Link href="/price-index" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Price Index</Link>
+                            <Link href="/founding" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Founding 20</Link>
+                            <Link href="/hub" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Product Hub</Link>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#ccc] mb-3">Admin</div>
+                        <div className="flex flex-col gap-2">
+                            <Link href="/login" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Firm Login</Link>
+                            <Link href="/admin" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Dashboard</Link>
+                            <Link href="/admin/matches" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Match Briefs</Link>
+                            <Link href="/admin/ratings" className="text-[12px] text-[#999] hover:text-[#111] transition-colors">Ratings</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-center justify-between border-t border-[#f0f0f0] pt-6">
+                    <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#ddd]">© {new Date().getFullYear()} Roof · Singapore · Malaysia</span>
+                    <span className="text-[10px] tracking-[0.1em] font-medium text-[#ddd]">The operating system for renovations</span>
+                </div>
             </footer>
         </div>
     );

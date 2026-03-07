@@ -58,8 +58,17 @@ export default function ConsultantSignup() {
             <style>{`input:focus, select:focus, textarea:focus { border-color: rgba(0,0,0,0.5) !important; } input::placeholder, textarea::placeholder { color: rgba(0,0,0,0.3); }`}</style>
 
             <nav style={{ padding: '0 48px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
-                <Link href="/landing" style={{ fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}>← Back</Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                    <Link href="/landing" style={{ fontFamily: mono, fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em', textTransform: 'uppercase' as const, textDecoration: 'none' }}>ROOF</Link>
+                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
+                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>CONSULTANT</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <Link href="/signup" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Design Firm</Link>
+                    <Link href="/signup/contractor" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Contractor</Link>
+                    <Link href="/signup/specialist" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Specialist</Link>
+                    <Link href="/login" style={{ fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Log in</Link>
+                </div>
             </nav>
 
             <div style={{ maxWidth: 560, margin: '0 auto', padding: '80px 48px 80px' }}>

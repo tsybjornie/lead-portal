@@ -106,14 +106,21 @@ export default function BrandSignup() {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 borderBottom: '1px solid rgba(0,0,0,0.06)',
             }}>
-                <Link href="/landing" style={{
-                    fontFamily: mono, fontSize: 11, fontWeight: 500,
-                    color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
-                    textTransform: 'uppercase' as const, textDecoration: 'none',
-                }}>ROOF</Link>
-                <Link href="/landing" style={{ fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}>
-                    ← Back to role selection
-                </Link>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+                    <Link href="/landing" style={{
+                        fontFamily: mono, fontSize: 11, fontWeight: 500,
+                        color: 'rgba(0,0,0,0.5)', letterSpacing: '0.14em',
+                        textTransform: 'uppercase' as const, textDecoration: 'none',
+                    }}>ROOF</Link>
+                    <span style={{ color: 'rgba(0,0,0,0.12)' }}>/</span>
+                    <span style={{ fontFamily: mono, fontSize: 10, fontWeight: 500, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' as const }}>BRAND</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <Link href="/signup" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Design Firm</Link>
+                    <Link href="/signup/vendor" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Vendor</Link>
+                    <Link href="/signup/contractor" style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Contractor</Link>
+                    <Link href="/login" style={{ fontSize: 11, fontWeight: 500, color: 'rgba(0,0,0,0.35)', textDecoration: 'none' }}>Log in</Link>
+                </div>
             </nav>
 
             {/* CONTENT */}
