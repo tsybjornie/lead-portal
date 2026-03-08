@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
+import RoofNav from '@/components/RoofNav';
 import QuoteBuilderEnhanced, { TradeSection } from './components/QuoteBuilderEnhanced';
 import PromptQuote from './components/PromptQuote';
 import ClientQuotePreview from './components/ClientQuotePreview';
@@ -292,10 +293,11 @@ export default function QuoteBuilderPage() {
 
     return (
         <div className="min-h-screen bg-gray-100">
+            <RoofNav />
             {/*  */}
             {/* STICKY HEADER  2-Row Layout */}
             {/*  */}
-            <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+            <div className="sticky top-[48px] z-40 bg-white border-b border-gray-200 shadow-sm">
                 {/*  ROW 1: Serial + Status + Views  */}
                 <div className="w-full px-6 py-2 flex items-center justify-between border-b border-gray-100">
                     <div className="flex items-center gap-3">

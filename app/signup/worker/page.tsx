@@ -13,7 +13,7 @@ const AVAILABILITY = ['Full-time (Mon–Sat)', 'Part-time', 'Weekends only', 'Ad
 const ID_TYPES = [
     { label: '🇸🇬 Singpass (NRIC/FIN)', value: 'singpass' },
     { label: '🇲🇾 MyKAD', value: 'mykad' },
-    { label: '📄 Work Permit', value: 'workpermit' },
+    { label: 'Work Permit', value: 'workpermit' },
     { label: '🌏 Passport', value: 'passport' },
 ];
 

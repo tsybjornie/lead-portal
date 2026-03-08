@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, TrendingUp, TrendingDown, Minus, MapPin, Activity, Plus, ChevronDown, ChevronRight, Send } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, MapPin, Activity, Plus, ChevronDown, ChevronRight, Send } from 'lucide-react';
+import RoofNav from '@/components/RoofNav';
+import RatingModal, { CRITERIA } from '@/components/RatingModal';
 import { SEED_INDEX } from '../../src/logic/PriceIndexTracker';
 import { LABOUR_BENCHMARKS, MATERIAL_CATALOG, mmToFeet, sqmToSqft } from '../../src/logic/AutoPricingEngine';
 
@@ -67,8 +69,98 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
                 { label: 'Panel thickness', type: 'select', options: ['9mm', '12mm', '15mm', '18mm', '25mm'] },
                 { label: 'Surface finish', type: 'select', options: ['HPL — high pressure laminate (Formica/Arborite)', 'LPL — low pressure laminate (budget)', 'Melamine paper (cheapest)', 'Veneer (real wood 0.5mm)', 'Lacquer / spray paint (on MDF)', 'Acrylic / PMMA (high gloss)', 'PET film (matte / soft touch)', 'Thermofoil / PVC wrap', 'Raw timber — oiled or waxed', 'N/A'], required: true },
                 { label: 'Laminate brand & code', type: 'text', placeholder: 'e.g. Formica F2253 / Arborite P421 / Lamitak' },
-                { label: 'Veneer species', type: 'select', options: ['N/A — laminate', 'Oak (white)', 'Oak (red)', 'Walnut', 'Teak', 'Ash', 'Maple', 'Cherry', 'Nyatoh', 'Meranti', 'Rubberwood', 'Custom'] },
-                { label: 'Solid timber species', type: 'select', options: ['N/A — engineered', 'Nyatoh', 'Chengal (outdoor grade)', 'Meranti', 'Teak', 'Oak', 'Walnut', 'Ash', 'Rubberwood', 'Pine', 'Bamboo', 'Custom'] },
+                {
+                    label: 'Veneer species', type: 'select', options: [
+                        '── POPULAR (SG/MY) ──',
+                        'Oak (White) — USA, Janka 1360, light grain',
+                        'Oak (Red) — USA, Janka 1290, warm pink-red',
+                        'Walnut (American) — USA, Janka 1010, rich dark brown',
+                        'Walnut (European) — France, Janka 1220, greyish brown',
+                        'Teak — Myanmar/Indonesia, Janka 1070, golden oily',
+                        'Ash — USA/Europe, Janka 1320, blonde, prominent grain',
+                        'Maple (Hard) — Canada, Janka 1450, pale cream',
+                        'Cherry (American) — USA, Janka 950, warm reddish, darkens with age',
+                        'Nyatoh — Malaysia, Janka 980, budget reddish',
+                        'Meranti — Malaysia, Janka 800, reddish, common door frame',
+                        '── PREMIUM ──',
+                        'Ebony — Africa/Asia, Janka 3220, jet black, rare',
+                        'Rosewood (Indian) — India, Janka 3170, dark with swirls',
+                        'Rosewood (Santos) — Bolivia, Janka 2200, dark chocolate',
+                        'Wenge — Congo, Janka 1630, dark espresso, coarse grain',
+                        'Zebrawood — West Africa, Janka 1575, striped light/dark',
+                        'Padauk — Africa, Janka 2170, vivid orange-red (fades)',
+                        'Sapele — Africa, Janka 1410, mahogany alternative',
+                        'Jarrah — Australia, Janka 1910, deep red-brown',
+                        '── JAPANESE ──',
+                        'Hinoki (Japanese Cypress) — Japan, Janka 580, pale blonde, citrus scent, spa/bath',
+                        'Sugi (Japanese Cedar) — Japan, Janka 420, soft, aromatic, shou sugi ban',
+                        'Kiri (Paulownia) — Japan, Janka 300, ultralight, tansu drawers',
+                        '── SE ASIAN ──',
+                        'Chengal — Malaysia, Janka 1750, ironwood, outdoor grade',
+                        'Balau (Selangan Batu) — Malaysia, Janka 1900, heavy outdoor decking',
+                        'Merbau (Kwila) — Indonesia, Janka 1925, dark red, decking',
+                        'Rubberwood — Malaysia/Thailand, Janka 960, budget solid wood',
+                        'Jelutong — Malaysia, Janka 390, carving wood, very soft',
+                        'Kapur — Malaysia, Janka 1680, structural timber',
+                        'Keruing — Malaysia, Janka 1430, heavy structural',
+                        '── BAMBOO ──',
+                        'Bamboo (Strand-woven) — China, Janka 3000+, harder than most hardwoods',
+                        'Bamboo (Horizontal) — China, Janka 1180, shows knuckle pattern',
+                        'Bamboo (Vertical) — China, Janka 1380, fine grain',
+                        '── RECLAIMED / SPECIALTY ──',
+                        'Reclaimed teak — Indonesia, Janka 1070, aged/weathered look',
+                        'Shou sugi ban (charred cedar) — Japan, burnt black finish',
+                        'Driftwood / salvaged — varies, rustic character',
+                        '── N/A ──',
+                        'N/A — laminate finish',
+                    ]
+                },
+                {
+                    label: 'Solid timber species', type: 'select', options: [
+                        '── SOFTWOOD (Low Janka — furniture, trim) ──',
+                        'Pine (Radiata) — NZ, Janka 570, budget, knots',
+                        'Pine (Southern Yellow) — USA, Janka 870, stronger pine',
+                        'Spruce — Europe, Janka 490, light construction',
+                        'Western Red Cedar — Canada, Janka 350, outdoor trim, aromatic',
+                        'Hinoki — Japan, Janka 580, spa/bath, citrus scent',
+                        'Sugi (Cedar) — Japan, Janka 420, shou sugi ban, light',
+                        '── MEDIUM HARDWOOD (Janka 800-1200) ──',
+                        'Rubberwood — MY/TH, Janka 960, budget solid wood',
+                        'Nyatoh — Malaysia, Janka 980, budget furniture',
+                        'Cherry — USA, Janka 950, fine furniture, ages beautifully',
+                        'Walnut — USA, Janka 1010, premium dark, live-edge tables',
+                        'Teak — MY/Indonesia, Janka 1070, outdoor king, oily',
+                        'Bamboo (Horizontal) — China, Janka 1180, eco alternative',
+                        '── HARD HARDWOOD (Janka 1200-1800) ──',
+                        'Oak (White) — USA, Janka 1360, most popular grain',
+                        'Oak (Red) — USA, Janka 1290, warm pinkish tone',
+                        'Ash — USA, Janka 1320, Scandi look, very durable',
+                        'Maple (Hard) — Canada, Janka 1450, basketball courts',
+                        'Beech — Europe, Janka 1300, fine grain, steambend',
+                        'Sapele — Africa, Janka 1410, mahogany look for less',
+                        'Chengal — Malaysia, Janka 1750, ironwood decking',
+                        '── VERY HARD (Janka 1800+) ──',
+                        'Merbau — Indonesia, Janka 1925, red decking staple',
+                        'Balau — Malaysia, Janka 1900, bulletproof decking',
+                        'Jarrah — Australia, Janka 1910, deep red outdoor',
+                        'Ipe (Ironwood) — Brazil, Janka 3510, hardest commercial wood',
+                        'Bamboo (Strand-woven) — China, Janka 3000+, extreme hardness',
+                        'Cumaru (Brazilian Teak) — Brazil, Janka 3540, ultra-durable',
+                        '── EXOTIC ──',
+                        'Ebony — Africa, Janka 3220, jet black, rare',
+                        'Padauk — Africa, Janka 2170, vivid orange (fades brown)',
+                        'Purpleheart — South America, Janka 2520, turns purple on exposure',
+                        'Zebrawood — West Africa, Janka 1575, dramatic stripes',
+                        'Bocote — Mexico, Janka 2010, wild dark grain',
+                        'Lignum Vitae — Caribbean, Janka 4500, hardest wood on earth',
+                        '── LIVE EDGE / SLAB ──',
+                        'Acacia (Rain Tree) — Thailand, Janka 1170, popular slab tables',
+                        'Suar (Monkey Pod) — Indonesia, Janka 900, massive live-edge slabs',
+                        'Camphor — SG/MY, Janka 1200, local heritage reclaimed',
+                        '── N/A ──',
+                        'N/A — engineered / no solid timber',
+                    ]
+                },
                 { label: 'E-rating (formaldehyde)', type: 'select', options: ['E0 (lowest emission)', 'E1 (standard)', 'E2', 'Not specified'] },
             ]
         },
@@ -373,12 +465,108 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
             ]
         },
         {
-            category: 'Tile Specification', fields: [
-                { label: 'Tile layout', type: 'select', options: ['Stack bond', 'Brick bond (1/2 offset)', '1/3 offset', 'Herringbone', 'Double herringbone', 'Chevron', '45° diagonal', 'Basket weave', 'Versailles', 'Pinwheel', 'Windmill', 'Custom'], required: true },
+            category: 'Tile Material', fields: [
+                {
+                    label: 'Tile material', type: 'select', options: [
+                        '── CERAMIC & PORCELAIN ──',
+                        'Porcelain — full body (color through, most durable)',
+                        'Porcelain — glazed (printed surface)',
+                        'Porcelain — polished (mirror finish, slippery)',
+                        'Porcelain — matt / anti-slip (R10-R13)',
+                        'Porcelain — rustic / textured',
+                        'Porcelain — marble-look (budget alternative)',
+                        'Porcelain — wood-look (plank format)',
+                        'Porcelain — concrete-look (industrial)',
+                        'Porcelain — terrazzo-look',
+                        'Ceramic — wall only (softer, budget)',
+                        'Ceramic — hand-glazed (artisan)',
+                        '── SPECIALTY / ARTISAN ──',
+                        'Zellige — Morocco, hand-cut, imperfect glaze, $$$$',
+                        'Encaustic cement tile — pattern inlaid, not printed, $$$',
+                        'Sukabumi (Green Bali Stone) — Indonesia, volcanic, pool/spa, $$$$',
+                        'Terracotta — Italy/Mexico, traditional clay, warm, $$',
+                        'Cotto — Italy, unglazed terracotta, Tuscan, $$',
+                        'Majolica — Italy/Spain, hand-painted decorative, $$$$',
+                        'Peranakan / Baba-Nonya — SG/MY, heritage shophouse motif, $$$$',
+                        'Delft — Netherlands, blue & white hand-painted, $$$$',
+                        'Talavera — Mexico, vibrant hand-painted, $$$',
+                        'Iznik — Turkey, blue & turquoise pattern, $$$$$',
+                        '── NATURAL / ORGANIC ──',
+                        'Slate tile — natural cleft surface, $',
+                        'Sandstone tile — warm earthy tones, $$',
+                        'Limestone tile — fossil-rich, cream, $$$',
+                        'Basalt tile — dark volcanic, $$',
+                        'Quartzite tile — natural sparkle, $$$',
+                        'Pebble mosaic — river stones on mesh, $$',
+                        'Lava stone — volcanic, can be glazed, $$$',
+                        '── GLASS & METAL ──',
+                        'Glass mosaic — pool / backsplash, $$',
+                        'Glass subway tile — translucent, $$',
+                        'Mirror mosaic — reflective feature, $$$',
+                        'Stainless steel mosaic — industrial, $$$',
+                        'Copper / brass mosaic — warm metallic, $$$$',
+                        '── BRICK & STONE LOOK ──',
+                        'Brick veneer — thin real brick (20mm), $$',
+                        'Brick-look porcelain — printed, $',
+                        'Split-face stone cladding — rough natural 3D, $$$',
+                        'Stacked stone ledger panel — feature wall, $$$',
+                        'Culture stone — manufactured stone veneer, $$',
+                        '── ROOF TILE (LANDED) ──',
+                        'Concrete roof tile — flat / S-profile, $',
+                        'Clay roof tile — traditional, $$',
+                        'Japanese kawara — curved grey clay, $$$',
+                        'Chinese imperial yellow glaze — heritage, $$$$$',
+                        'Indonesian Joglo shingle — teak wood, $$$$',
+                        'Spanish terracotta barrel — Mediterranean, $$$',
+                        'Slate roofing — natural stone, $$$$',
+                        '── OTHER ──',
+                        'Custom / unlisted — specify in notes',
+                    ], required: true
+                },
+            ]
+        },
+        {
+            category: 'Tile Layout & Pattern', fields: [
+                {
+                    label: 'Tile layout', type: 'select', options: [
+                        '── BASIC ──',
+                        'Stack bond (grid)',
+                        'Brick bond (1/2 offset)',
+                        '1/3 offset',
+                        '45° diagonal',
+                        '── HERRINGBONE FAMILY ──',
+                        'Herringbone (90° classic)',
+                        'Double herringbone',
+                        'Chevron (angled cuts)',
+                        'Herringbone 45° (diagonal)',
+                        '── COMPLEX ──',
+                        'Basket weave',
+                        'Pinwheel',
+                        'Windmill',
+                        'Versailles / French pattern (4 sizes)',
+                        'Stretcher bond (running bond)',
+                        'Flemish bond',
+                        'Cross hatch',
+                        'Hexagonal',
+                        'Fish scale / scallop',
+                        'Arabesque / lantern',
+                        'Penny round mosaic',
+                        'Subway (classic 1:2)',
+                        'Stacked subway (vertical)',
+                        'Diamond / rhombus',
+                        'Random / crazy paving',
+                        '── MIXED SIZE ──',
+                        'Linear plank (wood-look)',
+                        'Modular (2-3 sizes mixed)',
+                        'Opus Romano (multi-size)',
+                        'Hopscotch (large + small)',
+                        'Custom — see notes',
+                    ], required: true
+                },
                 { label: 'Grout brand', type: 'select', options: ['Mapei Keracolor', 'Mapei Ultracolor Plus', 'Laticrete Permacolor', 'Weber', 'Generic'], required: true },
                 { label: 'Grout color code', type: 'text', placeholder: 'e.g. Mapei #100 White / #114 Anthracite', required: true },
                 { label: 'Silicone sealant', type: 'select', options: ['Neutral cure (standard)', 'Sanitary grade (anti-mould)', 'Matching grout color'] },
-                { label: 'Grout width', type: 'select', options: ['1.5mm', '2mm', '3mm', '5mm'] },
+                { label: 'Grout width', type: 'select', options: ['1mm (rectified only)', '1.5mm', '2mm', '3mm', '5mm', '8mm+ (rustic/zellige)'] },
                 { label: 'Starting point', type: 'text', placeholder: 'Center of room / from door / from feature wall' },
                 { label: 'Tile orientation', type: 'select', options: ['Portrait', 'Landscape', 'Mixed — see notes'] },
             ]
@@ -389,6 +577,177 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
                 { label: 'Wall tile size', type: 'text', placeholder: 'e.g. 300x600 / subway 75x150' },
                 { label: 'Wall tile height', type: 'text', placeholder: 'Full height / 1200mm / wainscot 900mm' },
                 { label: 'Feature tile', type: 'textarea', placeholder: 'Location, pattern, different tile code' },
+                {
+                    label: 'Design motif / cultural reference', type: 'select', options: [
+                        'N/A — no specific motif',
+                        '── 🇯🇵 JAPAN ──',
+                        'Seigaiha (wave) — overlapping circles = ocean waves, Edo period',
+                        'Asanoha (hemp leaf) — geometric star, symbolizes growth',
+                        'Shippo (seven treasures) — interlocking circles, Buddhist',
+                        'Kumiko lattice — wooden geometric screen, joinery art',
+                        'Sakura (cherry blossom) — fleeting beauty, spring',
+                        'Koi fish — perseverance, good fortune',
+                        'Crane (tsuru) — longevity, 1000 years',
+                        'Cloud (kumo) — auspicious, heaven',
+                        'Bamboo — resilience, flexibility',
+                        'Shou sugi ban — charred cedar texture, wabi-sabi',
+                        'Notan — light/dark balance, negative space',
+                        '── 🇨🇳 CHINA ──',
+                        'Dragon — imperial power, strength, 5-claw = emperor',
+                        'Phoenix (fenghuang) — rebirth, empress, south',
+                        'Cloud scroll (ruyi) — good fortune, authority',
+                        'Double happiness (囍) — wedding, joy',
+                        'Lattice window (花窗) — geometric timber screen, Song dynasty',
+                        'Bagua (八卦) — octagonal, feng shui, cosmic balance',
+                        'Blue & white porcelain — Ming dynasty cobalt, timeless',
+                        'Longevity symbol (壽) — circular calligraphy',
+                        'Bat (蝠) — homophone for fortune (福)',
+                        'Peony — wealth, nobility, king of flowers',
+                        'Bamboo + plum + pine — Three Friends of Winter',
+                        'Fu dog / guardian lion — protection at entrance',
+                        '── 🇰🇷 KOREA ──',
+                        'Dancheong — multicolored bracket painting on temples',
+                        'Taegeuk — yin-yang balance, national symbol',
+                        'Lotus — purity, Buddhist, Joseon tiles',
+                        'Maebyeong (vase silhouette) — celadon elegance',
+                        'Bojagi patchwork — wrapping cloth geometry',
+                        '── 🇮🇳 INDIA ──',
+                        'Paisley (buta/boteh) — teardrop/mango, Kashmir, Mughal',
+                        'Jali screen (jaali) — perforated stone/wood, Mughal',
+                        'Mandala — radial geometry, universe, meditation',
+                        'Kolam / Rangoli — geometric floor art, Tamil Nadu',
+                        'Lotus — sacred, purity, Hindu/Buddhist',
+                        'Pietra dura (Parchin kari) — stone inlay, Taj Mahal',
+                        'Elephant procession — royal, auspicious',
+                        'Peacock — national bird, beauty, grace',
+                        'Chikankari embroidery pattern — Lucknow white-on-white',
+                        'Warli art — tribal, stick figure narrative, Maharashtra',
+                        'Madhubani — Bihar, geometric nature paintings',
+                        'Kalamkari — Andhra Pradesh, hand-painted mythology',
+                        '── 🇹🇭 THAILAND ──',
+                        'Lai Thai — flame-like flowing curves, temple art',
+                        'Naga serpent — mythical water serpent, stairway guardian',
+                        'Kanok pattern — flame/vine scroll, royal',
+                        'Garuda — divine bird, national emblem',
+                        '── 🇮🇩 INDONESIA / BALI ──',
+                        'Batik (parang) — diagonal wave, Javanese royal',
+                        'Batik (kawung) — four-circle palm sugar motif',
+                        'Balinese carved teak panel — floral deity relief',
+                        'Joglo teak carving — traditional Javanese house detail',
+                        'Wayang (shadow puppet) — Javanese mythology',
+                        'Lombok weave — ikat geometric textile',
+                        '── 🇲🇾 MALAYSIA / 🇸🇬 SINGAPORE ──',
+                        'Peranakan tile (Baba-Nonya) — floral + phoenix, shophouse',
+                        'Kebaya lace motif — intricate cutwork, Straits Chinese',
+                        'Songket weave — gold thread brocade, Malay royal',
+                        'Islamic geometric (Moorish) — star + polygon, mosque',
+                        '── 🇲🇦 MOROCCO / ISLAMIC ──',
+                        'Zellige mosaic — hand-cut geometric, Fez, 10th century',
+                        'Arabesque — infinite interlocking vegetal scrolls',
+                        'Muqarnas — 3D honeycomb vaulting, stalactite ceiling',
+                        '8-point star (khatam) — Islamic geometry',
+                        '16-point star (shamsa) — sun symbol',
+                        'Zillij fountain — mosaic water feature',
+                        '── 🇹🇷 TURKEY / OTTOMAN ──',
+                        'Iznik tile — blue/turquoise/red tulip & floral, 1400s',
+                        'Tulip motif — symbol of paradise, Ottoman',
+                        'Kilim geometric — triangle, hooks, ram horn, Anatolian',
+                        'Çini (tile art) — painted ceramic tradition',
+                        '── 🇮🇷 PERSIA ──',
+                        'Persian garden (chahar bagh) — four-part paradise garden',
+                        'Herati pattern — fish-around-diamond, infinite repeat',
+                        'Boteh (original paisley) — flame/leaf shape',
+                        'Islimi vine scroll — continuous spiraling vine',
+                        'Minakari enamel — blue + gold enamel metalwork',
+                        '── 🇪🇬 EGYPT ──',
+                        'Lotus column capital — papyrus/lotus, 3000 BC',
+                        'Scarab — rebirth, protection, solar',
+                        'Eye of Horus — protection, royal power',
+                        'Ankh — key of life, eternal',
+                        'Pharaonic frieze — procession, hieroglyphic border',
+                        '── 🌍 AFRICA ──',
+                        'Kente cloth — strip-woven geometry, Ghana/Ashanti',
+                        'Mud cloth (Bogolan) — earth-dyed symbols, Mali',
+                        'Ndebele — bold primary color geometry, South Africa',
+                        'Shona sculpture — abstract stone carving, Zimbabwe',
+                        'Dogon door panel — carved ancestral figures, Mali',
+                        'Zulu beadwork — triangle geometry, bright colors',
+                        'Adinkra symbols — Akan/Ghana, stamped wisdom symbols',
+                        'Ankara / wax print — vibrant repeated pattern, West Africa',
+                        'Maasai beadwork — flat disc collar, red/blue/white',
+                        'Kuba cloth — cut-pile raffia, geometric, Congo',
+                        'Berber rug pattern — diamond + zigzag, North Africa',
+                        '── 🇬🇷 GREECE / ROME ──',
+                        'Greek key (meander) — continuous right-angle spiral, 900 BC',
+                        'Acanthus leaf — Corinthian capital, 450 BC',
+                        'Palmette — fan-shaped palm leaf, frieze',
+                        'Egg & dart — alternating moulding pattern',
+                        'Roman mosaic — tessera stone scenes',
+                        'Guilloche — interlocking circles, floor border',
+                        '── 🇮🇹 ITALY ──',
+                        'Florentine scroll — Renaissance cherub + acanthus, gilded',
+                        'Grotesque — fantastical creatures + foliage, Roman villa',
+                        'Terrazzo — Venice, marble chips in cement, 1500s',
+                        'Pietra dura — Florentine stone inlay, floral',
+                        'Pompeii fresco — ancient wall painting style',
+                        '── 🇫🇷 FRANCE ──',
+                        'Toile de Jouy — pastoral scenes, Jouy-en-Josas, 1760',
+                        'Fleur-de-lis — stylized lily, royalty',
+                        'Rococo scroll — asymmetric curves, shell, gold, 1730s',
+                        'Empire laurel wreath — Napoleonic, neoclassical',
+                        'Art Nouveau — organic flowing lines, Mucha style, 1890s',
+                        '── 🇬🇧 ENGLAND ──',
+                        'William Morris — Arts & Crafts nature print, 1860s',
+                        'Tudor rose — stylized double rose, 1485',
+                        'Damask — tone-on-tone woven silk, via Damascus',
+                        'Tartan / plaid — Scottish clan patterns',
+                        'Chintz — glazed floral cotton, imported from India',
+                        '── 🇵🇹 PORTUGAL ──',
+                        'Azulejo — hand-painted blue & white tile, 1500s',
+                        'Manueline — nautical rope + coral carving, maritime',
+                        '── 🇪🇸 SPAIN ──',
+                        'Alhambra geometric — Moorish star tessellation',
+                        'Talavera pottery motif — cobalt + yellow on white',
+                        'Mudéjar — Islamic-Christian hybrid ornament',
+                        '── 🇲🇽 MEXICO / AMERICAS ──',
+                        'Talavera de Puebla — hand-painted cobalt + yellow tile',
+                        'Otomí embroidery — colorful flora + fauna, Tenango',
+                        'Aztec sun stone — calendar circle, geometric',
+                        'Mayan step fret — stepped spiral, temple frieze',
+                        'Navajo weave — diamond + arrow, earthy tones',
+                        'Haida / Pacific NW — formline, eagle/raven/bear',
+                        '── 🇷🇺 RUSSIA ──',
+                        'Khokhloma — red + gold + black floral, lacquer',
+                        'Gzhel — blue & white pottery, folk floral',
+                        'Matryoshka silhouette — nesting doll shape',
+                        'Onion dome — bulbous cupola profile',
+                        '── 🇳🇴🇸🇪🇩🇰 SCANDINAVIA ──',
+                        'Dala horse — Swedish folk, carved + painted',
+                        'Rosemaling — Norwegian folk flower painting',
+                        'Viking interlace — knotwork, animal style',
+                        'Rune carvings — Norse symbols',
+                        'Hygge minimalism — clean warmth, natural materials',
+                        '── 🇮🇪 CELTIC ──',
+                        'Celtic knot — endless interlace, no start/end',
+                        'Trinity knot (triquetra) — three-cornered, eternal',
+                        'Celtic cross — ring cross, stone carved',
+                        'Celtic spiral (triskelion) — triple spiral, Newgrange',
+                        '── 🌊 POLYNESIA / PACIFIC ──',
+                        'Tapa cloth — bark cloth, geometric, Fiji/Samoa/Tonga',
+                        'Maori Ta Moko — spiral koru + hook pattern',
+                        'Hawaiian quilt — appliqué nature motif',
+                        'Tribal tattoo pattern — bold black geometric',
+                        '── 🏛️ PERIOD STYLES ──',
+                        'Art Deco — geometric rays, symmetry, 1920s',
+                        'Art Nouveau — organic curves, whiplash line, 1890s',
+                        'Mid-century modern — retro atomic, starburst, 1950s',
+                        'Bauhaus — geometric, primary colors, functionalism',
+                        'Memphis — squiggle, terrazzo, bold 1980s',
+                        'Brutalist — raw concrete, massive geometry',
+                        '── CUSTOM ──',
+                        'Custom / mixed reference — specify in notes',
+                    ]
+                },
                 { label: 'Doorway threshold', type: 'select', options: ['Marble strip', 'Tile-to-tile (match cut)', 'Aluminium trim strip', 'PVC transition strip', 'Repair broken tiles only', 'No threshold'], required: true },
                 { label: 'Threshold material', type: 'text', placeholder: 'e.g. Volakas marble / black granite / stainless steel strip' },
             ]
@@ -396,7 +755,7 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
         {
             category: 'Bathroom Floor', fields: [
                 { label: 'Kerb', type: 'select', options: ['Kerb (standard)', 'No kerb (curbless)', 'Half-height kerb'], required: true },
-                { label: 'Floor level', type: 'select', options: ['Depressed (standard bathroom)', 'Elevated (platform shower)', 'Same level as outside', 'Step-down entry'], required: true },
+                { label: 'Floor level', type: 'select', options: ['Ramp (standard bathroom)', 'Elevated (platform shower)', 'Same level as outside', 'Step-down entry'], required: true },
                 { label: 'Floor trap tile treatment', type: 'select', options: ['X-cut (4 triangles to trap)', 'Cut tile around trap', 'Center trap in tile', 'Tile-insert trap cover', 'Linear drain with tile insert'], required: true },
                 { label: 'Floor slope direction', type: 'text', placeholder: 'Towards floor trap / towards door / cross-fall' },
                 { label: 'Concrete elevation for cabinetry', type: 'text', placeholder: 'Raise vanity area by Xmm, kitchen plinth height', unit: 'mm' },
@@ -443,14 +802,111 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
     ],
     'Natural Stone': [
         {
-            category: 'Stone Specification', fields: [
-                { label: 'Stone type', type: 'select', options: ['Marble', 'Granite', 'Travertine', 'Slate', 'Limestone', 'Sandstone', 'Quartzite', 'N/A'], required: true },
-                { label: 'Stone name', type: 'text', placeholder: 'e.g. Volakas, Calacatta, Carrara, Emperador, Nero Marquina' },
-                { label: 'Application', type: 'select', options: ['Floor', 'Wall', 'Feature wall', 'Countertop', 'Vanity top', 'Window sill', 'Threshold'] },
-                { label: 'Finish', type: 'select', options: ['Polished', 'Honed', 'Brushed / leathered', 'Tumbled', 'Flamed'] },
-                { label: 'Sealer required', type: 'select', options: ['Penetrating sealer', 'Topical sealer', 'Both', 'Not required (granite/quartzite)'] },
-                { label: 'Bookmatching', type: 'toggle' },
-                { label: 'Supplier', type: 'text', placeholder: 'e.g. stone fabricator name, quarry source' },
+            category: 'Stone Selection', fields: [
+                { label: 'Stone type', type: 'select', options: ['Marble', 'Granite', 'Travertine', 'Slate', 'Limestone', 'Sandstone', 'Quartzite', 'Soapstone', 'Onyx', 'Terrazzo', 'Sintered Stone', 'N/A'], required: true },
+                {
+                    label: 'Stone name', type: 'select', options: [
+                        '── WHITE MARBLE ──',
+                        'Carrara (Bianco Carrara) — Italy, grey veins, $$',
+                        'Calacatta Oro — Italy, bold gold veins, $$$$',
+                        'Calacatta Borghini — Italy, dramatic thick veins, $$$$$',
+                        'Statuario — Italy, grey-blue veins on bright white, $$$$',
+                        'Arabescato — Italy, swirly web-like grey veins, $$$',
+                        'Bianco Lasa — South Tyrol, minimal vein pure white, $$$$',
+                        'Volakas — Greece, grey-blue veins, $$',
+                        'Thassos — Greece, crystal white, $$$',
+                        'Sivec White — North Macedonia, solid white, $$$',
+                        '── BEIGE / WARM MARBLE ──',
+                        'Botticino — Italy, cream beige subtle veins, $$',
+                        'Crema Marfil — Spain, cream yellow, $',
+                        'Daino Reale — Sicily, warm beige with fossils, $$',
+                        'Rosa Portogallo — Portugal, salmon pink, $$$',
+                        'Breccia Oniciata — Italy, warm gold veins, $$$',
+                        '── DARK MARBLE ──',
+                        'Nero Marquina — Spain, black with white veins, $$$',
+                        'Emperador Dark — Spain, dark brown, $$',
+                        'Emperador Light — Spain, light brown, $$',
+                        'Portoro — Italy, black with gold veins, $$$$$',
+                        'Sahara Noir — Tunisia, black with gold-cream, $$$$',
+                        'Verde Guatemala — India, deep green, $$$',
+                        'Rosso Levanto — Italy/Turkey, dark red with white, $$$',
+                        '── EXOTIC / STATEMENT ──',
+                        'Blue Bahia — Brazil, blue with gold flecks, $$$$$',
+                        'Azul Macaubas — Brazil, blue quartzite, $$$$$',
+                        'Patagonia — Brazil, amber & blue quartzite, $$$$$',
+                        'Sodalite Blue — Bolivia, vivid blue, $$$$$',
+                        'Tiger Eye — South Africa, golden chatoyant, $$$$$',
+                        '── TRAVERTINE ──',
+                        'Travertine Classic (Filled) — Italy, smooth cream, $$',
+                        'Travertine Classic (Unfilled) — Italy, natural holes, $$',
+                        'Travertine Noce — Italy, walnut brown, $$',
+                        'Travertine Silver — Italy/Turkey, grey, $$',
+                        'Travertine Gold — Iran, warm yellow, $$',
+                        '── GRANITE ──',
+                        'Absolute Black — India/Zimbabwe, solid black, $$',
+                        'Black Galaxy — India, black with gold flecks, $$',
+                        'Steel Grey — India, dark grey, $$',
+                        'Tan Brown — India, brown with black, $',
+                        'Giallo Ornamental — Brazil, gold/cream, $',
+                        'Blue Pearl — Norway, blue-grey shimmer, $$$',
+                        'Viscount White — India, white with grey, $$',
+                        'Colonial White — India, off-white, $',
+                        'Kashmir White — India, white with garnets, $$',
+                        '── SOAPSTONE ──',
+                        'Soapstone (Grey) — Brazil, matte grey, $$',
+                        'Soapstone (Green) — India, dark green, $$',
+                        'Soapstone (Black) — Brazil, charcoal, $$',
+                        '── QUARTZITE ──',
+                        'Taj Mahal — Brazil, warm white, $$$$',
+                        'Super White — Brazil, marble-look quartzite, $$$',
+                        'Fantasy Brown — India, brown+grey+white, $$$',
+                        'Fusion — Brazil, multicolor, $$$',
+                        '── ONYX ──',
+                        'Onyx Honey — Pakistan, translucent amber, $$$$',
+                        'Onyx Verde — Pakistan, green translucent, $$$$',
+                        'Onyx White — Iran, white translucent, $$$$',
+                        '── SLATE ──',
+                        'Brazilian Black Slate — matte black, $',
+                        'Indian Autumn Slate — multicolor rustic, $',
+                        'Chinese Grey Slate — uniform grey, $',
+                        '── LIMESTONE ──',
+                        'Jura Beige — Germany, fossil-rich cream, $$$',
+                        'Moleanos — Portugal, beige, $$',
+                        'Cabeca Veada — Portugal, grey-blue, $$',
+                        '── SINTERED STONE ──',
+                        'Dekton (Cosentino) — engineered, zero porosity, $$$',
+                        'Neolith (TheSize) — ultra-compact, $$$',
+                        'Laminam — Italy, large format, $$$',
+                        '── OTHER ──',
+                        'Custom / unlisted — specify in notes',
+                    ], required: true
+                },
+                { label: 'Application', type: 'select', options: ['Floor', 'Wall', 'Feature wall', 'Countertop', 'Vanity top', 'Window sill', 'Threshold', 'Staircase', 'Fireplace surround', 'Backsplash', 'Shower niche'], required: true },
+            ]
+        },
+        {
+            category: 'Motif & Pattern', fields: [
+                { label: 'Vein pattern', type: 'select', options: ['Fine linear veins', 'Bold dramatic veins', 'Web / spider veins', 'Cloud / flowing', 'Speckled / granular', 'Fossil imprints', 'Solid / uniform', 'Chatoyant (light-shifting)', 'Translucent (backlit)', 'N/A'] },
+                { label: 'Vein direction', type: 'select', options: ['Horizontal run', 'Diagonal run', 'Random / organic', 'Bookmatched mirror', 'Cross-cut', 'Vein-cut', 'N/A'] },
+                { label: 'Bookmatching', type: 'select', options: ['No', 'Yes — 2 slabs mirrored', 'Yes — 4 slabs (butterfly)', 'Diamond match', 'N/A'] },
+                { label: 'Slab vs tile', type: 'select', options: ['Full slab (feature wall / countertop)', 'Large format tile (600×1200)', 'Standard tile (300×600 / 600×600)', 'Mosaic', 'Cut-to-size'] },
+            ]
+        },
+        {
+            category: 'Finish & Treatment', fields: [
+                { label: 'Surface finish', type: 'select', options: ['Polished (mirror shine)', 'Honed (matte smooth)', 'Brushed / leathered (textured)', 'Tumbled (aged look)', 'Flamed (rough, anti-slip)', 'Sandblasted', 'Bush-hammered', 'Acid-washed'], required: true },
+                { label: 'Edge profile', type: 'select', options: ['Flat / eased (standard)', 'Bullnose (rounded)', 'Beveled', 'Ogee (S-curve)', 'Waterfall (wraps down sides)', 'Mitered (45° join)', 'Pencil round', 'N/A'] },
+                { label: 'Sealer required', type: 'select', options: ['Penetrating sealer (marble, limestone, travertine)', 'Topical sealer', 'Both', 'Not required (granite, quartzite, sintered)', 'Soapstone oil treatment'] },
+                { label: 'Filling', type: 'select', options: ['N/A', 'Resin-filled (travertine)', 'Epoxy-filled (travertine)', 'Cement-filled', 'Unfilled (natural)'] },
+            ]
+        },
+        {
+            category: 'Installation & Sourcing', fields: [
+                { label: 'Thickness', type: 'select', options: ['10mm (wall cladding)', '15mm (standard tile)', '20mm (countertop / floor)', '30mm (heavy-duty countertop)', '40mm+ (monolithic slab)'] },
+                { label: 'Supplier / fabricator', type: 'text', placeholder: 'e.g. Stonehub, Classicstone, European Marble, direct quarry import' },
+                { label: 'Country of origin', type: 'text', placeholder: 'e.g. Italy, Brazil, India, Spain, Turkey, Greece' },
+                { label: 'Installation substrate', type: 'select', options: ['Cement screed', 'Plywood backing', 'Metal frame (feature wall)', 'Direct adhesive', 'Dry-hang system (lobby/feature)'] },
+                { label: 'Notes', type: 'textarea', placeholder: 'Slab selection required at yard? Colour matching across batches? Waterfall edge details?' },
             ]
         },
     ],
@@ -516,11 +972,74 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
         {
             category: 'Curtain Specification', fields: [
                 { label: 'Curtain supplier', type: 'text', placeholder: 'e.g. MC Curtain, Zetta, Soon Bee Huat, Window Connection' },
-                { label: 'Curtain type', type: 'select', options: ['Day & night (sheer + blackout)', 'Blackout only', 'Sheer only', 'Eyelet curtain', 'S-fold / wave fold', 'Pinch pleat', 'N/A'], required: true },
-                { label: 'Track type', type: 'select', options: ['Ceiling-mounted track', 'Wall-mounted rod', 'Motorized track (smart)', 'Curtain box / pelmet'], required: true },
-                { label: 'Track color', type: 'select', options: ['White', 'Matt black', 'Silver', 'Match ceiling'] },
-                { label: 'Fabric type', type: 'select', options: ['Polyester', 'Linen blend', 'Velvet', 'Cotton', 'Dimout fabric', 'Blackout coated'] },
-                { label: 'Lining', type: 'select', options: ['Blackout lining', 'Thermal lining', 'Interlining (premium)', 'No lining'] },
+                {
+                    label: 'Curtain type', type: 'select', options: [
+                        '── PLEAT STYLES ──',
+                        'S-fold / wave fold — modern clean ripple, most popular',
+                        'Pinch pleat (single) — classic tailored',
+                        'Pinch pleat (double / French) — formal, fullest',
+                        'Pinch pleat (triple) — ultra-formal, hotel grade',
+                        'Goblet pleat — wine-glass shaped top, luxury',
+                        'Box pleat — flat structured folds',
+                        'Inverted box pleat — clean flat panels',
+                        'Pencil pleat — gathered, casual, tape top',
+                        'Cartridge pleat — tubular folds, modern',
+                        '── HEADING STYLES ──',
+                        'Eyelet / grommet — rings punched through fabric',
+                        'Tab top — fabric loops on rod',
+                        'Hidden tab — invisible loops, clean line',
+                        'Rod pocket — fabric threaded over rod',
+                        'Tie top — fabric ties knotted on rod, casual',
+                        '── COMBINATION ──',
+                        'Day & night (sheer + blackout layered)',
+                        'Blackout only',
+                        'Sheer only (voile / organza)',
+                        'Sheer + dim-out layered',
+                        '── SPECIALTY ──',
+                        'Japanese panel (flat sliding panels)',
+                        'Cafe curtain (bottom half only)',
+                        'Swag & tail (formal draping)',
+                        'Austrian balloon (gathered festoons)',
+                        'N/A',
+                    ], required: true
+                },
+                { label: 'Track type', type: 'select', options: ['Ceiling-mounted track', 'Ceiling-recessed track (hidden in pelmet)', 'Wall-mounted rod (decorative)', 'Wall-mounted rod (plain)', 'Motorized track (Somfy / Aqara)', 'Motorized track (battery)', 'Double track (sheer + main)', 'Curtain box / pelmet'], required: true },
+                { label: 'Track color', type: 'select', options: ['White', 'Matt black', 'Brushed gold', 'Brushed nickel', 'Brass', 'Silver', 'Bronze', 'Match ceiling'] },
+                {
+                    label: 'Fabric type', type: 'select', options: [
+                        '── NATURAL ──',
+                        'Linen — breathable, natural drape, wrinkles',
+                        'Cotton — crisp, casual, light drape',
+                        'Silk — luxurious sheen, delicate, dry clean',
+                        'Wool — heavy drape, insulating, premium',
+                        'Jute / burlap — rustic, textured, casual',
+                        'Hemp — eco, similar to linen',
+                        '── SYNTHETIC ──',
+                        'Polyester — most common, durable, easy',
+                        'Nylon — strong, mildew resistant',
+                        'Rayon / viscose — silk-like, budget',
+                        'Acrylic — sun-resistant, outdoor safe',
+                        '── BLENDS ──',
+                        'Linen-poly blend — best of both',
+                        'Cotton-poly blend — easy care',
+                        'Silk-poly blend — affordable sheen',
+                        '── SPECIALTY ──',
+                        'Velvet (cotton) — heavy, rich, dramatic',
+                        'Velvet (polyester) — lighter, cheaper velvet',
+                        'Chenille — soft textured, good drape',
+                        'Jacquard — woven pattern, formal',
+                        'Damask — woven tone-on-tone pattern',
+                        'Brocade — raised woven pattern, luxe',
+                        'Organza — sheer, sparkle',
+                        'Voile — sheer, soft, plain',
+                        'Muslin — ultra-lightweight, gauzy',
+                        'Taffeta — crisp, rustling, formal',
+                        'Dimout fabric — blocks 70-90% light',
+                        'Blackout coated — blocks 99%+ light',
+                        'Sunbrella (outdoor) — UV + mildew resistant',
+                    ], required: true
+                },
+                { label: 'Lining', type: 'select', options: ['Blackout lining', 'Thermal lining', 'Interlining (premium weight)', 'Bump interlining (heaviest)', 'No lining'] },
             ]
         },
         {
@@ -546,9 +1065,69 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
     'Wallpaper': [
         {
             category: 'Wallpaper Specification', fields: [
-                { label: 'Wallpaper brand', type: 'select', options: ['Sanderson', 'Cole & Son', 'Graham & Brown', 'Harlequin', 'Goodrich', 'Korea wallpaper', 'China wallpaper', 'Custom print', 'N/A'] },
-                { label: 'Wallpaper type', type: 'select', options: ['Non-woven (easiest)', 'Vinyl (wet areas)', 'Fabric-backed', 'Grasscloth / natural', 'Peel & stick', 'N/A'], required: true },
-                { label: 'Coverage', type: 'select', options: ['Accent wall only', 'Full room', 'Multiple rooms', 'Ceiling'] },
+                { label: 'Wallpaper brand', type: 'select', options: ['Sanderson', 'Cole & Son', 'Graham & Brown', 'Harlequin', 'Morris & Co', 'Designers Guild', 'Farrow & Ball', 'de Gournay (hand-painted)', 'Fromental (embroidered)', 'Phillip Jeffries', 'Elitis', 'Goodrich', 'Korea wallpaper', 'China wallpaper', 'Custom print', 'N/A'] },
+                {
+                    label: 'Wallpaper type', type: 'select', options: [
+                        '── STANDARD ──',
+                        'Non-woven (easiest install/remove, most popular)',
+                        'Vinyl (wet areas, wipeable)',
+                        'Pre-pasted (water-activated)',
+                        'Peel & stick (removable)',
+                        '── PREMIUM ──',
+                        'Fabric-backed vinyl (commercial grade)',
+                        'Paper-backed (traditional, UK/European)',
+                        'Flocked (raised velvet texture)',
+                        'Foil / metallic (reflective)',
+                        'Embossed / textured',
+                        '── NATURAL ──',
+                        'Grasscloth (woven seagrass/jute)',
+                        'Sisal (natural fiber)',
+                        'Cork wallcovering',
+                        'Mica / stone chip',
+                        'Bamboo weave',
+                        'Silk wallcovering',
+                        '── ULTRA-LUXURY ──',
+                        'Hand-painted scenic (de Gournay style)',
+                        'Hand-embroidered (Fromental style)',
+                        'Gold leaf / silver leaf',
+                        'Leather panels',
+                        'Suede panels',
+                        '── SPECIALTY ──',
+                        'Acoustic wallcovering (sound absorbing)',
+                        'Magnetic wallpaper (for magnets)',
+                        'Whiteboard / dry-erase wallpaper',
+                        'Chalkboard wallpaper',
+                        'N/A',
+                    ], required: true
+                },
+                {
+                    label: 'Pattern style', type: 'select', options: [
+                        'Solid / plain texture',
+                        'Geometric — modern lines, shapes',
+                        'Damask — classic tone-on-tone',
+                        'Floral — botanical, garden',
+                        'Tropical — palm, banana leaf, jungle',
+                        'Chinoiserie — Chinese-inspired birds, branches',
+                        'Toile de Jouy — French pastoral scenes',
+                        'Art Deco — fan, shell, gold geometric',
+                        'Mid-century modern — retro, atomic',
+                        'Moroccan / Moorish — zellige-inspired',
+                        'Japanese — wave (seigaiha), cloud, crane',
+                        'Brick / stone effect',
+                        'Wood grain effect',
+                        'Concrete effect',
+                        'Marble / stone veining effect',
+                        'Trellis / lattice',
+                        'Stripes — vertical / horizontal',
+                        'Plaid / tartan',
+                        'Abstract / brushstroke',
+                        'Mural / scenic landscape',
+                        'Terrazzo effect',
+                        'Animal print',
+                        'Custom / digital print',
+                    ]
+                },
+                { label: 'Coverage', type: 'select', options: ['Accent wall only', 'Full room', 'Multiple rooms', 'Ceiling', 'Ceiling + walls', 'Powder room (full wrap)'] },
                 { label: 'Location', type: 'textarea', placeholder: 'Which walls, rooms — e.g. living room TV wall, master bedroom headboard wall' },
             ]
         },
@@ -556,11 +1135,65 @@ const TRADE_SPECS: Record<string, SpecCategory[]> = {
     'Metalwork': [
         {
             category: 'Metal Fabrication', fields: [
-                { label: 'Work type', type: 'select', options: ['Railing / balustrade', 'Staircase (landed)', 'Custom shelving / frame', 'Gate / fencing', 'Awning / canopy', 'Partition screen'], required: true },
-                { label: 'Material', type: 'select', options: ['Mild steel', 'Stainless steel (304)', 'Stainless steel (316 — outdoor)', 'Aluminium', 'Wrought iron', 'Brass / copper'], required: true },
-                { label: 'Finish', type: 'select', options: ['Powder coat — matt black', 'Powder coat — custom RAL', 'Hairline stainless', 'Brushed brass', 'Raw / industrial', 'Hot-dip galvanized (outdoor)'] },
-                { label: 'Glass infill', type: 'select', options: ['Tempered clear glass', 'Tempered tinted glass', 'Frosted glass', 'No glass', 'Wire mesh'] },
+                { label: 'Work type', type: 'select', options: ['Railing / balustrade', 'Staircase (landed)', 'Custom shelving / frame', 'Gate / fencing', 'Awning / canopy', 'Partition screen', 'Window grille', 'Shoe rack frame', 'Suspended shelf bracket', 'Display frame', 'Custom furniture base'], required: true },
+                { label: 'Material', type: 'select', options: ['Mild steel', 'Stainless steel (304)', 'Stainless steel (316 — marine/outdoor)', 'Aluminium', 'Wrought iron', 'Brass (solid)', 'Copper (solid)', 'Bronze', 'Corten steel (weathering steel)', 'Cast iron'], required: true },
+                {
+                    label: 'Finish', type: 'select', options: [
+                        '── POWDER COAT ──',
+                        'Powder coat — matt black (RAL 9005)',
+                        'Powder coat — satin black',
+                        'Powder coat — gloss black',
+                        'Powder coat — white (RAL 9016)',
+                        'Powder coat — dark grey (RAL 7016)',
+                        'Powder coat — custom RAL color',
+                        'Powder coat — textured / wrinkle',
+                        '── METAL FINISH ──',
+                        'Hairline stainless steel',
+                        'Mirror polish stainless',
+                        'Brushed brass / PVD gold',
+                        'Brushed nickel',
+                        'Antique brass (aged patina)',
+                        'Oil-rubbed bronze',
+                        'Rose gold / copper PVD',
+                        'Blackened steel (patina)',
+                        'Raw / industrial (clear coat only)',
+                        'Corten rust finish (weathered)',
+                        '── OUTDOOR / HEAVY DUTY ──',
+                        'Hot-dip galvanized',
+                        'Electrostatic spray',
+                        'Anodized aluminium',
+                    ]
+                },
+                { label: 'Glass infill', type: 'select', options: ['Tempered clear glass', 'Tempered tinted glass', 'Frosted glass', 'Laminated glass (safety)', 'Reeded / fluted glass', 'Rain glass', 'Wire glass', 'No glass', 'Wire mesh', 'Perforated metal sheet', 'Expanded metal mesh'] },
                 { label: 'Dimensions', type: 'textarea', placeholder: 'Height, width, number of panels, spacing between balusters' },
+            ]
+        },
+        {
+            category: 'Architectural Hardware', fields: [
+                {
+                    label: 'Door knocker', type: 'select', options: [
+                        'N/A',
+                        '── CLASSIC ──',
+                        'Lion head knocker — brass',
+                        'Lion head knocker — aged bronze',
+                        'Lion head knocker — matt black iron',
+                        'Ring knocker — simple round',
+                        'Urn knocker — decorative',
+                        'Doctors knocker — S-curve (Georgian)',
+                        'Fox head knocker',
+                        'Eagle / hawk knocker',
+                        '── MODERN ──',
+                        'Flat bar knocker — minimalist',
+                        'Ball knocker — spherical',
+                        'Cylinder knocker — tubular',
+                        'Custom design — specify',
+                    ]
+                },
+                { label: 'House numbers', type: 'select', options: ['Brushed stainless steel', 'Matt black', 'Brass', 'Bronze', 'Backlit LED', 'Ceramic tile (heritage)', 'Floating numbers (standoff mount)', 'N/A'] },
+                { label: 'Letterbox / mail slot', type: 'select', options: ['Through-door mail slot — brass', 'Through-door mail slot — chrome', 'Wall-mounted letterbox — modern', 'Wall-mounted letterbox — heritage', 'Post-mounted letterbox', 'N/A'] },
+                { label: 'Gate hardware', type: 'select', options: ['Auto-gate motor (swing)', 'Auto-gate motor (slide)', 'Manual latch — black iron', 'Manual latch — stainless', 'Ring pull — wrought iron', 'Thumb latch — heritage', 'Magnetic lock (access control)', 'N/A'] },
+                { label: 'Outdoor lighting brackets', type: 'select', options: ['Lantern bracket — wrought iron', 'Lantern bracket — brass', 'Coach lamp mount', 'Modern wall arm — matt black', 'Gooseneck barn light bracket', 'N/A'] },
+                { label: 'Decorative brackets', type: 'select', options: ['Shelf bracket — L-shape industrial', 'Shelf bracket — ornate scroll', 'Shelf bracket — hairpin', 'Shelf bracket — triangle', 'Curtain rod finial — ball', 'Curtain rod finial — spear', 'Curtain rod finial — scroll', 'Custom — specify', 'N/A'] },
             ]
         },
     ],
@@ -626,6 +1259,8 @@ export default function DispatchPage() {
     const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
     const [formValues, setFormValues] = useState<Record<string, string | boolean>>({});
     const [materialFilter, setMaterialFilter] = useState<string>('all');
+    const [dispatchView, setDispatchView] = useState<'po' | 'site' | 'deliveries'>('po');
+    const [ratingTarget, setRatingTarget] = useState<{ name: string; trade: string; project: string } | null>(null);
     const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 
     const toggleCategory = (cat: string) => {
@@ -646,413 +1281,521 @@ export default function DispatchPage() {
 
     return (
         <div style={{ fontFamily: f, minHeight: '100vh', background: '#FAFAF9' }}>
-            {/* Header */}
-            <header style={{
-                padding: '20px 32px', borderBottom: '1px solid #E9E9E7',
-                background: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                position: 'sticky', top: 0, zIndex: 30,
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <Link href="/hub" style={{ color: '#9B9A97', textDecoration: 'none' }}>
-                        <ArrowLeft style={{ width: 20, height: 20 }} />
-                    </Link>
-                    <div>
-                        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0, color: '#37352F', letterSpacing: '-0.02em' }}>Dispatch</h1>
-                        <p style={{ fontSize: 10, color: '#9B9A97', margin: 0, textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600 }}>Auto-price, source, and deploy vendors</p>
-                    </div>
-                </div>
-                <button
-                    onClick={() => { setShowNewPO(!showNewPO); if (!showNewPO) { setSelectedTrade(''); setFormValues({}); setExpandedCategories({}); } }}
-                    style={{
-                        padding: '8px 16px', fontSize: 12, fontWeight: 700, border: 'none', borderRadius: 6, cursor: 'pointer',
-                        background: showNewPO ? '#F5F5F4' : '#37352F', color: showNewPO ? '#37352F' : 'white', fontFamily: f,
-                        display: 'flex', alignItems: 'center', gap: 6,
-                    }}
-                >
-                    {showNewPO ? 'Cancel' : <><Plus style={{ width: 14, height: 14 }} /> New PO</>}
-                </button>
-            </header>
+            <RoofNav />
 
             <div style={{ padding: '24px 32px' }}>
-                {/* ===== NEW PO CREATION ===== */}
-                {showNewPO && (
-                    <div style={{ marginBottom: 24 }}>
-                        <h2 style={{ fontSize: 14, fontWeight: 700, color: '#37352F', margin: '0 0 16px' }}>Create Purchase Order</h2>
+                {/* ===== TAB BAR ===== */}
+                <div style={{ display: 'flex', gap: 2, marginBottom: 20, background: '#F7F6F3', borderRadius: 8, padding: 3 }}>
+                    {(['po', 'site', 'deliveries'] as const).map(t => (
+                        <button key={t} onClick={() => setDispatchView(t)} style={{
+                            flex: 1, padding: '8px 0', fontSize: 12, fontWeight: 600, borderRadius: 6,
+                            border: 'none', cursor: 'pointer', fontFamily: f,
+                            background: dispatchView === t ? 'white' : 'transparent',
+                            color: dispatchView === t ? '#37352F' : '#9B9A97',
+                            boxShadow: dispatchView === t ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+                        }}>
+                            {t === 'po' ? 'PO Board' : t === 'site' ? 'Site Command' : 'Deliveries'}
+                        </button>
+                    ))}
+                </div>
 
-                        {/* Trade Selector */}
-                        <div style={{ marginBottom: 20 }}>
-                            <div style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Select Trade</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                                {trades.map(t => (
-                                    <button key={t} onClick={() => {
-                                        setSelectedTrade(t);
-                                        setFormValues({});
-                                        const cats: Record<string, boolean> = {};
-                                        TRADE_SPECS[t].forEach((s, i) => { cats[s.category] = i === 0; });
-                                        cats[CROSS_TRADE_SPECS.category] = false;
-                                        setExpandedCategories(cats);
-                                    }} style={{
-                                        padding: '8px 14px', fontSize: 12, fontWeight: selectedTrade === t ? 700 : 500, border: '1px solid #E9E9E7',
-                                        borderRadius: 6, cursor: 'pointer', fontFamily: f,
-                                        background: selectedTrade === t ? '#37352F' : 'white',
-                                        color: selectedTrade === t ? 'white' : '#6B6A67',
+                {/* ===== PO VIEW ===== */}
+                {dispatchView === 'po' && (<>
+                    {/* ===== NEW PO CREATION ===== */}
+                    {showNewPO && (
+                        <div style={{ marginBottom: 24 }}>
+                            <h2 style={{ fontSize: 14, fontWeight: 700, color: '#37352F', margin: '0 0 16px' }}>Create Purchase Order</h2>
+
+                            {/* Trade Selector */}
+                            <div style={{ marginBottom: 20 }}>
+                                <div style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Select Trade</div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                    {trades.map(t => (
+                                        <button key={t} onClick={() => {
+                                            setSelectedTrade(t);
+                                            setFormValues({});
+                                            const cats: Record<string, boolean> = {};
+                                            TRADE_SPECS[t].forEach((s, i) => { cats[s.category] = i === 0; });
+                                            cats[CROSS_TRADE_SPECS.category] = false;
+                                            setExpandedCategories(cats);
+                                        }} style={{
+                                            padding: '8px 14px', fontSize: 12, fontWeight: selectedTrade === t ? 700 : 500, border: '1px solid #E9E9E7',
+                                            borderRadius: 6, cursor: 'pointer', fontFamily: f,
+                                            background: selectedTrade === t ? '#37352F' : 'white',
+                                            color: selectedTrade === t ? 'white' : '#6B6A67',
+                                        }}>{t}</button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Trade-Specific Specs */}
+                            {selectedTrade && (
+                                <div>
+                                    <div style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
+                                        {selectedTrade} — Site Instructions
+                                    </div>
+
+                                    {/* General PO Info */}
+                                    <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20, marginBottom: 12 }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                                            <div>
+                                                <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Project</label>
+                                                <input type="text" placeholder="e.g. Lim Residence (Punggol)" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Vendor</label>
+                                                <input type="text" placeholder="Select or type vendor name" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Site Address</label>
+                                                <input type="text" placeholder="Block, unit, postal code" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Trade-Specific Categories */}
+                                    {[...specs, CROSS_TRADE_SPECS].map(specCat => {
+                                        const isExpanded = expandedCategories[specCat.category] !== false;
+                                        const catRequiredCount = specCat.fields.filter(f => f.required).length;
+                                        const catFilledCount = specCat.fields.filter(f => {
+                                            if (!f.required) return false;
+                                            const key = `${selectedTrade}:${f.label}`;
+                                            const val = formValues[key];
+                                            return val !== undefined && val !== '' && val !== false;
+                                        }).length;
+
+                                        return (
+                                            <div key={specCat.category} style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', marginBottom: 8, overflow: 'hidden' }}>
+                                                <button onClick={() => toggleCategory(specCat.category)} style={{
+                                                    width: '100%', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                    background: 'none', border: 'none', cursor: 'pointer', fontFamily: f,
+                                                }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        {isExpanded ? <ChevronDown style={{ width: 14, height: 14, color: '#9B9A97' }} /> : <ChevronRight style={{ width: 14, height: 14, color: '#9B9A97' }} />}
+                                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#37352F' }}>{specCat.category}</span>
+                                                        {catRequiredCount > 0 && (
+                                                            <span style={{ fontSize: 9, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: catFilledCount === catRequiredCount ? '#F0FDF4' : '#F7F6F3', color: catFilledCount === catRequiredCount ? '#22C55E' : '#9B9A97' }}>
+                                                                {catFilledCount}/{catRequiredCount}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </button>
+
+                                                {isExpanded && (
+                                                    <div style={{ padding: '0 20px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                                        {specCat.fields.map(field => {
+                                                            const key = `${selectedTrade}:${field.label}`;
+                                                            const value = formValues[key] ?? '';
+                                                            return (
+                                                                <div key={field.label}>
+                                                                    <label style={{ fontSize: 11, fontWeight: 600, color: '#37352F', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+                                                                        {field.label}
+                                                                        {field.required && <span style={{ color: '#EF4444', fontSize: 10 }}>*</span>}
+                                                                        {field.unit && <span style={{ fontSize: 9, color: '#9B9A97', fontWeight: 400 }}>({field.unit})</span>}
+                                                                    </label>
+                                                                    {field.type === 'select' && (
+                                                                        <select
+                                                                            value={value as string}
+                                                                            onChange={e => setField(key, e.target.value)}
+                                                                            style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', background: 'white', color: value ? '#37352F' : '#9B9A97' }}
+                                                                        >
+                                                                            <option value="">Select...</option>
+                                                                            {field.options?.map(o => <option key={o} value={o}>{o}</option>)}
+                                                                        </select>
+                                                                    )}
+                                                                    {field.type === 'text' && (
+                                                                        <input
+                                                                            type="text"
+                                                                            value={value as string}
+                                                                            onChange={e => setField(key, e.target.value)}
+                                                                            placeholder={field.placeholder}
+                                                                            style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }}
+                                                                        />
+                                                                    )}
+                                                                    {field.type === 'number' && (
+                                                                        <input
+                                                                            type="number"
+                                                                            value={value as string}
+                                                                            onChange={e => setField(key, e.target.value)}
+                                                                            placeholder={field.placeholder}
+                                                                            style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }}
+                                                                        />
+                                                                    )}
+                                                                    {field.type === 'textarea' && (
+                                                                        <textarea
+                                                                            value={value as string}
+                                                                            onChange={e => setField(key, e.target.value)}
+                                                                            placeholder={field.placeholder}
+                                                                            rows={2}
+                                                                            style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                                                                        />
+                                                                    )}
+                                                                    {field.type === 'toggle' && (
+                                                                        <button
+                                                                            onClick={() => setField(key, !value)}
+                                                                            style={{
+                                                                                padding: '6px 14px', fontSize: 11, fontWeight: 600, border: '1px solid #E9E9E7',
+                                                                                borderRadius: 6, cursor: 'pointer', fontFamily: f,
+                                                                                background: value ? '#37352F' : 'white',
+                                                                                color: value ? 'white' : '#9B9A97',
+                                                                            }}
+                                                                        >
+                                                                            {value ? 'Yes' : 'No'}
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
+                                    {/* Dispatch Button */}
+                                    <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                                        <button style={{ padding: '10px 20px', fontSize: 12, fontWeight: 600, background: 'white', color: '#37352F', border: '1px solid #E9E9E7', borderRadius: 6, cursor: 'pointer', fontFamily: f }}>
+                                            Save Draft
+                                        </button>
+                                        <button
+                                            disabled={!filledRequired}
+                                            style={{
+                                                padding: '10px 20px', fontSize: 12, fontWeight: 700, border: 'none', borderRadius: 6, cursor: filledRequired ? 'pointer' : 'not-allowed', fontFamily: f,
+                                                background: filledRequired ? '#37352F' : '#E9E9E7',
+                                                color: filledRequired ? 'white' : '#9B9A97',
+                                                display: 'flex', alignItems: 'center', gap: 6,
+                                                opacity: filledRequired ? 1 : 0.6,
+                                            }}
+                                        >
+                                            <Send style={{ width: 12, height: 12 }} />
+                                            Dispatch PO
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {/* ===== KANBAN BOARD ===== */}
+                    {!showNewPO && (
+                        <div style={{ marginBottom: 32 }}>
+                            {/* Trade Filter */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                                <span style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Filter:</span>
+                                {['All', ...Object.keys(TRADE_SPECS)].map(t => (
+                                    <button key={t} style={{
+                                        padding: '4px 10px', fontSize: 10, fontWeight: 600, border: '1px solid #E9E9E7',
+                                        borderRadius: 4, cursor: 'pointer', fontFamily: f,
+                                        background: t === 'All' ? '#37352F' : 'white',
+                                        color: t === 'All' ? 'white' : '#9B9A97',
                                     }}>{t}</button>
                                 ))}
                             </div>
-                        </div>
 
-                        {/* Trade-Specific Specs */}
-                        {selectedTrade && (
-                            <div>
-                                <div style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
-                                    {selectedTrade} — Site Instructions
-                                </div>
-
-                                {/* General PO Info */}
-                                <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20, marginBottom: 12 }}>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-                                        <div>
-                                            <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Project</label>
-                                            <input type="text" placeholder="e.g. Lim Residence (Punggol)" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
+                            {/* Kanban Columns */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12, overflowX: 'auto' }}>
+                                {[
+                                    {
+                                        status: 'Draft', color: '#9B9A97', items: [
+                                            { project: 'Tan Residence (Clementi)', trade: 'Tiling', vendor: '—', updated: '2h ago' },
+                                            { project: 'Tan Residence (Clementi)', trade: 'Painting', vendor: '—', updated: '2h ago' },
+                                        ]
+                                    },
+                                    {
+                                        status: 'Sent', color: '#3B82F6', items: [
+                                            { project: 'Lim Residence (Punggol)', trade: 'Carpentry', vendor: 'Hock Seng Carpentry', updated: '1h ago' },
+                                            { project: 'Lim Residence (Punggol)', trade: 'Electrical', vendor: 'KH Electrical', updated: '45m ago' },
+                                            { project: 'Wong Condo (Bishan)', trade: 'Countertop', vendor: 'Qi Quartz', updated: '30m ago' },
+                                        ]
+                                    },
+                                    {
+                                        status: 'Accepted', color: '#8B5CF6', items: [
+                                            { project: 'Lim Residence (Punggol)', trade: 'Hacking & Demolition', vendor: 'Soon Huat Demo', updated: 'Today 9am' },
+                                            { project: 'Wong Condo (Bishan)', trade: 'Plumbing', vendor: 'Ah Kow Plumbing', updated: 'Yesterday' },
+                                        ]
+                                    },
+                                    {
+                                        status: 'In Progress', color: '#F59E0B', items: [
+                                            { project: 'Chen BTO (Tampines)', trade: 'Plastering & Ceiling', vendor: 'Union Plaster', updated: 'Day 3 of 5' },
+                                            { project: 'Chen BTO (Tampines)', trade: 'Aircon', vendor: 'CoolAire Pte Ltd', updated: 'Day 2 of 3' },
+                                        ]
+                                    },
+                                    {
+                                        status: 'Completed', color: '#22C55E', items: [
+                                            { project: 'Chen BTO (Tampines)', trade: 'Hacking & Demolition', vendor: 'KL Demolition', updated: '3 days ago' },
+                                        ]
+                                    },
+                                ].map(col => (
+                                    <div key={col.status} style={{ minWidth: 220 }}>
+                                        {/* Column Header */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, padding: '0 4px' }}>
+                                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
+                                            <span style={{ fontSize: 11, fontWeight: 700, color: '#37352F' }}>{col.status}</span>
+                                            <span style={{ fontSize: 9, fontWeight: 600, color: '#9B9A97', background: '#F7F6F3', padding: '1px 6px', borderRadius: 4 }}>{col.items.length}</span>
                                         </div>
-                                        <div>
-                                            <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Vendor</label>
-                                            <input type="text" placeholder="Select or type vendor name" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
-                                        </div>
-                                        <div>
-                                            <label style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', display: 'block', marginBottom: 4 }}>Site Address</label>
-                                            <input type="text" placeholder="Block, unit, postal code" style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }} />
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* Trade-Specific Categories */}
-                                {[...specs, CROSS_TRADE_SPECS].map(specCat => {
-                                    const isExpanded = expandedCategories[specCat.category] !== false;
-                                    const catRequiredCount = specCat.fields.filter(f => f.required).length;
-                                    const catFilledCount = specCat.fields.filter(f => {
-                                        if (!f.required) return false;
-                                        const key = `${selectedTrade}:${f.label}`;
-                                        const val = formValues[key];
-                                        return val !== undefined && val !== '' && val !== false;
-                                    }).length;
-
-                                    return (
-                                        <div key={specCat.category} style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', marginBottom: 8, overflow: 'hidden' }}>
-                                            <button onClick={() => toggleCategory(specCat.category)} style={{
-                                                width: '100%', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                background: 'none', border: 'none', cursor: 'pointer', fontFamily: f,
-                                            }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                    {isExpanded ? <ChevronDown style={{ width: 14, height: 14, color: '#9B9A97' }} /> : <ChevronRight style={{ width: 14, height: 14, color: '#9B9A97' }} />}
-                                                    <span style={{ fontSize: 12, fontWeight: 700, color: '#37352F' }}>{specCat.category}</span>
-                                                    {catRequiredCount > 0 && (
-                                                        <span style={{ fontSize: 9, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: catFilledCount === catRequiredCount ? '#F0FDF4' : '#F7F6F3', color: catFilledCount === catRequiredCount ? '#22C55E' : '#9B9A97' }}>
-                                                            {catFilledCount}/{catRequiredCount}
-                                                        </span>
+                                        {/* PO Cards */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                            {col.items.map((item, i) => (
+                                                <div key={i} style={{
+                                                    background: 'white', borderRadius: 8, border: '1px solid #E9E9E7', padding: 12,
+                                                    borderLeft: `3px solid ${col.color}`, cursor: 'pointer',
+                                                    transition: 'box-shadow 0.15s',
+                                                }}
+                                                    onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)')}
+                                                    onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
+                                                >
+                                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#37352F', marginBottom: 4 }}>{item.trade}</div>
+                                                    <div style={{ fontSize: 10, color: '#6B6A67', marginBottom: 6 }}>{item.project}</div>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <span style={{ fontSize: 9, color: '#9B9A97' }}>{item.vendor}</span>
+                                                        <span style={{ fontSize: 9, color: '#D4D3D0' }}>{item.updated}</span>
+                                                    </div>
+                                                    {col.status === 'Completed' && (
+                                                        <button
+                                                            onClick={(e) => { e.stopPropagation(); setRatingTarget({ name: item.vendor, trade: item.trade, project: item.project }); }}
+                                                            style={{
+                                                                marginTop: 8, width: '100%', padding: '6px 0', fontSize: 10, fontWeight: 600,
+                                                                background: '#FEF3C7', color: '#D97706', border: '1px solid #FDE68A',
+                                                                borderRadius: 5, cursor: 'pointer', fontFamily: f,
+                                                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                                                            }}
+                                                        >🔒 Rate Contractor</button>
                                                     )}
                                                 </div>
-                                            </button>
+                                            ))}
 
-                                            {isExpanded && (
-                                                <div style={{ padding: '0 20px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                                    {specCat.fields.map(field => {
-                                                        const key = `${selectedTrade}:${field.label}`;
-                                                        const value = formValues[key] ?? '';
-                                                        return (
-                                                            <div key={field.label}>
-                                                                <label style={{ fontSize: 11, fontWeight: 600, color: '#37352F', display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
-                                                                    {field.label}
-                                                                    {field.required && <span style={{ color: '#EF4444', fontSize: 10 }}>*</span>}
-                                                                    {field.unit && <span style={{ fontSize: 9, color: '#9B9A97', fontWeight: 400 }}>({field.unit})</span>}
-                                                                </label>
-                                                                {field.type === 'select' && (
-                                                                    <select
-                                                                        value={value as string}
-                                                                        onChange={e => setField(key, e.target.value)}
-                                                                        style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', background: 'white', color: value ? '#37352F' : '#9B9A97' }}
-                                                                    >
-                                                                        <option value="">Select...</option>
-                                                                        {field.options?.map(o => <option key={o} value={o}>{o}</option>)}
-                                                                    </select>
-                                                                )}
-                                                                {field.type === 'text' && (
-                                                                    <input
-                                                                        type="text"
-                                                                        value={value as string}
-                                                                        onChange={e => setField(key, e.target.value)}
-                                                                        placeholder={field.placeholder}
-                                                                        style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }}
-                                                                    />
-                                                                )}
-                                                                {field.type === 'number' && (
-                                                                    <input
-                                                                        type="number"
-                                                                        value={value as string}
-                                                                        onChange={e => setField(key, e.target.value)}
-                                                                        placeholder={field.placeholder}
-                                                                        style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', boxSizing: 'border-box' }}
-                                                                    />
-                                                                )}
-                                                                {field.type === 'textarea' && (
-                                                                    <textarea
-                                                                        value={value as string}
-                                                                        onChange={e => setField(key, e.target.value)}
-                                                                        placeholder={field.placeholder}
-                                                                        rows={2}
-                                                                        style={{ width: '100%', padding: '8px 10px', fontSize: 12, border: '1px solid #E9E9E7', borderRadius: 6, fontFamily: f, outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
-                                                                    />
-                                                                )}
-                                                                {field.type === 'toggle' && (
-                                                                    <button
-                                                                        onClick={() => setField(key, !value)}
-                                                                        style={{
-                                                                            padding: '6px 14px', fontSize: 11, fontWeight: 600, border: '1px solid #E9E9E7',
-                                                                            borderRadius: 6, cursor: 'pointer', fontFamily: f,
-                                                                            background: value ? '#37352F' : 'white',
-                                                                            color: value ? 'white' : '#9B9A97',
-                                                                        }}
-                                                                    >
-                                                                        {value ? 'Yes' : 'No'}
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        );
-                                                    })}
+                                            {/* Empty state */}
+                                            {col.items.length === 0 && (
+                                                <div style={{ padding: 16, textAlign: 'center', color: '#D4D3D0', fontSize: 10, border: '1px dashed #E9E9E7', borderRadius: 8 }}>
+                                                    No POs
                                                 </div>
                                             )}
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </>)}
 
-                                {/* Dispatch Button */}
-                                <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-                                    <button style={{ padding: '10px 20px', fontSize: 12, fontWeight: 600, background: 'white', color: '#37352F', border: '1px solid #E9E9E7', borderRadius: 6, cursor: 'pointer', fontFamily: f }}>
-                                        Save Draft
-                                    </button>
-                                    <button
-                                        disabled={!filledRequired}
-                                        style={{
-                                            padding: '10px 20px', fontSize: 12, fontWeight: 700, border: 'none', borderRadius: 6, cursor: filledRequired ? 'pointer' : 'not-allowed', fontFamily: f,
-                                            background: filledRequired ? '#37352F' : '#E9E9E7',
-                                            color: filledRequired ? 'white' : '#9B9A97',
-                                            display: 'flex', alignItems: 'center', gap: 6,
-                                            opacity: filledRequired ? 1 : 0.6,
-                                        }}
-                                    >
-                                        <Send style={{ width: 12, height: 12 }} />
-                                        Dispatch PO
-                                    </button>
+                {/* ===== SITE COMMAND VIEW ===== */}
+                {dispatchView === 'site' && (
+                    <div>
+                        {/* Project Info Bar */}
+                        <div style={{ background: 'white', border: '1px solid #E9E9E7', borderRadius: 10, padding: '14px 20px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                <h2 style={{ fontSize: 14, fontWeight: 700, color: '#37352F', margin: 0 }}>Site Command</h2>
+                                <span style={{ fontSize: 8, padding: '2px 8px', background: '#EFF6FF', color: '#3B82F6', borderRadius: 10, fontWeight: 700, textTransform: 'uppercase' }}>Live</span>
+                                <span style={{ fontSize: 10, color: '#9B9A97' }}>Mr & Mrs Tan — Block 123 Tampines St 45 #12-345</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: 9, color: '#9B9A97', textTransform: 'uppercase', fontWeight: 600 }}>Progress</div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ width: 80, height: 4, background: '#F5F5F4', borderRadius: 2, overflow: 'hidden' }}>
+                                            <div style={{ width: '56%', height: '100%', background: '#37352F', borderRadius: 2 }} />
+                                        </div>
+                                        <span style={{ fontSize: 12, fontWeight: 800, color: '#37352F' }}>56%</span>
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <div style={{ fontSize: 9, color: '#9B9A97', textTransform: 'uppercase', fontWeight: 600 }}>Days Left</div>
+                                    <span style={{ fontSize: 16, fontWeight: 900, color: '#37352F' }}>19</span>
                                 </div>
                             </div>
-                        )}
-                    </div>
-                )}
-                {/* ===== KANBAN BOARD ===== */}
-                {!showNewPO && (
-                    <div style={{ marginBottom: 32 }}>
-                        {/* Trade Filter */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Filter:</span>
-                            {['All', ...Object.keys(TRADE_SPECS)].map(t => (
-                                <button key={t} style={{
-                                    padding: '4px 10px', fontSize: 10, fontWeight: 600, border: '1px solid #E9E9E7',
-                                    borderRadius: 4, cursor: 'pointer', fontFamily: f,
-                                    background: t === 'All' ? '#37352F' : 'white',
-                                    color: t === 'All' ? 'white' : '#9B9A97',
-                                }}>{t}</button>
-                            ))}
                         </div>
 
-                        {/* Kanban Columns */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12, overflowX: 'auto' }}>
-                            {[
-                                {
-                                    status: 'Draft', color: '#9B9A97', items: [
-                                        { project: 'Tan Residence (Clementi)', trade: 'Tiling', vendor: '—', updated: '2h ago' },
-                                        { project: 'Tan Residence (Clementi)', trade: 'Painting', vendor: '—', updated: '2h ago' },
-                                    ]
-                                },
-                                {
-                                    status: 'Sent', color: '#3B82F6', items: [
-                                        { project: 'Lim Residence (Punggol)', trade: 'Carpentry', vendor: 'Hock Seng Carpentry', updated: '1h ago' },
-                                        { project: 'Lim Residence (Punggol)', trade: 'Electrical', vendor: 'KH Electrical', updated: '45m ago' },
-                                        { project: 'Wong Condo (Bishan)', trade: 'Countertop', vendor: 'Qi Quartz', updated: '30m ago' },
-                                    ]
-                                },
-                                {
-                                    status: 'Accepted', color: '#8B5CF6', items: [
-                                        { project: 'Lim Residence (Punggol)', trade: 'Hacking & Demolition', vendor: 'Soon Huat Demo', updated: 'Today 9am' },
-                                        { project: 'Wong Condo (Bishan)', trade: 'Plumbing', vendor: 'Ah Kow Plumbing', updated: 'Yesterday' },
-                                    ]
-                                },
-                                {
-                                    status: 'In Progress', color: '#F59E0B', items: [
-                                        { project: 'Chen BTO (Tampines)', trade: 'Plastering & Ceiling', vendor: 'Union Plaster', updated: 'Day 3 of 5' },
-                                        { project: 'Chen BTO (Tampines)', trade: 'Aircon', vendor: 'CoolAire Pte Ltd', updated: 'Day 2 of 3' },
-                                    ]
-                                },
-                                {
-                                    status: 'Completed', color: '#22C55E', items: [
-                                        { project: 'Chen BTO (Tampines)', trade: 'Hacking & Demolition', vendor: 'KL Demolition', updated: '3 days ago' },
-                                    ]
-                                },
-                            ].map(col => (
-                                <div key={col.status} style={{ minWidth: 220 }}>
-                                    {/* Column Header */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, padding: '0 4px' }}>
-                                        <div style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
-                                        <span style={{ fontSize: 11, fontWeight: 700, color: '#37352F' }}>{col.status}</span>
-                                        <span style={{ fontSize: 9, fontWeight: 600, color: '#9B9A97', background: '#F7F6F3', padding: '1px 6px', borderRadius: 4 }}>{col.items.length}</span>
-                                    </div>
-
-                                    {/* PO Cards */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                        {col.items.map((item, i) => (
-                                            <div key={i} style={{
-                                                background: 'white', borderRadius: 8, border: '1px solid #E9E9E7', padding: 12,
-                                                borderLeft: `3px solid ${col.color}`, cursor: 'pointer',
-                                                transition: 'box-shadow 0.15s',
-                                            }}
-                                                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)')}
-                                                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
-                                            >
-                                                <div style={{ fontSize: 11, fontWeight: 700, color: '#37352F', marginBottom: 4 }}>{item.trade}</div>
-                                                <div style={{ fontSize: 10, color: '#6B6A67', marginBottom: 6 }}>{item.project}</div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <span style={{ fontSize: 9, color: '#9B9A97' }}>{item.vendor}</span>
-                                                    <span style={{ fontSize: 9, color: '#D4D3D0' }}>{item.updated}</span>
-                                                </div>
-                                            </div>
-                                        ))}
-
-                                        {/* Empty state */}
-                                        {col.items.length === 0 && (
-                                            <div style={{ padding: 16, textAlign: 'center', color: '#D4D3D0', fontSize: 10, border: '1px dashed #E9E9E7', borderRadius: 8 }}>
-                                                No POs
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* ===== EXISTING CONTENT: Price Index ===== */}
-                <section style={{ marginBottom: 24 }}>
-                    <h2 style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>Price Index — Q1 2026</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-                        {SEED_INDEX.map((idx) => {
-                            const trendColor = idx.trend === 'UP' ? '#EF4444' : idx.trend === 'DOWN' ? '#22C55E' : '#9B9A97';
-                            return (
-                                <div key={idx.trade} style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 16 }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#37352F' }}>{idx.trade}</span>
-                                        {idx.trend === 'UP' && <TrendingUp style={{ width: 14, height: 14, color: trendColor }} />}
-                                        {idx.trend === 'DOWN' && <TrendingDown style={{ width: 14, height: 14, color: trendColor }} />}
-                                        {idx.trend === 'STABLE' && <Minus style={{ width: 14, height: 14, color: trendColor }} />}
-                                    </div>
-                                    <div style={{ fontSize: 22, fontWeight: 800, color: '#37352F' }}>
-                                        ${idx.currentAvg.toFixed(2)}
-                                        <span style={{ fontSize: 10, fontWeight: 500, color: '#9B9A97', marginLeft: 4 }}>/{idx.unit}</span>
-                                    </div>
-                                    <div style={{ fontSize: 10, fontWeight: 700, color: trendColor, marginTop: 4 }}>
-                                        {idx.changePercent > 0 ? '+' : ''}{idx.changePercent}% vs last quarter
-                                    </div>
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                                        <span style={{ fontSize: 9, color: '#9B9A97' }}>Material: ${idx.breakdown.materialAvg}</span>
-                                        <span style={{ fontSize: 9, color: '#9B9A97' }}>Labour: ${idx.breakdown.labourAvg}</span>
-                                    </div>
-                                    <div style={{ fontSize: 9, color: '#D4D3D0', marginTop: 4 }}>{idx.sampleSize} data points · {idx.confidence} confidence</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                {/* Labour Benchmarks */}
-                <section style={{ marginBottom: 24 }}>
-                    <h2 style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>Labour Rate Benchmarks</h2>
-                    <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-                            <thead>
-                                <tr style={{ borderBottom: '1px solid #E9E9E7' }}>
-                                    {['Trade', 'Unit', 'Min', 'Avg', 'Max', 'Notes'].map(h => (
-                                        <th key={h} style={{ padding: '10px 16px', textAlign: h === 'Notes' || h === 'Trade' || h === 'Unit' ? 'left' : 'right', fontSize: 10, fontWeight: 600, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {LABOUR_BENCHMARKS.map((lb) => (
-                                    <tr key={lb.trade} style={{ borderBottom: '1px solid #F5F5F4' }}>
-                                        <td style={{ padding: '10px 16px', fontWeight: 600, color: '#37352F' }}>{lb.trade}</td>
-                                        <td style={{ padding: '10px 16px', color: '#6B6A67' }}>{lb.unit}</td>
-                                        <td style={{ padding: '10px 16px', textAlign: 'right', color: '#9B9A97' }}>${lb.rateMin.toFixed(2)}</td>
-                                        <td style={{ padding: '10px 16px', textAlign: 'right', fontWeight: 700, color: '#37352F' }}>${lb.rateAvg.toFixed(2)}</td>
-                                        <td style={{ padding: '10px 16px', textAlign: 'right', color: '#9B9A97' }}>${lb.rateMax.toFixed(2)}</td>
-                                        <td style={{ padding: '10px 16px', fontSize: 11, color: '#9B9A97' }}>{lb.notes}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                {/* Material Catalog */}
-                <section>
-                    <h2 style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>Material Catalog</h2>
-
-                    {/* Category Tabs */}
-                    <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
-                        {[{ key: 'all', label: 'All' }, { key: 'paint', label: 'Paint' }, { key: 'tile', label: 'Tile' }, { key: 'electrical', label: 'Electrical' }, { key: 'lighting', label: 'Lighting' }, { key: 'plumbing', label: 'Plumbing' }, { key: 'laminate', label: 'Laminate' }, { key: 'hardware', label: 'Hardware' }, { key: 'countertop', label: 'Countertop' }, { key: 'glass', label: 'Glass' }, { key: 'flooring', label: 'Flooring' }, { key: 'adhesive', label: 'Adhesive & Grout' }, { key: 'aircon', label: 'Aircon' }, { key: 'curtain', label: 'Curtain' }, { key: 'wallpaper', label: 'Wallpaper' }, { key: 'furniture', label: 'Furniture' }, { key: 'fixture', label: 'Fixture' }, { key: 'decor', label: 'Decor' }, { key: 'appliance', label: 'Appliance' }].map(cat => (
-                            <button
-                                key={cat.key}
-                                onClick={() => setMaterialFilter(cat.key)}
-                                style={{
-                                    padding: '6px 14px', fontSize: 11, fontWeight: materialFilter === cat.key ? 700 : 500,
-                                    border: '1px solid #E9E9E7', borderRadius: 6, cursor: 'pointer', fontFamily: f,
-                                    background: materialFilter === cat.key ? '#37352F' : 'white',
-                                    color: materialFilter === cat.key ? 'white' : '#6B6A67',
-                                    transition: 'all 0.15s',
-                                }}
-                            >
-                                {cat.label}
-                                <span style={{ fontSize: 9, marginLeft: 4, opacity: 0.6 }}>
-                                    {cat.key === 'all' ? MATERIAL_CATALOG.length : MATERIAL_CATALOG.filter(m => m.category === cat.key).length}
-                                </span>
-                            </button>
-                        ))}
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                        {MATERIAL_CATALOG.filter(mat => materialFilter === 'all' || mat.category === materialFilter).map((mat) => (
-                            <div key={mat.id} style={{
-                                background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 16,
-                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                cursor: 'pointer', transition: 'border-color 0.15s',
-                            }}
-                                onMouseEnter={e => (e.currentTarget.style.borderColor = '#37352F')}
-                                onMouseLeave={e => (e.currentTarget.style.borderColor = '#E9E9E7')}
-                            >
+                        {/* No-Show Alert */}
+                        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <span style={{ fontSize: 16 }}>🚨</span>
                                 <div>
-                                    <div style={{ fontSize: 13, fontWeight: 600, color: '#37352F' }}>{mat.name}</div>
-                                    <div style={{ fontSize: 10, color: '#9B9A97' }}>{mat.brand} · {mat.category}</div>
+                                    <p style={{ fontSize: 11, fontWeight: 700, color: '#DC2626', margin: 0 }}>Vendor No-Show Alert</p>
+                                    <p style={{ fontSize: 10, color: '#EF4444', margin: '2px 0 0' }}>CoolAir SG (CA-001) — Xiao Ming did not check in for trunking installation</p>
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                                <button style={{ fontSize: 10, padding: '5px 12px', background: 'white', border: '1px solid #FECACA', color: '#DC2626', borderRadius: 6, fontWeight: 600, cursor: 'pointer' }}>Call Vendor</button>
+                                <button style={{ fontSize: 10, padding: '5px 12px', background: '#DC2626', border: 'none', color: 'white', borderRadius: 6, fontWeight: 600, cursor: 'pointer' }}>Dispatch Backup</button>
+                            </div>
+                        </div>
+
+                        {/* Quick Stats */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 10, marginBottom: 16 }}>
+                            {[
+                                { label: 'On Site Now', value: '2', color: '#22C55E', bg: '#F0FDF4' },
+                                { label: 'En Route', value: '1', color: '#3B82F6', bg: '#EFF6FF' },
+                                { label: 'Completed', value: '1', color: '#6B6A67', bg: '#F7F6F3' },
+                                { label: 'No Shows', value: '1', color: '#DC2626', bg: '#FEF2F2' },
+                                { label: 'Open Defects', value: '1', color: '#F59E0B', bg: '#FEF9C3' },
+                                { label: 'Delayed', value: '1', color: '#DC2626', bg: '#FEF2F2' },
+                            ].map(s => (
+                                <div key={s.label} style={{ background: s.bg, borderRadius: 10, padding: 14, border: '1px solid #E9E9E7' }}>
+                                    <div style={{ fontSize: 9, color: '#9B9A97', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>{s.label}</div>
+                                    <div style={{ fontSize: 22, fontWeight: 900, color: s.color }}>{s.value}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16 }}>
+                            {/* Today's Crew */}
+                            <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                                    <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: 0 }}>Today&apos;s Crew</h3>
+                                    <span style={{ fontSize: 10, color: '#9B9A97' }}>{new Date().toLocaleDateString('en-SG', { weekday: 'long', day: 'numeric', month: 'short' })}</span>
+                                </div>
+                                {[
+                                    { name: 'Ah Kow', trade: 'Tiler', vendor: 'WW-001', status: 'on-site', checkIn: '8:15 AM', task: 'Kitchen floor tiling (600×600)', location: 'Kitchen' },
+                                    { name: 'Raju', trade: 'Tiler Helper', vendor: 'WW-001', status: 'on-site', checkIn: '8:20 AM', task: 'Cutting & grouting support', location: 'Kitchen' },
+                                    { name: 'Ah Beng', trade: 'Plumber', vendor: 'PM-001', status: 'en-route', checkIn: '', task: 'Basin rough-in for master bath', location: 'Master Bath' },
+                                    { name: 'Kumar', trade: 'Electrician', vendor: 'ST-001', status: 'completed', checkIn: '7:30 AM → 11:45 AM', task: 'DB box wiring + point marking', location: 'Whole Unit' },
+                                    { name: 'Xiao Ming', trade: 'Aircon', vendor: 'CA-001', status: 'no-show', checkIn: '', task: 'Trunking installation', location: 'MBR + Living' },
+                                ].map((crew, i) => (
+                                    <div key={i} style={{
+                                        display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderRadius: 8, marginBottom: 6,
+                                        background: crew.status === 'no-show' ? '#FEF2F2' : '#FAFAF9',
+                                        border: `1px solid ${crew.status === 'no-show' ? '#FECACA' : '#F3F3F2'}`,
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                            <div style={{
+                                                width: 8, height: 8, borderRadius: '50%',
+                                                background: crew.status === 'on-site' ? '#22C55E' : crew.status === 'en-route' ? '#3B82F6' : crew.status === 'completed' ? '#9B9A97' : '#EF4444',
+                                            }} />
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                    <span style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>{crew.name}</span>
+                                                    <span style={{ fontSize: 8, padding: '1px 5px', background: '#F7F6F3', color: '#6B6A67', borderRadius: 3, fontWeight: 600 }}>{crew.trade}</span>
+                                                    <span style={{ fontSize: 8, padding: '1px 5px', background: '#FEF9C3', color: '#CA8A04', borderRadius: 3, fontFamily: "'SF Mono', monospace", fontWeight: 700 }}>{crew.vendor}</span>
+                                                </div>
+                                                <span style={{ fontSize: 10, color: '#9B9A97' }}>{crew.task} · 📍 {crew.location}</span>
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                            {crew.checkIn && <span style={{ fontSize: 9, color: '#9B9A97' }}>{crew.checkIn}</span>}
+                                            <span style={{
+                                                fontSize: 8, padding: '2px 8px', borderRadius: 10, fontWeight: 700, textTransform: 'uppercase', color: 'white',
+                                                background: crew.status === 'on-site' ? '#22C55E' : crew.status === 'en-route' ? '#3B82F6' : crew.status === 'completed' ? '#9B9A97' : '#EF4444',
+                                            }}>{crew.status === 'on-site' ? 'ON SITE' : crew.status === 'en-route' ? 'EN ROUTE' : crew.status === 'completed' ? 'DONE' : 'NO SHOW'}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Right: Activity Feed + Quick Actions */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20 }}>
+                                    <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: '0 0 12px' }}>Live Activity</h3>
+                                    {[
+                                        { icon: '📸', text: 'Uploaded 4 photos — Kitchen floor tiling 60%', who: 'Ah Kow', time: '12:30 PM', urgent: false },
+                                        { icon: '👋', text: 'Checked out — DB box wiring complete', who: 'Kumar', time: '11:45 AM', urgent: false },
+                                        { icon: '⚠️', text: 'Tile lippage at entrance >2mm', who: 'You', time: '11:20 AM', urgent: true },
+                                        { icon: '📦', text: 'Bosch Dishwasher delivery confirmed for tomorrow', who: 'System', time: '10:00 AM', urgent: false },
+                                        { icon: '💬', text: 'Can we change grout to dark grey?', who: 'Mrs Tan', time: '9:30 AM', urgent: false },
+                                        { icon: '✅', text: 'Checked in — GPS verified', who: 'Raju', time: '8:20 AM', urgent: false },
+                                    ].map((a, i) => (
+                                        <div key={i} style={{ display: 'flex', gap: 8, padding: '6px 0', borderBottom: i < 5 ? '1px solid #F5F5F3' : 'none' }}>
+                                            <span style={{ fontSize: 13, flexShrink: 0 }}>{a.icon}</span>
+                                            <div>
+                                                <p style={{ fontSize: 10, color: a.urgent ? '#DC2626' : '#37352F', fontWeight: a.urgent ? 600 : 400, margin: 0 }}>{a.text}</p>
+                                                <p style={{ fontSize: 9, color: '#9B9A97', margin: '1px 0 0' }}>{a.who} · {a.time}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20 }}>
+                                    <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: '0 0 10px' }}>Quick Actions</h3>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                                        {[
+                                            { label: 'Flag Defect', icon: '⚠️', bg: '#FEF9C3', color: '#CA8A04' },
+                                            { label: 'Approve Work', icon: '✅', bg: '#F0FDF4', color: '#22C55E' },
+                                            { label: 'Call Vendor', icon: '📞', bg: '#EFF6FF', color: '#3B82F6' },
+                                            { label: 'Message Client', icon: '💬', bg: '#F5F3FF', color: '#8B5CF6' },
+                                            { label: 'Upload Photos', icon: '📸', bg: '#F7F6F3', color: '#6B6A67' },
+                                            { label: 'Add VO', icon: '📝', bg: '#EEF2FF', color: '#6366F1' },
+                                        ].map(a => (
+                                            <button key={a.label} style={{
+                                                display: 'flex', alignItems: 'center', gap: 6, padding: '8px 10px', borderRadius: 8,
+                                                border: '1px solid #E9E9E7', background: a.bg, fontSize: 10, fontWeight: 600,
+                                                color: a.color, cursor: 'pointer', fontFamily: f,
+                                            }}>
+                                                <span>{a.icon}</span> {a.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== DELIVERIES VIEW ===== */}
+                {dispatchView === 'deliveries' && (
+                    <div style={{ background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 20 }}>
+                        <div style={{ marginBottom: 16 }}>
+                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#37352F', margin: 0 }}>Delivery Coordination</h3>
+                            <p style={{ fontSize: 10, color: '#9B9A97', margin: '4px 0 0' }}>Site deliveries + client purchases requiring coordination</p>
+                        </div>
+                        {[
+                            { item: 'Bosch Dishwasher SMS2HVI72E', from: 'Lazada', eta: 'Tomorrow 2-5 PM', status: 'arriving-today', client: true, location: 'Kitchen', dims: '600×600×845mm' },
+                            { item: 'Niro Granite Tiles 600×600 (Kitchen)', from: 'Hafary', eta: 'Today (delivered)', status: 'arriving-today', client: false, location: 'Kitchen' },
+                            { item: 'Fanco Ceiling Fan', from: 'Taobao via ezbuy', eta: 'Feb 25', status: 'arriving-this-week', client: true, location: 'Master Bedroom' },
+                            { item: 'Castlery Sofa (L-Shape)', from: 'Castlery.com', eta: 'Mar 1 (post-handover)', status: 'arriving-this-week', client: true, location: 'Living Room', dims: '2700×1800×850mm' },
+                            { item: 'Aircon units ×3', from: 'CoolAir SG', eta: 'Delayed — vendor no-show', status: 'delayed', client: false, location: 'MBR + BR2 + Living' },
+                        ].map((d, i) => (
+                            <div key={i} style={{
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderRadius: 8, marginBottom: 6,
+                                background: d.status === 'delayed' ? '#FEF2F2' : d.status === 'arriving-today' ? '#FEF9C3' : '#FAFAF9',
+                                border: `1px solid ${d.status === 'delayed' ? '#FECACA' : d.status === 'arriving-today' ? '#FDE68A' : '#F3F3F2'}`,
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <div style={{
+                                        width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+                                        background: d.status === 'delayed' ? '#FEE2E2' : d.status === 'arriving-today' ? '#FEF3C7' : '#DBEAFE',
+                                    }}>
+                                        {d.status === 'delayed' ? '⚠️' : '📦'}
+                                    </div>
+                                    <div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                            <span style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>{d.item}</span>
+                                            {d.client && <span style={{ fontSize: 7, padding: '1px 5px', background: '#F5F3FF', color: '#8B5CF6', borderRadius: 10, fontWeight: 700, textTransform: 'uppercase' }}>Client Purchase</span>}
+                                        </div>
+                                        <div style={{ display: 'flex', gap: 10, marginTop: 2 }}>
+                                            <span style={{ fontSize: 10, color: '#9B9A97' }}>from {d.from}</span>
+                                            <span style={{ fontSize: 10, color: '#9B9A97' }}>📍 {d.location}</span>
+                                            {d.dims && <span style={{ fontSize: 10, color: '#9B9A97' }}>📐 {d.dims}</span>}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div style={{ textAlign: 'right' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 800, color: '#37352F' }}>${mat.pricePerUnit.toFixed(2)}</div>
-                                    <div style={{ fontSize: 9, color: '#9B9A97' }}>per {mat.unit}</div>
+                                    <div style={{ fontSize: 11, fontWeight: 600, color: d.status === 'delayed' ? '#DC2626' : d.status === 'arriving-today' ? '#CA8A04' : '#37352F' }}>{d.eta}</div>
+                                    <span style={{
+                                        fontSize: 8, fontWeight: 700, padding: '2px 8px', borderRadius: 10, textTransform: 'uppercase',
+                                        background: d.status === 'delayed' ? '#FEE2E2' : d.status === 'arriving-today' ? '#FEF3C7' : '#DBEAFE',
+                                        color: d.status === 'delayed' ? '#DC2626' : d.status === 'arriving-today' ? '#CA8A04' : '#3B82F6',
+                                    }}>{d.status === 'delayed' ? 'DELAYED' : d.status === 'arriving-today' ? 'TODAY/TOMORROW' : 'THIS WEEK'}</span>
                                 </div>
                             </div>
                         ))}
-                        {MATERIAL_CATALOG.filter(mat => materialFilter === 'all' || mat.category === materialFilter).length === 0 && (
-                            <div style={{ gridColumn: '1 / -1', padding: 24, textAlign: 'center', color: '#D4D3D0', fontSize: 12 }}>
-                                No materials in this category yet
-                            </div>
-                        )}
+
+                        <div style={{ background: '#EFF6FF', borderRadius: 8, padding: 12, marginTop: 14, fontSize: 10, color: '#3B82F6' }}>
+                            <strong>Synced from client&apos;s My Purchases:</strong> Items marked &quot;Client Purchase&quot; were added by the homeowner. Dimensions auto-loaded for equipment layout planning.
+                        </div>
                     </div>
-                </section>
+                )}
+
             </div>
+
+            {/* Rating Modal */}
+            <RatingModal
+                isOpen={!!ratingTarget}
+                onClose={() => setRatingTarget(null)}
+                onSubmit={(data) => { console.log('Rating submitted:', data); setRatingTarget(null); }}
+                targetName={ratingTarget?.name || ''}
+                targetRole={ratingTarget?.trade || ''}
+                projectName={ratingTarget?.project}
+                criteria={CRITERIA.designerRatesContractor}
+            />
         </div>
     );
 }

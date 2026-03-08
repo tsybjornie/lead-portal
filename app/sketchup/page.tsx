@@ -100,11 +100,11 @@ export default function SketchUpPage() {
                 {uploaded && (
                     <div style={{ display: 'flex', gap: 4, marginBottom: 28, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
                         {[
-                            { id: 'upload', label: '📁 Upload' },
-                            { id: 'boq', label: '📋 Auto-BOQ' },
-                            { id: 'materials', label: '🧱 Materials' },
-                            { id: 'viewer', label: '🏠 3D Viewer' },
-                            { id: 'versions', label: '📌 Versions' },
+                            { id: 'upload', label: 'Upload' },
+                            { id: 'boq', label: 'Auto-BOQ' },
+                            { id: 'materials', label: 'Materials' },
+                            { id: 'viewer', label: '3D Viewer' },
+                            { id: 'versions', label: 'Versions' },
                         ].map(t => (
                             <button key={t.id} onClick={() => setTab(t.id as typeof tab)} className={tab === t.id ? 'tab-active' : ''} style={{
                                 padding: '10px 18px', fontSize: 12, fontWeight: 400, color: 'rgba(0,0,0,0.35)',
@@ -132,7 +132,9 @@ export default function SketchUpPage() {
                                 }}
                             >
                                 <input ref={fileInputRef} type="file" accept=".skp,.ifc,.obj,.fbx" style={{ display: 'none' }} onChange={handleUpload} />
-                                <div style={{ fontSize: 48, marginBottom: 16 }}>📐</div>
+                                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(0,0,0,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                                </div>
                                 <h2 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 8px' }}>Drop your SketchUp file here</h2>
                                 <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.35)', margin: '0 0 20px' }}>
                                     Supports .skp, .ifc, .obj, .fbx — up to 100MB
@@ -143,13 +145,13 @@ export default function SketchUpPage() {
                                 }}>Browse Files</button>
                                 <div style={{ marginTop: 24, display: 'flex', gap: 20, justifyContent: 'center' }}>
                                     {[
-                                        { icon: '📋', label: 'Auto-extract BOQ' },
-                                        { icon: '🧱', label: 'Map materials' },
-                                        { icon: '💰', label: 'Generate pricing' },
-                                        { icon: '🏠', label: '3D client view' },
+                                        { icon: '', label: 'Auto-extract BOQ' },
+                                        { icon: '', label: 'Map materials' },
+                                        { icon: '', label: 'Generate pricing' },
+                                        { icon: '', label: '3D client view' },
                                     ].map(f => (
                                         <div key={f.label} style={{ fontSize: 10, color: 'rgba(0,0,0,0.25)' }}>
-                                            <span style={{ marginRight: 4 }}>{f.icon}</span>{f.label}
+                                            {f.label}
                                         </div>
                                     ))}
                                 </div>
@@ -158,7 +160,9 @@ export default function SketchUpPage() {
 
                         {parsing && (
                             <div style={{ background: 'white', borderRadius: 16, padding: '60px 40px', textAlign: 'center', border: '1px solid rgba(37,99,235,0.1)' }}>
-                                <div style={{ fontSize: 48, marginBottom: 16, animation: 'pulse 1.5s infinite' }}>🔍</div>
+                                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, animation: 'pulse 1.5s infinite' }}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                                </div>
                                 <h2 style={{ fontSize: 18, fontWeight: 600, margin: '0 0 8px' }}>Parsing SketchUp Model...</h2>
                                 <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.35)', margin: '0 0 24px' }}>Extracting geometry, materials, and measurements</p>
                                 <div style={{ maxWidth: 300, margin: '0 auto' }}>
@@ -174,7 +178,7 @@ export default function SketchUpPage() {
                         {uploaded && (
                             <div style={{ background: 'white', borderRadius: 16, padding: 24, border: '1px solid rgba(5,150,105,0.1)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                                    <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(5,150,105,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>✅</div>
+                                    <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(5,150,105,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, color: '#059669' }}>✓</div>
                                     <div style={{ flex: 1 }}>
                                         <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>Sarah_Tan_4Room_BTO_V3.skp</div>
                                         <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.35)' }}>24.6 MB · Uploaded 7 Mar 2026 · 12 BOQ items extracted · 6 materials mapped</div>
@@ -241,7 +245,7 @@ export default function SketchUpPage() {
                         </div>
 
                         <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(37,99,235,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            💡 <span>Confidence scores show AI certainty on each extraction. Items below 85% should be manually verified. Click <strong>"Export to Numbers"</strong> to push this BOQ directly into your quote builder.</span>
+                            Confidence scores show AI certainty on each extraction. Items below 85% should be manually verified. Click <strong>"Export to Numbers"</strong> to push this BOQ directly into your quote builder.
                         </div>
                     </div>
                 )}
@@ -282,10 +286,10 @@ export default function SketchUpPage() {
                         </div>
                         <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
                             <div style={{ flex: 1, padding: '12px 14px', background: 'rgba(5,150,105,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.4)' }}>
-                                ✅ <strong>5/6 materials auto-matched</strong> to Roof's vendor database with live pricing
+                                <strong>5/6 materials auto-matched</strong> to Roof's vendor database with live pricing
                             </div>
                             <div style={{ flex: 1, padding: '12px 14px', background: 'rgba(220,38,38,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.4)' }}>
-                                ⚠️ <strong>1 material needs manual mapping</strong> — click to search Roof's material library
+                                <strong>1 material needs manual mapping</strong> — click to search Roof's material library
                             </div>
                         </div>
                     </div>
@@ -364,7 +368,7 @@ export default function SketchUpPage() {
                             </div>
                         </div>
                         <div style={{ marginTop: 12, padding: '10px 14px', background: 'rgba(0,0,0,0.02)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
-                            🏠 In production, this renders the full 3D SketchUp model via Three.js. Homeowners get a shareable link. Supports Plan, Elevation, Isometric, and Perspective views.
+                            In production, this renders the full 3D SketchUp model via Three.js. Homeowners get a shareable link. Supports Plan, Elevation, Isometric, and Perspective views.
                         </div>
                     </div>
                 )}
@@ -411,7 +415,7 @@ export default function SketchUpPage() {
                             ))}
                         </div>
                         <div style={{ marginTop: 16, padding: '12px 14px', background: 'rgba(0,0,0,0.02)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.3)' }}>
-                            📌 Every upload creates a version. Clients see the approval status on their dashboard. BOQ auto-updates when a new version is extracted.
+                            Every upload creates a version. Clients see the approval status on their dashboard. BOQ auto-updates when a new version is extracted.
                         </div>
                     </div>
                 )}

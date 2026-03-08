@@ -385,7 +385,7 @@ export default function VendorDashboardPage() {
                         {WORKERS.some(w => w.kitStatus === 'missing') && (
                             <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: 10, padding: '12px 20px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                    <span style={{ fontSize: 18 }}>⚠️</span>
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: '#D97706' }}>!</span>
                                     <div>
                                         <div style={{ fontSize: 13, fontWeight: 700, color: '#92400E' }}>Kit Incomplete</div>
                                         <div style={{ fontSize: 11, color: '#78350F' }}>{WORKERS.filter(w => w.kitStatus === 'missing').map(w => `${w.name}: ${w.missingItems.join(', ')}`).join(' | ')}</div>
@@ -420,10 +420,10 @@ export default function VendorDashboardPage() {
                                             {w.status.replace('-', ' ')}
                                         </div>
                                         {w.currentProject !== '—' && (
-                                            <div style={{ fontSize: 11, color: '#6B6A67', marginBottom: 4 }}>📍 {w.currentProject}</div>
+                                            <div style={{ fontSize: 11, color: '#6B6A67', marginBottom: 4 }}>{w.currentProject}</div>
                                         )}
                                         {w.checkinTime && (
-                                            <div style={{ fontSize: 10, color: '#9B9A97', fontFamily: "'SF Mono', monospace" }}>⏰ {w.checkinTime}</div>
+                                            <div style={{ fontSize: 10, color: '#9B9A97', fontFamily: "'SF Mono', monospace" }}>{w.checkinTime}</div>
                                         )}
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8, paddingTop: 8, borderTop: '1px solid #F5F5F4' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -565,14 +565,14 @@ export default function VendorDashboardPage() {
                                                 { label: 'Suren — Carpentry', amount: 2400, note: 'S-Pass' },
                                                 { label: 'Babu — Finishing', amount: 2200, note: 'PR' },
                                                 { label: 'Tan Wei — Foreman', amount: 3500, note: 'Local' },
-                                            ], subtotal: 11700, icon: '👷'
+                                            ], subtotal: 11700, icon: ''
                                         },
                                         {
                                             category: 'Workbench & Workshop', items: [
                                                 { label: 'Workshop rental (Mandai)', amount: 2800, note: '800 sqft' },
                                                 { label: 'Power & utilities', amount: 280, note: 'Avg/mth' },
                                                 { label: 'Tool maintenance', amount: 200, note: 'Est' },
-                                            ], subtotal: 3280, icon: '🔧'
+                                            ], subtotal: 3280, icon: ''
                                         },
                                         {
                                             category: 'Insurance & Compliance', items: [
@@ -641,7 +641,7 @@ export default function VendorDashboardPage() {
                                         ))}
                                     </div>
                                     <div style={{ marginTop: 12, padding: '8px 12px', background: '#FFFBEB', borderRadius: 6, display: 'flex', gap: 6, alignItems: 'center' }}>
-                                        <span style={{ fontSize: 12 }}>💡</span>
+                                        <span style={{ fontSize: 10, fontWeight: 700, color: '#2563EB' }}>i</span>
                                         <span style={{ fontSize: 10, color: '#92400E' }}>S-Pass min salary rising to $3,150 from Sep 2026 — budget $750 more/mth</span>
                                     </div>
                                 </div>

@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { DataProvider } from "@/context/DataContext";
 import { RoofAuthProvider } from "@/context/RoofAuthContext";
+import { SubscriptionProvider } from "@/context/SubscriptionContext";
+import { MaterialProvider } from "@/context/MaterialContext";
+import { RoleProvider } from "@/components/RoleContext";
 import AppShell from "@/components/AppShell";
 
 const inter = Inter({
@@ -66,11 +69,17 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased min-h-screen bg-white text-gray-900`}
       >
         <RoofAuthProvider>
-          <DataProvider>
-            <AppShell>
-              {children}
-            </AppShell>
-          </DataProvider>
+          <SubscriptionProvider>
+            <MaterialProvider>
+              <DataProvider>
+                <RoleProvider>
+                  <AppShell>
+                    {children}
+                  </AppShell>
+                </RoleProvider>
+              </DataProvider>
+            </MaterialProvider>
+          </SubscriptionProvider>
         </RoofAuthProvider>
       </body>
     </html>

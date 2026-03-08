@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RoofNav from '@/components/RoofNav';
 
 // =============================================================
 // SITE COMMAND CENTER — The ID's cockpit for active construction
@@ -127,48 +128,43 @@ export default function SiteCommandCenter() {
 
     const activityIcon = (t: SiteActivity['type']) => {
         switch (t) {
-            case 'photo': return '📸';
-            case 'checkin': return '✅';
-            case 'checkout': return '👋';
-            case 'defect': return '⚠️';
-            case 'delivery': return '📦';
+            case 'photo': return 'PH';
+            case 'checkin': return 'IN';
+            case 'checkout': return 'OUT';
+            case 'defect': return '!!';
+            case 'delivery': return 'DL';
             case 'approval': return '✓';
-            case 'message': return '💬';
+            case 'message': return 'MSG';
         }
     };
 
     return (
         <div className="min-h-screen bg-[#FAFAF9]" style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}>
-            {/* Top Bar */}
-            <div className="bg-white border-b border-gray-100 px-8 py-4">
+            <RoofNav />
+
+            {/* Project Info Bar */}
+            <div className="bg-white border-b border-gray-100 px-8 py-3">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <div className="flex items-center gap-4">
-                        <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center text-white font-black text-sm">R</div>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-sm font-bold text-gray-800">Site Command</h1>
-                                <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-bold uppercase">Live</span>
-                            </div>
-                            <p className="text-[10px] text-gray-400">{PROJECT.name} • {PROJECT.address}</p>
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-sm font-bold text-gray-800">Site Command</h2>
+                        <span className="text-[8px] px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-bold uppercase">Live</span>
+                        <span className="text-[10px] text-gray-400">{PROJECT.name} • {PROJECT.address}</span>
                     </div>
                     <div className="flex items-center gap-6">
-                        <div className="text-right">
-                            <p className="text-xs text-gray-400">Progress</p>
-                            <div className="flex items-center gap-2">
-                                <div className="w-24 bg-gray-100 rounded-full h-1.5">
-                                    <div className="bg-gray-900 h-1.5 rounded-full" style={{ width: `${PROJECT.progress}%` }} />
-                                </div>
-                                <span className="text-xs font-bold text-gray-800">{PROJECT.progress}%</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-gray-400">Progress</span>
+                            <div className="w-24 bg-gray-100 rounded-full h-1.5">
+                                <div className="bg-gray-900 h-1.5 rounded-full" style={{ width: `${PROJECT.progress}%` }} />
                             </div>
+                            <span className="text-xs font-bold text-gray-800">{PROJECT.progress}%</span>
                         </div>
                         <div className="text-right">
-                            <p className="text-xs text-gray-400">Handover</p>
-                            <p className="text-xs font-bold text-gray-800">{PROJECT.handoverDate}</p>
+                            <span className="text-[10px] text-gray-400 mr-1">Handover</span>
+                            <span className="text-xs font-bold text-gray-800">{PROJECT.handoverDate}</span>
                         </div>
                         <div className="text-right">
-                            <p className="text-xs text-gray-400">Days Left</p>
-                            <p className="text-sm font-black text-gray-900">{PROJECT.daysRemaining}</p>
+                            <span className="text-[10px] text-gray-400 mr-1">Days Left</span>
+                            <span className="text-sm font-black text-gray-900">{PROJECT.daysRemaining}</span>
                         </div>
                     </div>
                 </div>
@@ -179,7 +175,7 @@ export default function SiteCommandCenter() {
                 {noShows > 0 && (
                     <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-3 mb-5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <span className="text-lg">🚨</span>
+                            <span className="text-[10px] font-black text-red-600">ALERT</span>
                             <div>
                                 <p className="text-xs font-bold text-red-700">Vendor No-Show Alert</p>
                                 <p className="text-[10px] text-red-500">CoolAir SG (CA-001) — Xiao Ming did not check in for trunking installation. Auto-penalty applied to karma score.</p>
@@ -218,7 +214,7 @@ export default function SiteCommandCenter() {
                             className={`px-4 py-2 rounded-md text-xs font-semibold transition-all ${activeTab === tab ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                                 }`}
                         >
-                            {tab === 'overview' ? '👷 Site Overview' : tab === 'checklist' ? '✅ Checklist' : '📦 Deliveries'}
+                            {tab === 'overview' ? 'Site Overview' : tab === 'checklist' ? 'Checklist' : 'Deliveries'}
                         </button>
                     ))}
                 </div>
@@ -245,7 +241,7 @@ export default function SiteCommandCenter() {
                                                         <span className="text-[8px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded font-medium">{crew.trade}</span>
                                                         <span className="text-[8px] px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded font-mono font-medium">{crew.vendorCode}</span>
                                                     </div>
-                                                    <p className="text-[10px] text-gray-500 mt-0.5">{crew.task} • 📍 {crew.location}</p>
+                                                    <p className="text-[10px] text-gray-500 mt-0.5">{crew.task} • {crew.location}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
@@ -289,12 +285,12 @@ export default function SiteCommandCenter() {
                                 <h2 className="text-sm font-bold text-gray-800 mb-3">Quick Actions</h2>
                                 <div className="grid grid-cols-2 gap-2">
                                     {[
-                                        { label: 'Flag Defect', icon: '⚠️', color: 'bg-amber-50 text-amber-700 border-amber-200' },
-                                        { label: 'Approve Work', icon: '✅', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-                                        { label: 'Call Vendor', icon: '📞', color: 'bg-blue-50 text-blue-700 border-blue-200' },
-                                        { label: 'Message Client', icon: '💬', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-                                        { label: 'Upload Photos', icon: '📸', color: 'bg-gray-50 text-gray-700 border-gray-200' },
-                                        { label: 'Add VO', icon: '📝', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+                                        { label: 'Flag Defect', icon: '!', color: 'bg-amber-50 text-amber-700 border-amber-200' },
+                                        { label: 'Approve Work', icon: '✓', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+                                        { label: 'Call Vendor', icon: 'TEL', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+                                        { label: 'Message Client', icon: 'MSG', color: 'bg-purple-50 text-purple-700 border-purple-200' },
+                                        { label: 'Upload Photos', icon: '+', color: 'bg-gray-50 text-gray-700 border-gray-200' },
+                                        { label: 'Add VO', icon: 'VO', color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
                                     ].map(action => (
                                         <button key={action.label} className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-[10px] font-semibold transition-all hover:scale-[1.02] ${action.color}`}>
                                             <span>{action.icon}</span>
@@ -324,16 +320,16 @@ export default function SiteCommandCenter() {
                             return (
                                 <div key={phase} className="mb-5">
                                     <h3 className={`text-[10px] font-bold uppercase tracking-wide px-1 mb-2 ${phase === 'Defect' ? 'text-red-500' : 'text-gray-400'
-                                        }`}>{phase === 'Defect' ? '⚠️ Defects' : phase}</h3>
+                                        }`}>{phase === 'Defect' ? 'Defects' : phase}</h3>
                                     <div className="space-y-1.5">
                                         {items.map(item => (
                                             <div key={item.id} className={`flex items-center justify-between p-3 rounded-lg border ${item.status === 'flagged' ? 'border-red-200 bg-red-50/50' : 'border-gray-100'
                                                 }`}>
                                                 <div className="flex items-center gap-3">
                                                     <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${item.status === 'done' ? 'bg-emerald-500 text-white' :
-                                                            item.status === 'in-progress' ? 'bg-blue-100 text-blue-600 border border-blue-300' :
-                                                                item.status === 'flagged' ? 'bg-red-500 text-white' :
-                                                                    'bg-gray-100 text-gray-400 border border-gray-200'
+                                                        item.status === 'in-progress' ? 'bg-blue-100 text-blue-600 border border-blue-300' :
+                                                            item.status === 'flagged' ? 'bg-red-500 text-white' :
+                                                                'bg-gray-100 text-gray-400 border border-gray-200'
                                                         }`}>
                                                         {item.status === 'done' ? '✓' : item.status === 'flagged' ? '!' : ''}
                                                     </div>
@@ -344,12 +340,12 @@ export default function SiteCommandCenter() {
                                                 </div>
                                                 <div className="flex items-center gap-3">
                                                     {item.photos && (
-                                                        <span className="text-[9px] text-gray-400">📸 {item.photos} photos</span>
+                                                        <span className="text-[9px] text-gray-400">{item.photos} photos</span>
                                                     )}
                                                     <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold uppercase ${item.status === 'done' ? 'bg-emerald-50 text-emerald-600' :
-                                                            item.status === 'in-progress' ? 'bg-blue-50 text-blue-600' :
-                                                                item.status === 'flagged' ? 'bg-red-50 text-red-600' :
-                                                                    'bg-gray-50 text-gray-400'
+                                                        item.status === 'in-progress' ? 'bg-blue-50 text-blue-600' :
+                                                            item.status === 'flagged' ? 'bg-red-50 text-red-600' :
+                                                                'bg-gray-50 text-gray-400'
                                                         }`}>{item.status}</span>
                                                 </div>
                                             </div>
@@ -373,14 +369,14 @@ export default function SiteCommandCenter() {
                         <div className="space-y-2">
                             {DELIVERIES.map(d => (
                                 <div key={d.id} className={`flex items-center justify-between p-4 rounded-lg border ${d.status === 'delayed' ? 'border-red-200 bg-red-50/30' :
-                                        d.status === 'arriving-today' ? 'border-amber-200 bg-amber-50/30' :
-                                            'border-gray-100'
+                                    d.status === 'arriving-today' ? 'border-amber-200 bg-amber-50/30' :
+                                        'border-gray-100'
                                     }`}>
                                     <div className="flex items-center gap-3">
                                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg ${d.status === 'delayed' ? 'bg-red-100' :
-                                                d.status === 'arriving-today' ? 'bg-amber-100' : 'bg-blue-100'
+                                            d.status === 'arriving-today' ? 'bg-amber-100' : 'bg-blue-100'
                                             }`}>
-                                            {d.status === 'delayed' ? '⚠️' : '📦'}
+                                            {d.status === 'delayed' ? '!' : 'DL'}
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-2">
@@ -391,18 +387,18 @@ export default function SiteCommandCenter() {
                                             </div>
                                             <div className="flex items-center gap-3 mt-1">
                                                 <span className="text-[10px] text-gray-400">from {d.from}</span>
-                                                <span className="text-[10px] text-gray-400">📍 {d.location}</span>
-                                                {d.dimensions && <span className="text-[10px] text-gray-400">📐 {d.dimensions}</span>}
+                                                <span className="text-[10px] text-gray-400">{d.location}</span>
+                                                {d.dimensions && <span className="text-[10px] text-gray-400">{d.dimensions}</span>}
                                             </div>
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <p className={`text-xs font-semibold ${d.status === 'delayed' ? 'text-red-600' :
-                                                d.status === 'arriving-today' ? 'text-amber-600' : 'text-gray-600'
+                                            d.status === 'arriving-today' ? 'text-amber-600' : 'text-gray-600'
                                             }`}>{d.eta}</p>
                                         <span className={`text-[8px] px-2 py-0.5 rounded-full font-bold uppercase mt-1 inline-block ${d.status === 'delayed' ? 'bg-red-100 text-red-600' :
-                                                d.status === 'arriving-today' ? 'bg-amber-100 text-amber-600' :
-                                                    'bg-blue-100 text-blue-600'
+                                            d.status === 'arriving-today' ? 'bg-amber-100 text-amber-600' :
+                                                'bg-blue-100 text-blue-600'
                                             }`}>
                                             {d.status === 'delayed' ? 'DELAYED' : d.status === 'arriving-today' ? 'TODAY/TOMORROW' : 'THIS WEEK'}
                                         </span>

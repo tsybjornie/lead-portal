@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Search, Filter, Phone, Mail, Clock, Plus, TrendingUp, Users, AlertCircle, FolderPlus } from 'lucide-react';
+import { Search, Filter, Phone, Mail, Clock, Plus, TrendingUp, Users, AlertCircle, FolderPlus, Zap, Eye, MessageCircle, ChevronRight, Flame, Timer, Star, ArrowUpRight } from 'lucide-react';
+import RoofNav from '@/components/RoofNav';
 import { getLeads, createProject } from '@/lib/supabase-data';
 
 type LeadStatus = 'NEW' | 'CONTACTED' | 'SITE_VISIT' | 'QUOTING' | 'NEGOTIATING' | 'WON' | 'LOST';
@@ -20,39 +21,43 @@ interface Lead {
     nextAction: string;
     assignedTo: string;
     commitmentLevel?: 'just_looking' | 'engaged' | 'shortlisted' | 'deciding' | 'committed';
+    score?: number; // 0-100 lead score
+    touchpoints?: number; // how many interactions
+    daysInPipeline?: number;
 }
 
-const STATUS_STYLES: Record<LeadStatus, { bg: string; text: string }> = {
-    NEW: { bg: 'bg-blue-50', text: 'text-blue-700' },
-    CONTACTED: { bg: 'bg-yellow-50', text: 'text-yellow-700' },
-    SITE_VISIT: { bg: 'bg-purple-50', text: 'text-purple-700' },
-    QUOTING: { bg: 'bg-orange-50', text: 'text-orange-700' },
-    NEGOTIATING: { bg: 'bg-indigo-50', text: 'text-indigo-700' },
-    WON: { bg: 'bg-green-50', text: 'text-green-700' },
-    LOST: { bg: 'bg-red-50', text: 'text-red-700' },
+const STATUS_CONFIG: Record<LeadStatus, { bg: string; text: string; glow: string; label: string }> = {
+    NEW: { bg: '#EFF6FF', text: '#2563EB', glow: '#3B82F6', label: 'New Lead' },
+    CONTACTED: { bg: '#FEF9C3', text: '#CA8A04', glow: '#F59E0B', label: 'Contacted' },
+    SITE_VISIT: { bg: '#F5F3FF', text: '#7C3AED', glow: '#8B5CF6', label: 'Site Visit' },
+    QUOTING: { bg: '#FFF7ED', text: '#EA580C', glow: '#F97316', label: 'Quoting' },
+    NEGOTIATING: { bg: '#EEF2FF', text: '#4F46E5', glow: '#6366F1', label: 'Negotiating' },
+    WON: { bg: '#F0FDF4', text: '#16A34A', glow: '#22C55E', label: 'Won' },
+    LOST: { bg: '#FEF2F2', text: '#DC2626', glow: '#EF4444', label: 'Lost' },
 };
 
-const COMMITMENT_DOT: Record<string, string> = {
-    just_looking: 'bg-red-400',
-    engaged: 'bg-orange-400',
-    shortlisted: 'bg-yellow-400',
-    deciding: 'bg-blue-400',
-    committed: 'bg-green-400',
+const HEAT_COLORS: Record<string, { border: string; glow: string; label: string }> = {
+    just_looking: { border: '#94A3B8', glow: 'rgba(148,163,184,0.15)', label: 'Cold' },
+    engaged: { border: '#F59E0B', glow: 'rgba(245,158,11,0.15)', label: 'Warm' },
+    shortlisted: { border: '#F97316', glow: 'rgba(249,115,22,0.15)', label: 'Hot' },
+    deciding: { border: '#EF4444', glow: 'rgba(239,68,68,0.2)', label: 'Very Hot' },
+    committed: { border: '#22C55E', glow: 'rgba(34,197,94,0.2)', label: 'Committed' },
 };
 
 const STAFF_ROSTER = [
-    { id: 'bjorn', name: 'Bjorn', initials: 'BT', color: 'bg-indigo-500' },
-    { id: 'jenny', name: 'Jenny', initials: 'JL', color: 'bg-pink-500' },
-    { id: 'amir', name: 'Amir', initials: 'AR', color: 'bg-teal-500' },
+    { id: 'bjorn', name: 'Bjorn', initials: 'BT', color: '#6366F1' },
+    { id: 'jenny', name: 'Jenny', initials: 'JL', color: '#EC4899' },
+    { id: 'amir', name: 'Amir', initials: 'AR', color: '#14B8A6' },
 ];
 
-const DEMO_LEADS_INIT: Lead[] = [
-    { id: 'L001', name: 'Colleen Tan', phone: '+65 9123 4567', source: 'Instagram', propertyType: 'HDB', location: 'Punggol', budgetRange: '$35k-$50k', status: 'QUOTING', lastContact: '2 hours ago', nextAction: 'Send revised quote', assignedTo: 'Bjorn', commitmentLevel: 'engaged' },
-    { id: 'L002', name: 'Marcus Lee', phone: '+65 8234 5678', source: 'Referral', propertyType: 'Condo', location: 'Bukit Timah', budgetRange: '$80k-$120k', status: 'SITE_VISIT', lastContact: '1 day ago', nextAction: 'Confirm site visit Sat 2pm', assignedTo: 'Jenny', commitmentLevel: 'shortlisted' },
-    { id: 'L003', name: 'Sarah Wong', phone: '+65 9345 6789', source: 'Qanvast', propertyType: 'HDB', location: 'Tampines', budgetRange: '$25k-$35k', status: 'NEW', lastContact: 'Just now', nextAction: 'Call within 15 min', assignedTo: 'Unassigned', commitmentLevel: 'just_looking' },
-    { id: 'L004', name: 'David Chen', phone: '+65 8456 7890', source: 'Walk-in', propertyType: 'Landed', location: 'Siglap', budgetRange: '$150k+', status: 'NEGOTIATING', lastContact: '3 days ago', nextAction: 'Follow up on contract', assignedTo: 'Amir', commitmentLevel: 'deciding' },
-    { id: 'L005', name: 'Amy Lim', phone: '+65 9567 8901', source: 'Facebook', propertyType: 'HDB', location: 'Sengkang', budgetRange: '$30k-$40k', status: 'CONTACTED', lastContact: '5 hours ago', nextAction: 'Send portfolio', assignedTo: 'Bjorn', commitmentLevel: 'just_looking' },
-    { id: 'L006', name: 'Raymond Goh', phone: '+65 8678 9012', source: 'Referral', propertyType: 'Condo', location: 'Novena', budgetRange: '$60k-$80k', status: 'WON', lastContact: '1 week ago', nextAction: 'Start project kickoff', assignedTo: 'Jenny', commitmentLevel: 'committed' },
+const DEMO_LEADS: Lead[] = [
+    { id: 'L001', name: 'Colleen Tan', phone: '+65 9123 4567', source: 'Instagram', propertyType: 'HDB', location: 'Punggol', budgetRange: '$35k–$50k', status: 'QUOTING', lastContact: '2 hours ago', nextAction: 'Send revised quote', assignedTo: 'Bjorn', commitmentLevel: 'engaged', score: 72, touchpoints: 5, daysInPipeline: 14 },
+    { id: 'L002', name: 'Marcus Lee', phone: '+65 8234 5678', source: 'Referral', propertyType: 'Condo', location: 'Bukit Timah', budgetRange: '$80k–$120k', status: 'SITE_VISIT', lastContact: '1 day ago', nextAction: 'Confirm site visit Sat 2pm', assignedTo: 'Jenny', commitmentLevel: 'shortlisted', score: 85, touchpoints: 8, daysInPipeline: 21 },
+    { id: 'L003', name: 'Sarah Wong', phone: '+65 9345 6789', source: 'Qanvast', propertyType: 'HDB', location: 'Tampines', budgetRange: '$25k–$35k', status: 'NEW', lastContact: 'Just now', nextAction: 'Call within 15 min ', assignedTo: 'Unassigned', commitmentLevel: 'just_looking', score: 25, touchpoints: 1, daysInPipeline: 0 },
+    { id: 'L004', name: 'David Chen', phone: '+65 8456 7890', source: 'Walk-in', propertyType: 'Landed', location: 'Siglap', budgetRange: '$150k+', status: 'NEGOTIATING', lastContact: '3 days ago', nextAction: 'Follow up on contract', assignedTo: 'Amir', commitmentLevel: 'deciding', score: 91, touchpoints: 12, daysInPipeline: 35 },
+    { id: 'L005', name: 'Amy Lim', phone: '+65 9567 8901', source: 'Facebook', propertyType: 'HDB', location: 'Sengkang', budgetRange: '$30k–$40k', status: 'CONTACTED', lastContact: '5 hours ago', nextAction: 'Send portfolio', assignedTo: 'Bjorn', commitmentLevel: 'just_looking', score: 35, touchpoints: 2, daysInPipeline: 3 },
+    { id: 'L006', name: 'Raymond Goh', phone: '+65 8678 9012', source: 'Referral', propertyType: 'Condo', location: 'Novena', budgetRange: '$60k–$80k', status: 'WON', lastContact: '1 week ago', nextAction: 'Start project kickoff', assignedTo: 'Jenny', commitmentLevel: 'committed', score: 100, touchpoints: 15, daysInPipeline: 42 },
+    { id: 'L007', name: 'Nicole Teo', phone: '+65 9012 3456', source: 'Carousell', propertyType: 'HDB', location: 'Bedok', budgetRange: '$40k–$55k', status: 'SITE_VISIT', lastContact: '8 hours ago', nextAction: 'Prepare mood board', assignedTo: 'Amir', commitmentLevel: 'engaged', score: 58, touchpoints: 4, daysInPipeline: 10 },
 ];
 
 function timeAgo(dateStr: string): string {
@@ -67,20 +72,32 @@ function timeAgo(dateStr: string): string {
     return `${diffDay}d ago`;
 }
 
+// CSS-only animated styles
+const pulseKeyframes = `
+@keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(0.8); opacity: 0.5; } }
+@keyframes slide-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes score-fill { from { width: 0; } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes glow-pulse { 0%, 100% { box-shadow: 0 0 4px rgba(239,68,68,0.2); } 50% { box-shadow: 0 0 16px rgba(239,68,68,0.4); } }
+`;
+
 export default function FollowUpPage() {
     const [filter, setFilter] = useState<LeadStatus | 'ALL'>('ALL');
     const [staffFilter, setStaffFilter] = useState<string>('ALL');
     const [searchQuery, setSearchQuery] = useState('');
-    const [leads, setLeads] = useState(DEMO_LEADS_INIT);
+    const [leads, setLeads] = useState(DEMO_LEADS);
     const [loadingLeads, setLoadingLeads] = useState(true);
+    const [hoveredLead, setHoveredLead] = useState<string | null>(null);
+    const [expandedLead, setExpandedLead] = useState<string | null>(null);
 
-    // Load real leads from Supabase, merge with demo if needed
+    const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
+
     useEffect(() => {
         async function loadLeads() {
             try {
                 const supaLeads = await getLeads();
                 if (supaLeads.length > 0) {
-                    const mapped: Lead[] = supaLeads.map((sl, i) => ({
+                    const mapped: Lead[] = supaLeads.map((sl) => ({
                         id: sl.id,
                         name: sl.full_name,
                         phone: sl.phone || '',
@@ -90,11 +107,14 @@ export default function FollowUpPage() {
                         budgetRange: sl.budget || 'TBD',
                         status: 'NEW' as LeadStatus,
                         lastContact: timeAgo(sl.created_at),
-                        nextAction: 'Call within 15 min',
+                        nextAction: 'Call within 15 min ',
                         assignedTo: 'Unassigned',
                         commitmentLevel: 'just_looking' as const,
+                        score: 20,
+                        touchpoints: 1,
+                        daysInPipeline: 0,
                     }));
-                    setLeads([...mapped, ...DEMO_LEADS_INIT]);
+                    setLeads([...mapped, ...DEMO_LEADS]);
                 }
             } catch (err) {
                 console.error('Failed to load leads:', err);
@@ -125,176 +145,439 @@ export default function FollowUpPage() {
     const stats = {
         total: leads.length,
         hot: leads.filter(l => ['QUOTING', 'NEGOTIATING'].includes(l.status)).length,
-        cold: leads.filter(l => l.status === 'NEW').length,
+        fresh: leads.filter(l => l.status === 'NEW').length,
         won: leads.filter(l => l.status === 'WON').length,
+        revenue: leads.filter(l => l.status === 'WON').reduce((s) => s + 75000, 0),
+        avgScore: Math.round(leads.reduce((s, l) => s + (l.score || 0), 0) / leads.length),
     };
 
-    return (
-        <div className="min-h-screen bg-[#fafafa]" style={{ fontFamily: "'Inter', sans-serif" }}>
-            {/* Header */}
-            <header className="bg-white border-b border-gray-100 px-8 py-5 flex items-center justify-between sticky top-0 z-30">
-                <div className="flex items-center gap-4">
-                    <Link href="/hub" className="text-[#999] hover:text-[#111] transition-colors">
-                        <ArrowLeft className="w-5 h-5" />
-                    </Link>
-                    <div>
-                        <h1 className="text-xl font-semibold tracking-tight text-[#111]">Follow Up</h1>
-                        <p className="text-[11px] text-[#999] tracking-widest uppercase font-medium">Never lose a lead again</p>
-                    </div>
-                </div>
-                <button className="flex items-center gap-2 bg-[#111] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#333] transition-colors">
-                    <Plus className="w-4 h-4" />
-                    New Lead
-                </button>
-            </header>
+    // Pipeline funnel data
+    const pipeline = [
+        { status: 'NEW' as LeadStatus, count: leads.filter(l => l.status === 'NEW').length },
+        { status: 'CONTACTED' as LeadStatus, count: leads.filter(l => l.status === 'CONTACTED').length },
+        { status: 'SITE_VISIT' as LeadStatus, count: leads.filter(l => l.status === 'SITE_VISIT').length },
+        { status: 'QUOTING' as LeadStatus, count: leads.filter(l => l.status === 'QUOTING').length },
+        { status: 'NEGOTIATING' as LeadStatus, count: leads.filter(l => l.status === 'NEGOTIATING').length },
+        { status: 'WON' as LeadStatus, count: leads.filter(l => l.status === 'WON').length },
+    ];
+    const maxPipeline = Math.max(...pipeline.map(p => p.count), 1);
 
-            {/* Stats Bar */}
-            <div className="px-8 py-4 flex gap-4">
-                {[
-                    { label: 'Total Leads', value: stats.total, icon: Users, color: 'text-[#111]' },
-                    { label: 'Hot', value: stats.hot, icon: TrendingUp, color: 'text-orange-600' },
-                    { label: 'New (Act Fast)', value: stats.cold, icon: AlertCircle, color: 'text-blue-600' },
-                    { label: 'Won', value: stats.won, icon: TrendingUp, color: 'text-green-600' },
-                ].map((stat) => (
-                    <div key={stat.label} className="flex-1 bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-3">
-                        <stat.icon className={`w-5 h-5 ${stat.color}`} />
+    return (
+        <div style={{ fontFamily: f, minHeight: '100vh', background: '#FAFAF9' }}>
+            <style dangerouslySetInnerHTML={{ __html: pulseKeyframes }} />
+            <RoofNav />
+
+            <div style={{ padding: '20px 32px 80px' }}>
+
+                {/* ===== HERO STATS ROW ===== */}
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 16, marginBottom: 20 }}>
+
+                    {/* Left: Big Number + Funnel */}
+                    <div style={{ background: 'white', borderRadius: 14, border: '1px solid #E9E9E7', padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                         <div>
-                            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-                            <div className="text-[10px] font-bold text-[#999] uppercase tracking-widest">{stat.label}</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                <span style={{ fontSize: 14, fontWeight: 800, color: '#37352F' }}>Pipeline</span>
+                                <span style={{ fontSize: 9, padding: '2px 8px', background: '#F0FDF4', color: '#22C55E', borderRadius: 10, fontWeight: 700 }}>LIVE</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                                <span style={{ fontSize: 48, fontWeight: 900, color: '#37352F', lineHeight: 1 }}>{stats.total}</span>
+                                <span style={{ fontSize: 12, color: '#9B9A97', fontWeight: 500 }}>total leads</span>
+                            </div>
+                        </div>
+
+                        {/* Mini Funnel */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 16 }}>
+                            {pipeline.map(p => {
+                                const cfg = STATUS_CONFIG[p.status];
+                                return (
+                                    <div key={p.status} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}
+                                        onClick={() => setFilter(filter === p.status ? 'ALL' : p.status)}>
+                                        <span style={{ fontSize: 10, width: 20, textAlign: 'center', fontWeight: 700, color: cfg.glow }}>{cfg.label.charAt(0)}</span>
+                                        <span style={{ fontSize: 10, color: '#9B9A97', width: 70, fontWeight: 500 }}>{cfg.label}</span>
+                                        <div style={{ flex: 1, height: 6, background: '#F5F5F4', borderRadius: 3, overflow: 'hidden' }}>
+                                            <div style={{
+                                                height: '100%', borderRadius: 3, background: cfg.glow,
+                                                width: `${(p.count / maxPipeline) * 100}%`,
+                                                animation: 'score-fill 0.8s ease-out',
+                                            }} />
+                                        </div>
+                                        <span style={{ fontSize: 14, fontWeight: 800, color: cfg.text, width: 20, textAlign: 'right' }}>{p.count}</span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
-                ))}
-            </div>
 
-            {/* Search + Filter */}
-            <div className="px-8 py-2 flex gap-3">
-                <div className="flex-1 relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ccc]" />
-                    <input
-                        type="text"
-                        placeholder="Search leads..."
-                        className="w-full pl-10 pr-4 py-2.5 bg-white rounded-lg border border-gray-100 text-sm focus:outline-none focus:border-[#111] transition-colors"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                </div>
-                {/* Staff Filter */}
-                <div className="flex gap-1 items-center bg-white rounded-lg border border-gray-100 p-1">
-                    <button
-                        className={`px-2.5 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${staffFilter === 'ALL' ? 'bg-[#111] text-white' : 'text-[#999] hover:text-[#111]'}`}
-                        onClick={() => setStaffFilter('ALL')}
-                    >Team</button>
-                    {STAFF_ROSTER.map(s => (
-                        <button
-                            key={s.id}
-                            className={`w-7 h-7 rounded-full text-[9px] font-bold text-white transition-all ${staffFilter === s.name ? 'ring-2 ring-offset-1 ring-[#111] scale-110' : 'opacity-60 hover:opacity-100'} ${s.color}`}
-                            onClick={() => setStaffFilter(staffFilter === s.name ? 'ALL' : s.name)}
-                            title={s.name}
-                        >{s.initials}</button>
-                    ))}
-                    <button
-                        className={`w-7 h-7 rounded-full text-[9px] font-bold bg-gray-300 text-white transition-all ${staffFilter === 'Unassigned' ? 'ring-2 ring-offset-1 ring-[#111] scale-110' : 'opacity-60 hover:opacity-100'}`}
-                        onClick={() => setStaffFilter(staffFilter === 'Unassigned' ? 'ALL' : 'Unassigned')}
-                        title="Unassigned"
-                    >?</button>
-                </div>
-                {/* Status Filter */}
-                <div className="flex gap-1 bg-white rounded-lg border border-gray-100 p-1">
-                    {(['ALL', 'NEW', 'CONTACTED', 'SITE_VISIT', 'QUOTING', 'WON'] as const).map((s) => (
-                        <button
-                            key={s}
-                            className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${filter === s ? 'bg-[#111] text-white' : 'text-[#999] hover:text-[#111]'}`}
-                            onClick={() => setFilter(s)}
-                        >
-                            {s.replace('_', ' ')}
-                        </button>
-                    ))}
-                </div>
-            </div>
+                    {/* Right: Stats Cards Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+                        {[
+                            { label: 'Hot Leads', value: stats.hot, sub: 'Quoting + Negotiating', icon: '', color: '#EA580C', bg: 'linear-gradient(135deg, #FFF7ED, #FEF3C7)' },
+                            { label: 'Fresh Today', value: stats.fresh, sub: 'Act within 15 min', icon: '', color: '#2563EB', bg: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)' },
+                            { label: 'Won', value: stats.won, sub: `~$${(stats.revenue / 1000).toFixed(0)}k revenue`, icon: '', color: '#16A34A', bg: 'linear-gradient(135deg, #F0FDF4, #DCFCE7)' },
+                            { label: 'Lead Score', value: stats.avgScore, sub: 'Avg across pipeline', icon: '', color: '#7C3AED', bg: 'linear-gradient(135deg, #F5F3FF, #EDE9FE)' },
+                        ].map(s => (
+                            <div key={s.label} style={{
+                                background: s.bg, borderRadius: 14, padding: 16, border: '1px solid rgba(0,0,0,0.04)',
+                                display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 120,
+                                cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
+                            }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                            >
+                                <span style={{ fontSize: 24 }}>{s.icon}</span>
+                                <div>
+                                    <div style={{ fontSize: 32, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.value}</div>
+                                    <div style={{ fontSize: 10, fontWeight: 700, color: s.color, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{s.label}</div>
+                                    <div style={{ fontSize: 9, color: '#9B9A97', marginTop: 2 }}>{s.sub}</div>
+                                </div>
+                            </div>
+                        ))}
 
-            {/* Lead List */}
-            <div className="px-8 py-4 space-y-2">
-                {filtered.map((lead) => (
-                    <div key={lead.id} className="bg-white rounded-xl border border-gray-100 p-4 hover:border-[#111]/20 transition-all cursor-pointer group">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                {/* Staff Avatar (clickable to reassign) */}
-                                {(() => {
-                                    const staff = STAFF_ROSTER.find(s => s.name === lead.assignedTo);
-                                    return (
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); reassignLead(lead.id); }}
-                                            className={`w-8 h-8 rounded-full text-[10px] font-bold text-white flex items-center justify-center shrink-0 transition-all hover:scale-110 hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 ${staff?.color || 'bg-gray-300'}`}
-                                            title={`Assigned to: ${lead.assignedTo} (click to reassign)`}
-                                        >
+                        {/* Conversion Rate */}
+                        {[
+                            { label: 'Win Rate', value: `${stats.total > 0 ? Math.round((stats.won / stats.total) * 100) : 0}%`, sub: `${stats.won} of ${stats.total} converted`, icon: '', color: '#0EA5E9', bg: 'linear-gradient(135deg, #F0F9FF, #E0F2FE)' },
+                            { label: 'Avg Days', value: Math.round(leads.reduce((s, l) => s + (l.daysInPipeline || 0), 0) / leads.length), sub: 'Time to close', icon: '', color: '#6B6A67', bg: 'linear-gradient(135deg, #FAFAF9, #F5F5F4)' },
+                            { label: 'Touchpoints', value: Math.round(leads.reduce((s, l) => s + (l.touchpoints || 0), 0) / leads.length), sub: 'Avg per lead', icon: '', color: '#EC4899', bg: 'linear-gradient(135deg, #FDF2F8, #FCE7F3)' },
+                            { label: 'Unassigned', value: leads.filter(l => l.assignedTo === 'Unassigned').length, sub: 'Needs attention', icon: '', color: '#DC2626', bg: leads.filter(l => l.assignedTo === 'Unassigned').length > 0 ? 'linear-gradient(135deg, #FEF2F2, #FEE2E2)' : 'linear-gradient(135deg, #F0FDF4, #DCFCE7)' },
+                        ].map(s => (
+                            <div key={s.label} style={{
+                                background: s.bg, borderRadius: 14, padding: 16, border: '1px solid rgba(0,0,0,0.04)',
+                                display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 120,
+                                cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
+                            }}
+                                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.08)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                            >
+                                <span style={{ fontSize: 24 }}>{s.icon}</span>
+                                <div>
+                                    <div style={{ fontSize: 32, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.value}</div>
+                                    <div style={{ fontSize: 10, fontWeight: 700, color: s.color, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 }}>{s.label}</div>
+                                    <div style={{ fontSize: 9, color: '#9B9A97', marginTop: 2 }}>{s.sub}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* ===== FILTERS BAR ===== */}
+                <div style={{ display: 'flex', gap: 10, marginBottom: 16, alignItems: 'center' }}>
+                    {/* Search */}
+                    <div style={{ flex: 1, position: 'relative' }}>
+                        <Search style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', width: 14, height: 14, color: '#D4D3D0' }} />
+                        <input
+                            type="text"
+                            placeholder="Search leads by name..."
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            style={{
+                                width: '100%', padding: '10px 12px 10px 36px', fontSize: 12, border: '1px solid #E9E9E7',
+                                borderRadius: 10, fontFamily: f, outline: 'none', background: 'white', boxSizing: 'border-box',
+                            }}
+                        />
+                    </div>
+
+                    {/* Team Avatars */}
+                    <div style={{ display: 'flex', gap: 4, alignItems: 'center', background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: '4px 8px' }}>
+                        <button onClick={() => setStaffFilter('ALL')} style={{
+                            padding: '4px 10px', fontSize: 9, fontWeight: 700, borderRadius: 6, border: 'none', cursor: 'pointer',
+                            background: staffFilter === 'ALL' ? '#37352F' : 'transparent', color: staffFilter === 'ALL' ? 'white' : '#9B9A97',
+                            fontFamily: f, textTransform: 'uppercase', letterSpacing: '0.06em',
+                        }}>Team</button>
+                        {STAFF_ROSTER.map(s => (
+                            <button key={s.id} onClick={() => setStaffFilter(staffFilter === s.name ? 'ALL' : s.name)} style={{
+                                width: 28, height: 28, borderRadius: '50%', border: staffFilter === s.name ? `2px solid ${s.color}` : '2px solid transparent',
+                                background: s.color, color: 'white', fontSize: 8, fontWeight: 800, cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                opacity: staffFilter !== 'ALL' && staffFilter !== s.name ? 0.35 : 1,
+                                transition: 'all 0.2s', transform: staffFilter === s.name ? 'scale(1.15)' : 'scale(1)',
+                            }}>{s.initials}</button>
+                        ))}
+                        <button onClick={() => setStaffFilter(staffFilter === 'Unassigned' ? 'ALL' : 'Unassigned')} style={{
+                            width: 28, height: 28, borderRadius: '50%', border: staffFilter === 'Unassigned' ? '2px solid #DC2626' : '2px solid transparent',
+                            background: '#D4D3D0', color: 'white', fontSize: 10, fontWeight: 800, cursor: 'pointer',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            opacity: staffFilter !== 'ALL' && staffFilter !== 'Unassigned' ? 0.35 : 1,
+                            transition: 'all 0.2s',
+                        }}>?</button>
+                    </div>
+
+                    {/* Status Filters */}
+                    <div style={{ display: 'flex', gap: 2, background: 'white', borderRadius: 10, border: '1px solid #E9E9E7', padding: 3 }}>
+                        {(['ALL', 'NEW', 'CONTACTED', 'SITE_VISIT', 'QUOTING', 'NEGOTIATING', 'WON'] as const).map(s => {
+                            const cfg = s !== 'ALL' ? STATUS_CONFIG[s] : null;
+                            return (
+                                <button key={s} onClick={() => setFilter(s)} style={{
+                                    padding: '6px 12px', fontSize: 10, fontWeight: 600, borderRadius: 7,
+                                    border: 'none', cursor: 'pointer', fontFamily: f,
+                                    background: filter === s ? (cfg?.bg || '#37352F') : 'transparent',
+                                    color: filter === s ? (cfg?.text || 'white') : '#9B9A97',
+                                    transition: 'all 0.15s',
+                                }}>
+                                    {s === 'ALL' ? 'All' : s.replace('_', ' ')}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* ===== LEAD CARDS ===== */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {filtered.map((lead, idx) => {
+                        const statusCfg = STATUS_CONFIG[lead.status];
+                        const heatCfg = HEAT_COLORS[lead.commitmentLevel || 'just_looking'];
+                        const staff = STAFF_ROSTER.find(s => s.name === lead.assignedTo);
+                        const isHovered = hoveredLead === lead.id;
+                        const isExpanded = expandedLead === lead.id;
+                        const isUrgent = lead.status === 'NEW' || (lead.commitmentLevel === 'deciding');
+                        const score = lead.score || 0;
+
+                        return (
+                            <div key={lead.id}
+                                onMouseEnter={() => setHoveredLead(lead.id)}
+                                onMouseLeave={() => setHoveredLead(null)}
+                                onClick={() => setExpandedLead(isExpanded ? null : lead.id)}
+                                style={{
+                                    background: 'white', borderRadius: 14, padding: '0',
+                                    border: `1px solid ${isHovered ? statusCfg.glow : '#E9E9E7'}`,
+                                    borderLeft: `4px solid ${heatCfg.border}`,
+                                    boxShadow: isHovered ? `0 8px 32px ${heatCfg.glow}, 0 2px 8px rgba(0,0,0,0.04)` : '0 1px 3px rgba(0,0,0,0.02)',
+                                    cursor: 'pointer', transition: 'all 0.2s ease',
+                                    transform: isHovered ? 'translateY(-1px)' : 'none',
+                                    animation: `slide-in 0.3s ease ${idx * 0.05}s both`,
+                                    overflow: 'hidden',
+                                }}>
+
+                                {/* Main Row */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                                        {/* Staff Avatar */}
+                                        <button onClick={e => { e.stopPropagation(); reassignLead(lead.id); }} style={{
+                                            width: 36, height: 36, borderRadius: '50%', border: 'none', cursor: 'pointer',
+                                            background: staff?.color || '#D4D3D0', color: 'white', fontSize: 10, fontWeight: 800,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                                            transition: 'transform 0.2s',
+                                            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+                                        }}>
                                             {staff?.initials || '?'}
                                         </button>
-                                    );
-                                })()}
-                                {/* Commitment Dot */}
-                                <div className={`w-2.5 h-2.5 rounded-full ${COMMITMENT_DOT[lead.commitmentLevel || 'just_looking']}`} />
-                                {/* Name & Details */}
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-semibold text-[#111] text-sm">{lead.name}</span>
-                                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${STATUS_STYLES[lead.status].bg} ${STATUS_STYLES[lead.status].text}`}>
-                                            {lead.status.replace('_', ' ')}
-                                        </span>
+
+                                        {/* Lead Score Ring */}
+                                        <div style={{ position: 'relative', width: 36, height: 36, flexShrink: 0 }}>
+                                            <svg width="36" height="36" viewBox="0 0 36 36">
+                                                <circle cx="18" cy="18" r="15" fill="none" stroke="#F5F5F4" strokeWidth="2.5" />
+                                                <circle cx="18" cy="18" r="15" fill="none" stroke={statusCfg.glow} strokeWidth="2.5"
+                                                    strokeDasharray={`${score * 0.94} 100`} strokeLinecap="round"
+                                                    transform="rotate(-90 18 18)"
+                                                    style={{ transition: 'stroke-dasharray 0.8s ease' }}
+                                                />
+                                            </svg>
+                                            <span style={{
+                                                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                                                fontSize: 9, fontWeight: 800, color: statusCfg.text,
+                                            }}>{score}</span>
+                                        </div>
+
+                                        {/* Name & Details */}
+                                        <div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <span style={{ fontSize: 14, fontWeight: 700, color: '#37352F' }}>{lead.name}</span>
+                                                <span style={{
+                                                    fontSize: 8, padding: '2px 8px', borderRadius: 10, fontWeight: 700,
+                                                    background: statusCfg.bg, color: statusCfg.text, textTransform: 'uppercase',
+                                                }}>
+                                                    {statusCfg.label}
+                                                </span>
+                                                {isUrgent && (
+                                                    <span style={{
+                                                        width: 8, height: 8, borderRadius: '50%', background: '#EF4444',
+                                                        animation: 'glow-pulse 1.5s ease-in-out infinite', display: 'inline-block',
+                                                    }} />
+                                                )}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: 8, marginTop: 3, alignItems: 'center' }}>
+                                                <span style={{ fontSize: 10, color: '#6B6A67', fontWeight: 500 }}>{lead.propertyType}</span>
+                                                <span style={{ fontSize: 8, color: '#D4D3D0' }}>•</span>
+                                                <span style={{ fontSize: 10, color: '#9B9A97' }}> {lead.location}</span>
+                                                <span style={{ fontSize: 8, color: '#D4D3D0' }}>•</span>
+                                                <span style={{ fontSize: 10, fontWeight: 600, color: '#37352F', fontFamily: "'SF Mono', monospace" }}>{lead.budgetRange}</span>
+                                                <span style={{ fontSize: 8, color: '#D4D3D0' }}>•</span>
+                                                <span style={{ fontSize: 10, color: '#9B9A97' }}>via {lead.source}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="text-[11px] text-[#999] mt-0.5">
-                                        {lead.propertyType} · {lead.location} · {lead.budgetRange} · via {lead.source}
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                        {/* Heat Indicator */}
+                                        <div style={{
+                                            padding: '4px 10px', borderRadius: 10, fontSize: 9, fontWeight: 700,
+                                            background: heatCfg.glow, color: heatCfg.border, textTransform: 'uppercase',
+                                            letterSpacing: '0.05em',
+                                        }}>
+                                            {heatCfg.label}
+                                        </div>
+
+                                        {/* Next Action */}
+                                        <div style={{ textAlign: 'right', maxWidth: 160 }}>
+                                            <div style={{ fontSize: 8, fontWeight: 700, color: '#EA580C', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Next</div>
+                                            <div style={{ fontSize: 11, color: '#37352F', fontWeight: 500 }}>{lead.nextAction}</div>
+                                        </div>
+
+                                        {/* Last Contact */}
+                                        <div style={{ textAlign: 'right', minWidth: 60 }}>
+                                            <div style={{ fontSize: 8, fontWeight: 700, color: '#D4D3D0', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Last</div>
+                                            <div style={{ fontSize: 11, color: '#9B9A97' }}>{lead.lastContact}</div>
+                                        </div>
+
+                                        {/* Quick Actions (visible on hover) */}
+                                        <div style={{
+                                            display: 'flex', gap: 4,
+                                            opacity: isHovered ? 1 : 0, transition: 'opacity 0.2s', pointerEvents: isHovered ? 'auto' : 'none',
+                                        }}>
+                                            {[
+                                                { icon: Phone, color: '#22C55E', bg: '#F0FDF4', label: 'Call' },
+                                                { icon: Mail, color: '#3B82F6', bg: '#EFF6FF', label: 'Email' },
+                                                { icon: MessageCircle, color: '#8B5CF6', bg: '#F5F3FF', label: 'Chat' },
+                                            ].map(act => (
+                                                <button key={act.label} onClick={e => e.stopPropagation()} style={{
+                                                    width: 30, height: 30, borderRadius: 8, border: 'none', cursor: 'pointer',
+                                                    background: act.bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    transition: 'transform 0.15s',
+                                                }}
+                                                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.15)')}
+                                                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                                                >
+                                                    <act.icon style={{ width: 13, height: 13, color: act.color }} />
+                                                </button>
+                                            ))}
+                                            <button onClick={async (e) => {
+                                                e.stopPropagation();
+                                                const budgetNum = parseFloat(lead.budgetRange.replace(/[^0-9.]/g, '')) || undefined;
+                                                const project = await createProject({
+                                                    client_name: lead.name,
+                                                    client_phone: lead.phone,
+                                                    property_type: lead.propertyType,
+                                                    property_address: lead.location,
+                                                    budget_min: budgetNum,
+                                                    status: 'lead',
+                                                });
+                                                if (project) {
+                                                    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: 'QUOTING' as LeadStatus, nextAction: 'Project created', score: 60 } : l));
+                                                }
+                                            }} style={{
+                                                width: 30, height: 30, borderRadius: 8, border: 'none', cursor: 'pointer',
+                                                background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                transition: 'transform 0.15s',
+                                            }}
+                                                onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.15)')}
+                                                onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                                            >
+                                                <FolderPlus style={{ width: 13, height: 13, color: '#6366F1' }} />
+                                            </button>
+                                        </div>
+
+                                        <ChevronRight style={{
+                                            width: 14, height: 14, color: '#D4D3D0',
+                                            transition: 'transform 0.2s, color 0.2s',
+                                            transform: isExpanded ? 'rotate(90deg)' : 'rotate(0)',
+                                            ...(isHovered ? { color: '#9B9A97' } : {}),
+                                        }} />
                                     </div>
                                 </div>
+
+                                {/* Expanded Detail Panel */}
+                                {isExpanded && (
+                                    <div style={{
+                                        borderTop: '1px solid #F5F5F4', padding: '14px 18px', background: '#FAFAF9',
+                                        animation: 'slide-in 0.2s ease',
+                                    }}>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+                                            {/* Activity Timeline */}
+                                            <div style={{ background: 'white', borderRadius: 10, padding: 14, border: '1px solid #E9E9E7' }}>
+                                                <div style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Activity</div>
+                                                {['Enquiry received', 'Auto-reply sent', 'Bjorn assigned', 'First call made', 'Portfolio sent'].slice(0, lead.touchpoints || 3).map((act, i) => (
+                                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
+                                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: i === 0 ? statusCfg.glow : '#E9E9E7', flexShrink: 0 }} />
+                                                        <span style={{ fontSize: 10, color: i === 0 ? '#37352F' : '#9B9A97' }}>{act}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Lead Score Breakdown */}
+                                            <div style={{ background: 'white', borderRadius: 10, padding: 14, border: '1px solid #E9E9E7' }}>
+                                                <div style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Score Breakdown</div>
+                                                {[
+                                                    { label: 'Budget Match', val: 80 },
+                                                    { label: 'Engagement', val: score },
+                                                    { label: 'Timeline Fit', val: 65 },
+                                                    { label: 'Response Speed', val: 90 },
+                                                ].map(s => (
+                                                    <div key={s.label} style={{ marginBottom: 6 }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                                                            <span style={{ fontSize: 9, color: '#6B6A67' }}>{s.label}</span>
+                                                            <span style={{ fontSize: 9, fontWeight: 700, color: '#37352F' }}>{s.val}</span>
+                                                        </div>
+                                                        <div style={{ height: 4, background: '#F5F5F4', borderRadius: 2, overflow: 'hidden' }}>
+                                                            <div style={{
+                                                                height: '100%', borderRadius: 2,
+                                                                background: s.val > 70 ? '#22C55E' : s.val > 40 ? '#F59E0B' : '#EF4444',
+                                                                width: `${s.val}%`, animation: 'score-fill 0.6s ease',
+                                                            }} />
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Quick Stats */}
+                                            <div style={{ background: 'white', borderRadius: 10, padding: 14, border: '1px solid #E9E9E7' }}>
+                                                <div style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Quick Stats</div>
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                                                    {[
+                                                        { label: 'Touchpoints', value: lead.touchpoints || 0, icon: '' },
+                                                        { label: 'Days In', value: lead.daysInPipeline || 0, icon: '' },
+                                                        { label: 'Budget', value: lead.budgetRange, icon: '' },
+                                                        { label: 'Source', value: lead.source, icon: '' },
+                                                    ].map(s => (
+                                                        <div key={s.label} style={{ padding: '6px 8px', background: '#FAFAF9', borderRadius: 8 }}>
+                                                            <div style={{ fontSize: 9, color: '#9B9A97' }}>{s.icon} {s.label}</div>
+                                                            <div style={{ fontSize: 13, fontWeight: 700, color: '#37352F' }}>{s.value}</div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div style={{ background: 'white', borderRadius: 10, padding: 14, border: '1px solid #E9E9E7' }}>
+                                                <div style={{ fontSize: 10, fontWeight: 700, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Actions</div>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                                    {[
+                                                        { label: 'Schedule Site Visit', bg: '#F5F3FF', color: '#7C3AED' },
+                                                        { label: 'Send Quotation', bg: '#FFF7ED', color: '#EA580C' },
+                                                        { label: 'Open in Sequence', bg: '#EFF6FF', color: '#2563EB' },
+                                                        { label: 'Convert to Project', bg: '#F0FDF4', color: '#16A34A' },
+                                                    ].map(a => (
+                                                        <button key={a.label} onClick={e => e.stopPropagation()} style={{
+                                                            padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                                                            background: a.bg, color: a.color, fontSize: 10, fontWeight: 600,
+                                                            fontFamily: f, textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                                            transition: 'transform 0.15s',
+                                                        }}
+                                                            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.02)')}
+                                                            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                                                        >
+                                                            {a.label}
+                                                            <ArrowUpRight style={{ width: 12, height: 12 }} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex items-center gap-6">
-                                {/* Next Action */}
-                                <div className="text-right">
-                                    <div className="text-[10px] font-bold text-orange-600 uppercase tracking-wider">Next</div>
-                                    <div className="text-xs text-[#666]">{lead.nextAction}</div>
-                                </div>
-                                {/* Last Contact */}
-                                <div className="text-right">
-                                    <div className="text-[10px] font-bold text-[#ccc] uppercase tracking-wider flex items-center gap-1 justify-end">
-                                        <Clock className="w-3 h-3" />
-                                        Last
-                                    </div>
-                                    <div className="text-xs text-[#999]">{lead.lastContact}</div>
-                                </div>
-                                {/* Quick Actions */}
-                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 rounded-lg bg-green-50 hover:bg-green-100 text-green-600 transition-colors">
-                                        <Phone className="w-3.5 h-3.5" />
-                                    </button>
-                                    <button className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors">
-                                        <Mail className="w-3.5 h-3.5" />
-                                    </button>
-                                    <button
-                                        onClick={async (e) => {
-                                            e.stopPropagation();
-                                            const budgetNum = parseFloat(lead.budgetRange.replace(/[^0-9.]/g, '')) || undefined;
-                                            const project = await createProject({
-                                                client_name: lead.name,
-                                                client_phone: lead.phone,
-                                                property_type: lead.propertyType,
-                                                property_address: lead.location,
-                                                budget_min: budgetNum,
-                                                status: 'lead',
-                                            });
-                                            if (project) {
-                                                setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: 'QUOTING' as LeadStatus, nextAction: 'Project created — open quote builder' } : l));
-                                                alert(`Project created for ${lead.name}`);
-                                            }
-                                        }}
-                                        className="p-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-600 transition-colors"
-                                        title="Convert to Project"
-                                    >
-                                        <FolderPlus className="w-3.5 h-3.5" />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                        );
+                    })}
+                </div>
+
             </div>
         </div>
     );

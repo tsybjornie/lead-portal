@@ -41,10 +41,10 @@ export default function AutopilotPage() {
     const [preset, setPreset] = useState<'personal' | 'vacation' | 'festive' | 'upskill'>('personal');
 
     const PRESETS = {
-        personal: { icon: '🛡️', label: 'Personal Leave', sub: 'Grief, health, family — take the time you need.', defaultWeeks: 2, leadDefault: false },
-        vacation: { icon: '🏖️', label: 'Vacation', sub: 'You\'re on a beach. Your projects aren\'t.', defaultWeeks: 2, leadDefault: true },
-        festive: { icon: '🎆', label: 'Festive Season', sub: 'CNY, Hari Raya, Deepavali — the whole industry rests. Your pipeline doesn\'t.', defaultWeeks: 2, leadDefault: true },
-        upskill: { icon: '🎓', label: 'Upskill', sub: 'Courses, certifications, study trips — invest in yourself.', defaultWeeks: 4, leadDefault: true },
+        personal: { icon: '', label: 'Personal Leave', sub: 'Grief, health, family — take the time you need.', defaultWeeks: 2, leadDefault: false },
+        vacation: { icon: '', label: 'Vacation', sub: 'You\'re on a beach. Your projects aren\'t.', defaultWeeks: 2, leadDefault: true },
+        festive: { icon: '', label: 'Festive Season', sub: 'CNY, Hari Raya, Deepavali — the whole industry rests. Your pipeline doesn\'t.', defaultWeeks: 2, leadDefault: true },
+        upskill: { icon: '', label: 'Upskill', sub: 'Courses, certifications, study trips — invest in yourself.', defaultWeeks: 4, leadDefault: true },
     };
 
     const activePreset = PRESETS[preset];
@@ -120,7 +120,7 @@ export default function AutopilotPage() {
                                     cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s',
                                     boxShadow: preset === key ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                                 }}>
-                                    <div style={{ fontSize: 22, marginBottom: 4 }}>{p.icon}</div>
+                                    {p.icon && <div style={{ fontSize: 22, marginBottom: 4 }}>{p.icon}</div>}
                                     <div style={{ fontSize: 11, fontWeight: 600, color: preset === key ? '#111' : 'rgba(0,0,0,0.35)' }}>{p.label}</div>
                                 </div>
                             ))}
@@ -274,7 +274,7 @@ export default function AutopilotPage() {
                                             padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 14,
                                             borderBottom: i < affectedMeetings.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
                                         }}>
-                                            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(245,158,11,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>📅</div>
+                                            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(245,158,11,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#D97706', flexShrink: 0 }}>CAL</div>
                                             <div style={{ flex: 1 }}>
                                                 <div style={{ fontSize: 12, fontWeight: 600, color: '#111' }}>{m.type}</div>
                                                 <div style={{ fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>{m.client} · {m.location}</div>
@@ -348,7 +348,9 @@ export default function AutopilotPage() {
                 {step === 'confirm' && (
                     <div style={{ maxWidth: 500, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 40, paddingTop: 20 }}>
-                            <div style={{ fontSize: 48, marginBottom: 16 }}>🛡️</div>
+                            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginLeft: 'auto', marginRight: 'auto' }}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                            </div>
                             <h1 style={{ fontSize: 24, fontWeight: 300, letterSpacing: '-0.02em', margin: '0 0 8px' }}>
                                 Confirm <span style={{ color: 'rgba(0,0,0,0.2)', fontStyle: 'italic' }}>Autopilot</span>
                             </h1>
@@ -359,15 +361,15 @@ export default function AutopilotPage() {
 
                         <div style={{ background: 'white', borderRadius: 14, border: '1px solid rgba(0,0,0,0.06)', padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
                             {[
-                                { icon: '📨', title: 'Client Notification', desc: 'Each client receives a message: "Your designer has a personal matter. Roof is ensuring your project stays on track. Response time: <4 hours."' },
-                                { icon: '🔧', title: 'Vendor Coordination', desc: 'All purchase orders, deliveries, and site schedules continue through Roof dispatch.' },
-                                { icon: '📸', title: 'Milestone Tracking', desc: 'Photo verification and progress updates continue. Payments release on schedule.' },
-                                { icon: '📋', title: 'Weekly Digest', desc: `Every Sunday you receive a one-page digest of decisions that need your input. Everything else handled.` },
-                                { icon: '📅', title: 'Meeting Reschedule', desc: `${affectedMeetings.length} meeting${affectedMeetings.length !== 1 ? 's' : ''} auto-rescheduled to after your return. New requests auto-declined with your return date.` },
-                                ...(leadCapture ? [{ icon: '🔥', title: 'Lead Capture Active', desc: 'Roof responds to new leads within 4 hours, qualifies budget/property/timeline, and schedules first meetings for your return date. You come back to a warm pipeline.' }] : []),
+                                { icon: '', title: 'Client Notification', desc: 'Each client receives a message: "Your designer has a personal matter. Roof is ensuring your project stays on track. Response time: <4 hours."' },
+                                { icon: '', title: 'Vendor Coordination', desc: 'All purchase orders, deliveries, and site schedules continue through Roof dispatch.' },
+                                { icon: '', title: 'Milestone Tracking', desc: 'Photo verification and progress updates continue. Payments release on schedule.' },
+                                { icon: '', title: 'Weekly Digest', desc: `Every Sunday you receive a one-page digest of decisions that need your input. Everything else handled.` },
+                                { icon: '', title: 'Meeting Reschedule', desc: `${affectedMeetings.length} meeting${affectedMeetings.length !== 1 ? 's' : ''} auto-rescheduled to after your return. New requests auto-declined with your return date.` },
+                                ...(leadCapture ? [{ icon: '', title: 'Lead Capture Active', desc: 'Roof responds to new leads within 4 hours, qualifies budget/property/timeline, and schedules first meetings for your return date. You come back to a warm pipeline.' }] : []),
                             ].map((item, i) => (
                                 <div key={i} style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: i < 3 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}>
-                                    <div style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{item.icon}</div>
+                                    {item.icon && <div style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{item.icon}</div>}
                                     <div>
                                         <div style={{ fontSize: 13, fontWeight: 600, color: '#111', marginBottom: 2 }}>{item.title}</div>
                                         <div style={{ fontSize: 11, color: 'rgba(0,0,0,0.4)', lineHeight: 1.6 }}>{item.desc}</div>
@@ -395,7 +397,7 @@ export default function AutopilotPage() {
                                 background: '#2563EB', color: 'white', border: 'none', borderRadius: 10,
                                 cursor: 'pointer', fontFamily: f,
                             }}>
-                                Confirm & Activate Autopilot 🛡️
+                                Confirm & Activate Autopilot
                             </button>
                         </div>
                     </div>
@@ -405,9 +407,11 @@ export default function AutopilotPage() {
                 {step === 'active' && (
                     <div style={{ maxWidth: 560, margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: 40, paddingTop: 20 }}>
-                            <div style={{ fontSize: 56, marginBottom: 16, animation: 'pulse-soft 3s infinite' }}>🛡️</div>
+                            <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(37,99,235,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, marginLeft: 'auto', marginRight: 'auto', animation: 'pulse-soft 3s infinite' }}>
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                            </div>
                             <h1 style={{ fontSize: 28, fontWeight: 300, letterSpacing: '-0.03em', margin: '0 0 8px' }}>
-                                {activePreset.icon} Autopilot <span style={{ color: '#2563EB', fontWeight: 600 }}>Active</span>
+                                Autopilot <span style={{ color: '#2563EB', fontWeight: 600 }}>Active</span>
                             </h1>
                             <p style={{ fontSize: 13, color: 'rgba(0,0,0,0.4)', margin: '0 0 6px' }}>
                                 Take all the time you need. We've got this.
@@ -465,7 +469,7 @@ export default function AutopilotPage() {
                                     </div>
                                 ))}
                                 <div style={{ marginTop: 12, padding: '8px 12px', background: 'rgba(37,99,235,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
-                                    💡 New meeting requests are auto-declined with message: <em>&quot;Designer returning {resumeDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}. Roof is managing the project.&quot;</em>
+                                    Note: New meeting requests are auto-declined with message: <em>&quot;Designer returning {resumeDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}. Roof is managing the project.&quot;</em>
                                 </div>
                             </div>
                         )}
@@ -510,7 +514,7 @@ export default function AutopilotPage() {
                                     </div>
                                 ))}
                                 <div style={{ marginTop: 12, padding: '8px 12px', background: 'rgba(5,150,105,0.03)', borderRadius: 8, fontSize: 10, color: 'rgba(0,0,0,0.35)' }}>
-                                    🔥 3 leads qualified while you were away · S${(60000 + 80000 + 55000).toLocaleString()} potential project value
+                                    3 leads qualified while you were away · S${(60000 + 80000 + 55000).toLocaleString()} potential project value
                                 </div>
                             </div>
                         )}

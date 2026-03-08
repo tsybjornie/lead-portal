@@ -95,10 +95,10 @@ export default function IRSDashboard() {
                 {/* Tabs */}
                 <div style={{ display: 'flex', gap: 4, marginBottom: 20, background: 'white', borderRadius: 10, padding: 4, border: '1px solid #E9E9E7' }}>
                     {[
-                        { key: 'workers' as const, label: '🔧 Workers', count: WORKERS.length },
-                        { key: 'designers' as const, label: '🎨 ID Firms', count: ID_FIRMS.length },
-                        { key: 'complaints' as const, label: '📢 Complaints', count: COMPLAINTS.filter(c => c.status !== 'Dismissed').length },
-                        { key: 'drops' as const, label: '📉 Loyalty Drops', count: LOYALTY_DROPS.length },
+                        { key: 'workers' as const, label: 'Workers', count: WORKERS.length },
+                        { key: 'designers' as const, label: 'ID Firms', count: ID_FIRMS.length },
+                        { key: 'complaints' as const, label: 'Complaints', count: COMPLAINTS.filter(c => c.status !== 'Dismissed').length },
+                        { key: 'drops' as const, label: 'Loyalty Drops', count: LOYALTY_DROPS.length },
                     ].map(t => (
                         <button key={t.key} onClick={() => setTab(t.key)} style={{
                             flex: 1, padding: '10px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
@@ -141,7 +141,7 @@ export default function IRSDashboard() {
                                             <div style={{ width: `${irsBar(w.irs)}%`, height: '100%', borderRadius: 3, background: irsColor(w.irs) }} />
                                         </div>
                                     </div>
-                                    <div style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>🪙 {w.loyalty.toLocaleString()}</div>
+                                    <div style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>{w.loyalty.toLocaleString()} pts</div>
                                     <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 4, background: c.bg, color: c.text, border: `1px solid ${c.border}`, fontWeight: 600, textAlign: 'center' }}>{w.badge}</span>
                                 </div>
                             );
@@ -167,17 +167,17 @@ export default function IRSDashboard() {
                                 <div style={{ fontSize: 12, color: firm.avgPay <= 14 ? '#059669' : firm.avgPay <= 30 ? '#D97706' : '#DC2626', fontWeight: 600 }}>{firm.avgPay}d</div>
                                 <div style={{ fontSize: 12, color: firm.specClarity >= 80 ? '#059669' : firm.specClarity >= 60 ? '#D97706' : '#DC2626' }}>{firm.specClarity}%</div>
                                 <div style={{ fontSize: 12, color: firm.changeOrders <= 2 ? '#059669' : firm.changeOrders <= 5 ? '#D97706' : '#DC2626' }}>{firm.changeOrders}/proj</div>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: '#37352F' }}>⭐ {firm.hoRating}</div>
+                                <div style={{ fontSize: 13, fontWeight: 600, color: '#37352F' }}>{firm.hoRating}</div>
                                 <div style={{ fontSize: 13, fontWeight: 600, color: Math.abs(firm.hoRating - firm.coRating) > 1 ? '#DC2626' : '#37352F' }}>
-                                    {firm.coRating < firm.hoRating - 1 ? '🎭 ' : '⭐ '}{firm.coRating}
+                                    {firm.coRating < firm.hoRating - 1 ? '!! ' : ''}{firm.coRating}
                                 </div>
-                                <div style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>🪙 {firm.loyalty.toLocaleString()}</div>
+                                <div style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>{firm.loyalty.toLocaleString()} pts</div>
                                 <div>
                                     {firm.flag === 'backstab' && (
-                                        <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 4, background: '#FEE2E2', color: '#991B1B', fontWeight: 700 }}>🎭 TWO-FACED</span>
+                                        <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 4, background: '#FEE2E2', color: '#991B1B', fontWeight: 700 }}>TWO-FACED</span>
                                     )}
                                     {firm.flag === 'serial' && (
-                                        <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 4, background: '#FEE2E2', color: '#991B1B', fontWeight: 700 }}>🚨 SERIAL</span>
+                                        <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 4, background: '#FEE2E2', color: '#991B1B', fontWeight: 700 }}>SERIAL</span>
                                     )}
                                     {!firm.flag && (
                                         <span style={{ fontSize: 10, padding: '3px 8px', borderRadius: 4, background: '#DCFCE7', color: '#166534', fontWeight: 600 }}>✓ Clean</span>
@@ -188,7 +188,7 @@ export default function IRSDashboard() {
 
                         {/* Backstab explanation */}
                         <div style={{ padding: '14px 20px', background: '#FEF2F2', borderTop: '1px solid #FECACA' }}>
-                            <span style={{ fontSize: 11, color: '#991B1B', fontWeight: 700 }}>🎭 TWO-FACED flag: </span>
+                            <span style={{ fontSize: 11, color: '#991B1B', fontWeight: 700 }}>TWO-FACED flag: </span>
                             <span style={{ fontSize: 11, color: '#991B1B' }}>Homeowner rating vs Contractor rating gap {'>'} 1.0 star. Nice to client&apos;s face, nightmare for workers behind the scenes.</span>
                         </div>
                     </div>
@@ -218,7 +218,7 @@ export default function IRSDashboard() {
                                         <div style={{ textAlign: 'right' }}>
                                             <div style={{ fontSize: 11, color: '#9B9A97' }}>{c.date}</div>
                                             {c.loyalty_impact !== 0 && (
-                                                <div style={{ fontSize: 13, fontWeight: 700, color: '#DC2626' }}>🪙 {c.loyalty_impact}</div>
+                                                <div style={{ fontSize: 13, fontWeight: 700, color: '#DC2626' }}>{c.loyalty_impact} pts</div>
                                             )}
                                         </div>
                                     </div>
@@ -227,7 +227,7 @@ export default function IRSDashboard() {
                                         <div>
                                             <div style={{ fontSize: 10, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Filed by</div>
                                             <div style={{ fontSize: 12, fontWeight: 600, color: '#37352F' }}>
-                                                {c.fromType === 'ho' ? '🏠' : '🔧'} {c.from}
+                                                {c.from}
                                                 {c.fromType === 'contractor' && <span style={{ fontSize: 10, color: irsColor((c as any).fromIrs), marginLeft: 6, fontWeight: 700 }}>IRS {(c as any).fromIrs}</span>}
                                             </div>
                                             {c.fromType === 'ho' && <div style={{ fontSize: 10, color: '#059669', fontWeight: 600 }}>Credibility: 100% (paying client)</div>}
@@ -235,7 +235,7 @@ export default function IRSDashboard() {
                                         </div>
                                         <div>
                                             <div style={{ fontSize: 10, color: '#9B9A97', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>Against</div>
-                                            <div style={{ fontSize: 12, fontWeight: 600, color: '#DC2626' }}>🎨 {c.target}</div>
+                                            <div style={{ fontSize: 12, fontWeight: 600, color: '#DC2626' }}>{c.target}</div>
                                         </div>
                                     </div>
 
@@ -266,7 +266,7 @@ export default function IRSDashboard() {
                             <div key={i} style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 0.8fr 0.8fr 2fr', padding: '14px 20px', borderBottom: i < LOYALTY_DROPS.length - 1 ? '1px solid #F3F3F2' : 'none', alignItems: 'center' }}>
                                 <div style={{ fontSize: 13, fontWeight: 600, color: '#37352F' }}>{d.target}</div>
                                 <div style={{ fontSize: 12, color: '#6B6A67' }}>{d.event}</div>
-                                <div style={{ fontSize: 14, fontWeight: 800, color: '#DC2626' }}>🪙 {d.points}</div>
+                                <div style={{ fontSize: 14, fontWeight: 800, color: '#DC2626' }}>{d.points} pts</div>
                                 <div style={{ fontSize: 11, color: '#9B9A97' }}>{d.date}</div>
                                 <div style={{ fontSize: 11, color: '#6B6A67' }}>{d.source}</div>
                             </div>
