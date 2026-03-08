@@ -4,8 +4,8 @@ import React, { useState, useMemo } from 'react';
 import RoofNav from '@/components/RoofNav';
 import { useRole } from '@/components/RoleContext';
 import type { RoleId } from '@/components/RoleContext';
-import { PAINT_BRANDS, PAINT_FINISHES, VERNACULAR_ARCHITECTURE, ADDITIONAL_ARCHITECTURE, PEDIGREE_FURNITURE, CRAFT_HERITAGE, LIGHTING_DESIGNS } from '@/data/materialEncyclopedia';
-import type { PaintEntry, ArchitectureStyle, FurnitureEntry, CraftEntry, LightingEntry } from '@/data/materialEncyclopedia';
+import { PAINT_BRANDS, PAINT_FINISHES, VERNACULAR_ARCHITECTURE, ADDITIONAL_ARCHITECTURE, PEDIGREE_FURNITURE, CRAFT_HERITAGE, LIGHTING_DESIGNS, STONE_NAMES, WOOD_SPECIES, TILE_ENCYCLOPEDIA, CABINET_TIERS, COUNTERTOP_EDGE_PROFILES, METAL_MATERIALS, METAL_FINISHES, WALLPAPER_TYPES, WALL_FINISHES, CURTAIN_STYLES, BLIND_TYPES } from '@/data/encyclopedia';
+import type { PaintEntry, ArchitectureStyle, FurnitureEntry, CraftEntry, LightingEntry, MaterialEntry } from '@/data/encyclopedia';
 
 // ============================================================
 // SEQUENCE — Interior Design Studio Operating System
@@ -13,7 +13,7 @@ import type { PaintEntry, ArchitectureStyle, FurnitureEntry, CraftEntry, Lightin
 // ============================================================
 
 type Section = 'dna' | 'materials' | 'suppliers' | 'sketchup' | 'brief' | 'survey' | 'drawings' | 'boards' | 'client-deck' | 'tradesman-pack' | 'issues' | 'checklists';
-type EncyclopediaTab = 'all' | 'paint' | 'architecture' | 'furniture' | 'craft' | 'lighting';
+type EncyclopediaTab = 'all' | 'stone' | 'wood' | 'tiles' | 'paint' | 'architecture' | 'furniture' | 'craft' | 'lighting' | 'cabinetry' | 'countertops' | 'metal' | 'wallpaper' | 'wall' | 'soft';
 
 const SECTIONS: { id: Section; label: string; group: string }[] = [
     { id: 'dna', label: 'Design DNA', group: 'Design System' },
@@ -165,6 +165,15 @@ export default function SequencePage() {
     // ── Encyclopedia filtering ──
     const encQ = encSearch.toLowerCase();
     const allArch = useMemo(() => [...VERNACULAR_ARCHITECTURE, ...ADDITIONAL_ARCHITECTURE], []);
+    const filteredStones = useMemo(() => (STONE_NAMES || []).filter((s: MaterialEntry) =>
+        !encQ || s.name.toLowerCase().includes(encQ) || s.origin?.toLowerCase().includes(encQ) || s.characteristics?.toLowerCase().includes(encQ)
+    ), [encQ]);
+    const filteredWoods = useMemo(() => (WOOD_SPECIES || []).filter((w: MaterialEntry) =>
+        !encQ || w.name.toLowerCase().includes(encQ) || w.origin?.toLowerCase().includes(encQ) || w.characteristics?.toLowerCase().includes(encQ)
+    ), [encQ]);
+    const filteredTiles = useMemo(() => (TILE_ENCYCLOPEDIA || []).filter((t) =>
+        !encQ || t.name.toLowerCase().includes(encQ) || t.materialType?.toLowerCase().includes(encQ) || t.subcategory?.toLowerCase().includes(encQ) || t.bestFor?.toLowerCase().includes(encQ) || t.designStyle?.toLowerCase().includes(encQ) || t.notes?.toLowerCase().includes(encQ) || t.sizes?.toLowerCase().includes(encQ)
+    ), [encQ]);
     const filteredPaints = useMemo(() => PAINT_BRANDS.filter(p =>
         !encQ || p.name.toLowerCase().includes(encQ) || p.brand?.toLowerCase().includes(encQ) || p.type.toLowerCase().includes(encQ) || p.characteristics.toLowerCase().includes(encQ) || p.tropicalNotes?.toLowerCase().includes(encQ)
     ), [encQ]);
@@ -180,7 +189,10 @@ export default function SequencePage() {
     const filteredLighting = useMemo(() => LIGHTING_DESIGNS.filter(l =>
         !encQ || l.name.toLowerCase().includes(encQ) || l.designer.toLowerCase().includes(encQ) || l.designerCountry.toLowerCase().includes(encQ) || l.manufacturer.toLowerCase().includes(encQ) || l.category.toLowerCase().includes(encQ) || l.materials.toLowerCase().includes(encQ) || l.significance.toLowerCase().includes(encQ)
     ), [encQ]);
-    const encTotalResults = (encTab === 'all' || encTab === 'paint' ? filteredPaints.length : 0)
+    const encTotalResults = (encTab === 'all' || encTab === 'stone' ? filteredStones.length : 0)
+        + (encTab === 'all' || encTab === 'wood' ? filteredWoods.length : 0)
+        + (encTab === 'all' || encTab === 'tiles' ? filteredTiles.length : 0)
+        + (encTab === 'all' || encTab === 'paint' ? filteredPaints.length : 0)
         + (encTab === 'all' || encTab === 'architecture' ? filteredArch.length : 0)
         + (encTab === 'all' || encTab === 'furniture' ? filteredFurniture.length : 0)
         + (encTab === 'all' || encTab === 'craft' ? filteredCraft.length : 0)
@@ -341,7 +353,7 @@ export default function SequencePage() {
                                 <div>
                                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#37352F', margin: 0 }}>Material Encyclopedia</h2>
                                     <p style={{ fontSize: 12, color: '#9B9A97', margin: '4px 0 0' }}>
-                                        {PAINT_BRANDS.length} paints · {allArch.length} architecture styles · {PEDIGREE_FURNITURE.length} iconic furniture · {CRAFT_HERITAGE.length} craft traditions · {LIGHTING_DESIGNS.length} lighting designs
+                                        {filteredStones.length + filteredWoods.length + filteredTiles.length + PAINT_BRANDS.length + allArch.length + PEDIGREE_FURNITURE.length + CRAFT_HERITAGE.length + LIGHTING_DESIGNS.length} materials across all categories
                                     </p>
                                 </div>
                             </div>
@@ -359,9 +371,12 @@ export default function SequencePage() {
                             </div>
 
                             {/* Tabs */}
-                            <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+                            <div style={{ display: 'flex', gap: 4, marginBottom: 20, flexWrap: 'wrap' }}>
                                 {([
-                                    { id: 'all' as EncyclopediaTab, label: 'All', count: PAINT_BRANDS.length + allArch.length + PEDIGREE_FURNITURE.length + CRAFT_HERITAGE.length + LIGHTING_DESIGNS.length },
+                                    { id: 'all' as EncyclopediaTab, label: 'All', count: filteredStones.length + filteredWoods.length + filteredTiles.length + PAINT_BRANDS.length + allArch.length + PEDIGREE_FURNITURE.length + CRAFT_HERITAGE.length + LIGHTING_DESIGNS.length },
+                                    { id: 'stone' as EncyclopediaTab, label: '🪨 Stone', count: filteredStones.length },
+                                    { id: 'wood' as EncyclopediaTab, label: '🪵 Wood', count: filteredWoods.length },
+                                    { id: 'tiles' as EncyclopediaTab, label: '🔲 Tiles', count: filteredTiles.length },
                                     { id: 'paint' as EncyclopediaTab, label: '🎨 Paint', count: PAINT_BRANDS.length },
                                     { id: 'architecture' as EncyclopediaTab, label: '🏛️ Architecture', count: allArch.length },
                                     { id: 'furniture' as EncyclopediaTab, label: '🪑 Furniture', count: PEDIGREE_FURNITURE.length },
@@ -381,6 +396,142 @@ export default function SequencePage() {
 
                             {/* Results Count */}
                             {encQ && <div style={{ fontSize: 11, color: '#9B9A97', marginBottom: 12 }}>{encTotalResults} results for &ldquo;{encSearch}&rdquo;</div>}
+
+                            {/* ═══ NATURAL STONE SECTION ═══ */}
+                            {(encTab === 'all' || encTab === 'stone') && filteredStones.length > 0 && (
+                                <div style={{ marginBottom: 32 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #F3F3F2' }}>
+                                        <div style={{ width: 4, height: 20, borderRadius: 2, background: 'linear-gradient(135deg, #8B5CF6, #6D28D9)' }} />
+                                        <span style={{ fontSize: 13, fontWeight: 700, color: '#37352F' }}>🪨 Natural Stone</span>
+                                        <span style={{ fontSize: 10, fontWeight: 500, color: '#9B9A97' }}>{filteredStones.length} stones</span>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                                        {filteredStones.slice(0, encTab === 'all' ? 6 : undefined).map((s: MaterialEntry, i: number) => (
+                                            <div key={`${s.name}-${i}`} style={{ background: '#fff', border: '1px solid #E9E9E7', borderRadius: 10, padding: 16, transition: 'box-shadow 0.15s' }}
+                                                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
+                                            >
+                                                <div style={{ marginBottom: 8 }}>
+                                                    <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, background: '#EDE9FE', color: '#7C3AED' }}>{s.priceTier || 'STONE'}</span>
+                                                </div>
+                                                <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: '0 0 4px' }}>{s.name}</h3>
+                                                {s.origin && <div style={{ fontSize: 10, color: '#9B9A97', marginBottom: 6 }}>📍 {s.origin}</div>}
+                                                {s.characteristics && <p style={{ fontSize: 11, color: '#6B6A67', lineHeight: 1.5, margin: '0 0 8px' }}>{s.characteristics}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {encTab === 'all' && filteredStones.length > 6 && (
+                                        <button onClick={() => setEncTab('stone')} style={{ marginTop: 8, fontSize: 11, color: '#7C3AED', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>View all {filteredStones.length} stones →</button>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* ═══ WOOD SPECIES SECTION ═══ */}
+                            {(encTab === 'all' || encTab === 'wood') && filteredWoods.length > 0 && (
+                                <div style={{ marginBottom: 32 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #F3F3F2' }}>
+                                        <div style={{ width: 4, height: 20, borderRadius: 2, background: 'linear-gradient(135deg, #D97706, #92400E)' }} />
+                                        <span style={{ fontSize: 13, fontWeight: 700, color: '#37352F' }}>🪵 Wood Species</span>
+                                        <span style={{ fontSize: 10, fontWeight: 500, color: '#9B9A97' }}>{filteredWoods.length} species</span>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                                        {filteredWoods.slice(0, encTab === 'all' ? 6 : undefined).map((w: MaterialEntry, i: number) => (
+                                            <div key={`${w.name}-${i}`} style={{ background: '#fff', border: '1px solid #E9E9E7', borderRadius: 10, padding: 16, transition: 'box-shadow 0.15s' }}
+                                                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
+                                            >
+                                                <div style={{ marginBottom: 8 }}>
+                                                    <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, background: '#FEF3C7', color: '#92400E' }}>WOOD</span>
+                                                </div>
+                                                <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: '0 0 4px' }}>{w.name}</h3>
+                                                {w.origin && <div style={{ fontSize: 10, color: '#9B9A97', marginBottom: 6 }}>📍 {w.origin}</div>}
+                                                {w.characteristics && <p style={{ fontSize: 11, color: '#6B6A67', lineHeight: 1.5, margin: '0 0 8px' }}>{w.characteristics}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {encTab === 'all' && filteredWoods.length > 6 && (
+                                        <button onClick={() => setEncTab('wood')} style={{ marginTop: 8, fontSize: 11, color: '#D97706', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>View all {filteredWoods.length} wood species →</button>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* ═══ TILES SECTION ═══ */}
+                            {(encTab === 'all' || encTab === 'tiles') && filteredTiles.length > 0 && (
+                                <div style={{ marginBottom: 32 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, paddingBottom: 8, borderBottom: '1px solid #F3F3F2' }}>
+                                        <div style={{ width: 4, height: 20, borderRadius: 2, background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)' }} />
+                                        <span style={{ fontSize: 13, fontWeight: 700, color: '#37352F' }}>🔲 Tiles</span>
+                                        <span style={{ fontSize: 10, fontWeight: 500, color: '#9B9A97' }}>{filteredTiles.length} tiles</span>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+                                        {filteredTiles.slice(0, encTab === 'all' ? 6 : undefined).map((t, i) => (
+                                            <div key={`${t.name}-${i}`} style={{ background: '#fff', border: '1px solid #E9E9E7', borderRadius: 10, padding: 16, transition: 'box-shadow 0.15s' }}
+                                                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.06)'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
+                                            >
+                                                {/* Badge row: material type + subcategory */}
+                                                <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+                                                    <span style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: 4, background: '#DBEAFE', color: '#1E40AF' }}>{t.materialType}</span>
+                                                    <span style={{ fontSize: 9, fontWeight: 600, padding: '2px 8px', borderRadius: 4, background: '#F0FDF4', color: '#166534' }}>{t.subcategory}</span>
+                                                </div>
+                                                {/* Name + origin */}
+                                                <h3 style={{ fontSize: 13, fontWeight: 700, color: '#37352F', margin: '0 0 4px' }}>{t.name}</h3>
+                                                {t.origin && <div style={{ fontSize: 10, color: '#9B9A97', marginBottom: 6 }}>📍 {t.origin}</div>}
+
+                                                {/* Sizes & Finishes */}
+                                                <div style={{ fontSize: 10, color: '#6B6A67', marginBottom: 4, lineHeight: 1.5 }}>
+                                                    📐 <strong>Sizes:</strong> {t.sizes}
+                                                </div>
+                                                <div style={{ fontSize: 10, color: '#6B6A67', marginBottom: 6, lineHeight: 1.5 }}>
+                                                    ✨ <strong>Finishes:</strong> {t.finishes}
+                                                </div>
+
+                                                {/* Ratings row */}
+                                                {(t.peiRating || t.slipRating) && (
+                                                    <div style={{ display: 'flex', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+                                                        {t.peiRating && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 4, background: '#FEF3C7', color: '#92400E', fontWeight: 600 }}>🛡️ {t.peiRating}</span>}
+                                                        {t.slipRating && <span style={{ fontSize: 9, padding: '2px 6px', borderRadius: 4, background: '#FEE2E2', color: '#991B1B', fontWeight: 600 }}>🦶 {t.slipRating}</span>}
+                                                    </div>
+                                                )}
+
+                                                {/* Best for */}
+                                                <p style={{ fontSize: 11, color: '#6B6A67', lineHeight: 1.5, margin: '0 0 6px' }}>
+                                                    <strong style={{ color: '#37352F' }}>Best for:</strong> {t.bestFor.length > 120 ? t.bestFor.slice(0, 120) + '…' : t.bestFor}
+                                                </p>
+
+                                                {/* Design style tags */}
+                                                {t.designStyle && (
+                                                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                                                        {t.designStyle.split(' / ').slice(0, 4).map(ds => (
+                                                            <span key={ds} style={{ fontSize: 8, fontWeight: 600, padding: '1px 6px', borderRadius: 10, background: '#F3F0FF', color: '#6D28D9' }}>{ds}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Notes (truncated) */}
+                                                <p style={{ fontSize: 10, color: '#9B9A97', lineHeight: 1.5, margin: '0 0 8px', fontStyle: 'italic' }}>
+                                                    {t.notes.length > 100 ? t.notes.slice(0, 100) + '…' : t.notes}
+                                                </p>
+
+                                                {/* Pricing footer */}
+                                                <div style={{ paddingTop: 8, borderTop: '1px solid #F3F3F2', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <div>
+                                                        <div style={{ fontSize: 9, color: '#9B9A97', marginBottom: 2 }}>Material</div>
+                                                        <span style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, color: '#37352F' }}>{t.materialCost}</span>
+                                                    </div>
+                                                    <div style={{ textAlign: 'right' }}>
+                                                        <div style={{ fontSize: 9, color: '#9B9A97', marginBottom: 2 }}>Installed</div>
+                                                        <span style={{ fontFamily: mono, fontSize: 11, fontWeight: 700, color: '#166534' }}>{t.totalInstalled}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {encTab === 'all' && filteredTiles.length > 6 && (
+                                        <button onClick={() => setEncTab('tiles')} style={{ marginTop: 8, fontSize: 11, color: '#1D4ED8', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>View all {filteredTiles.length} tiles →</button>
+                                    )}
+                                </div>
+                            )}
 
                             {/* ═══ PAINT SECTION ═══ */}
                             {(encTab === 'all' || encTab === 'paint') && filteredPaints.length > 0 && (

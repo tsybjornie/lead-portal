@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
-import { MaterialSelection, SupplierInfo } from '@/data/materialEncyclopedia';
+import { MaterialSelection, SupplierInfo } from '@/data/encyclopedia';
 
 // ============================================================
 // MATERIAL CONTEXT — Design Selection State Management
@@ -14,6 +14,7 @@ interface MaterialContextType {
     addSelection: (selection: Omit<MaterialSelection, 'id'>) => void;
     updateSelection: (id: string, updates: Partial<MaterialSelection>) => void;
     removeSelection: (id: string) => void;
+    overrideCost: (id: string, actualCostPerUnit: number, note: string) => void;
     getSelectionsByRoom: (room: string) => MaterialSelection[];
     getSelectionsByTrade: (trade: string) => MaterialSelection[];
 
@@ -37,6 +38,7 @@ export function useMaterialContext() {
             addSelection: () => { },
             updateSelection: () => { },
             removeSelection: () => { },
+            overrideCost: () => { },
             getSelectionsByRoom: () => [],
             getSelectionsByTrade: () => [],
             totalCost: 0,
@@ -79,6 +81,30 @@ export function MaterialProvider({ children }: { children: ReactNode }) {
         setSelections(prev => prev.filter(s => s.id !== id));
     }, []);
 
+    const overrideCost = useCallback((id: string, actualCostPerUnit: number, note: string) => {
+        setSelections(prev => prev.map(s => {
+            if (s.id !== id) return s;
+            const referenceCost = s.referenceCost || 0;
+            const variance = referenceCost > 0
+                ? ((actualCostPerUnit - referenceCost) / referenceCost) * 100
+                : 0;
+            const qtyNum = parseFloat(s.quantity || '0') || 0;
+            const newCostTotal = actualCostPerUnit * qtyNum;
+            const markup = s.selectedSupplier?.designerMarkup || 20;
+            const newRetailTotal = newCostTotal * (1 + markup / 100);
+            return {
+                ...s,
+                overrideCost: actualCostPerUnit,
+                costVariance: Math.round(variance * 10) / 10,
+                overrideNote: note,
+                overrideAt: new Date().toISOString(),
+                costTotal: newCostTotal,
+                retailTotal: newRetailTotal,
+                designerProfit: newRetailTotal - newCostTotal,
+            };
+        }));
+    }, []);
+
     const getSelectionsByRoom = useCallback((room: string) => {
         return selections.filter(s => s.room === room);
     }, [selections]);
@@ -105,6 +131,7 @@ export function MaterialProvider({ children }: { children: ReactNode }) {
             addSelection,
             updateSelection,
             removeSelection,
+            overrideCost,
             getSelectionsByRoom,
             getSelectionsByTrade,
             totalCost,

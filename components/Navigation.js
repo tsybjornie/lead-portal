@@ -12,6 +12,11 @@ export default function Navigation() {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
+  // Hide public nav on internal tool pages
+  const INTERNAL_ROUTES = ['/sequence', '/follow-up', '/projects', '/quote-builder', '/dispatch', '/ledger', '/team', '/intelligence', '/autopilot', '/admin', '/drafter', '/chat', '/marketing', '/inspect', '/overhead', '/vendor-rates', '/price-index', '/materials', '/portal'];
+  const isInternalPage = INTERNAL_ROUTES.some(r => pathname === r || pathname?.startsWith(r + '/'));
+  if (isInternalPage) return null;
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
