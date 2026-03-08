@@ -11,6 +11,7 @@ import MaterialSearch from '@/components/MaterialSearch';
 import { useMaterialContext } from '@/context/MaterialContext';
 import { encyclopediaToSelection } from '@/lib/materialBridge';
 import type { SearchableItem } from '@/components/MaterialSearch';
+import type { MaterialEntry } from '@/data/encyclopedia/core';
 
 const f = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const mono = "'JetBrains Mono', 'SF Mono', monospace";
@@ -107,7 +108,7 @@ export default function MaterialsPage() {
                         }}
                         onAddToQuote={(item: SearchableItem, room: string, quantity: string) => {
                             const selection = encyclopediaToSelection(
-                                item.raw as Record<string, unknown>,
+                                item.raw as MaterialEntry,
                                 item.supplierInfo,
                                 room,
                                 quantity,
