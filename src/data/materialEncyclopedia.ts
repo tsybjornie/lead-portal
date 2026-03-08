@@ -1560,3 +1560,115 @@ export const SG_RENOVATION_PRICES: RenovationPriceRange[] = [
     { propertyType: 'Kitchen Only', scope: 'Kitchen renovation', budgetRange: '$5,000 — $10,000', standardRange: '$10,000 — $20,000', premiumRange: '$20,000 — $35,000', luxuryRange: '$35,000 — $60,000+', timeline: '2-4 weeks', notes: 'Most common standalone reno. Budget = reface doors + new countertop. Standard = new carcass + countertop + backsplash. Premium = full Blum + stone countertop + feature lighting' },
     { propertyType: 'Bathroom Only', scope: 'Bathroom renovation', budgetRange: '$4,000 — $8,000', standardRange: '$8,000 — $15,000', premiumRange: '$15,000 — $25,000', luxuryRange: '$25,000 — $50,000+', timeline: '2-3 weeks', notes: 'Must include waterproofing ($3-5/sqft). Budget = overlay tiles. Standard = hack + retile + new fittings. Premium = rain shower, freestanding tub, heated towel rail, niche lighting' },
 ];
+
+// ══════════════════════════════════════════════════════════════
+// DESIGNER MARGIN CALCULATOR
+// The "receipts, not feelings" transparency tool.
+// Shows cost vs client price vs margin for every line item.
+// When clients kaopeh, show them THIS.
+// ══════════════════════════════════════════════════════════════
+
+export interface MarginLineItem {
+    category: string;
+    item: string;
+    costPrice: string;        // What designer/contractor pays
+    clientPrice: string;      // What client sees on quotation
+    markupPercent: string;    // Typical markup
+    marginDollar: string;     // Dollar margin per unit
+    justification: string;    // Why this markup is fair
+}
+
+export interface ProjectCostBreakdown {
+    projectType: string;
+    totalClientPrice: string;
+    lineItems: { item: string; costPrice: number; clientPrice: number; markupPercent: number }[];
+    totalCost: number;
+    totalMargin: number;
+    marginPercent: number;
+    fixedOverheads: string;
+    netProfitEstimate: string;
+    reality: string;
+}
+
+// ── LINE ITEM MARGINS (What designers actually make per item) ──
+export const MARGIN_LINE_ITEMS: MarginLineItem[] = [
+    // Materials
+    { category: 'Materials', item: 'Plywood 18mm E1 Meranti (per sheet)', costPrice: '$42', clientPrice: '$52 — $58', markupPercent: '24 — 38%', marginDollar: '$10 — $16', justification: 'Covers: sourcing time, supplier relationship, quality inspection (rejecting warped/wet sheets), wastage allowance (10-15% cut-off waste is REAL), storage at workshop, and the risk of buying 50 sheets upfront for YOUR project' },
+    { category: 'Materials', item: 'Plywood 18mm ENF (per sheet)', costPrice: '$60', clientPrice: '$78 — $90', markupPercent: '30 — 50%', marginDollar: '$18 — $30', justification: 'Premium product = higher margin. Requires sourcing from certified suppliers, verifying ENF test certs (some fakes exist), and the knowledge to RECOMMEND the right grade for children\'s rooms' },
+    { category: 'Materials', item: 'Quartz Countertop (per ft run)', costPrice: '$28 — $45/ft', clientPrice: '$45 — $80/ft', markupPercent: '40 — 60%', marginDollar: '$17 — $35/ft', justification: 'Covers: templating visit, factory cutting to exact dimensions, polishing edges, transport (heavy + fragile), installation, and CRITICAL: warranty if countertop cracks during install (happens 5% of time — who absorbs that cost?)' },
+    { category: 'Materials', item: 'Tiles (per sqft, mid-range)', costPrice: '$3 — $6/sqft', clientPrice: '$5 — $10/sqft', markupPercent: '40 — 70%', marginDollar: '$2 — $4/sqft', justification: 'Includes: showroom time helping client choose (2-3 visits), ordering correct quantity + 10% spare, checking lot numbers match, arranging delivery, handling breakage/returns. Also storing leftover tiles for future repairs' },
+    { category: 'Materials', item: 'Laminate Sheet (Formica/Lamitak)', costPrice: '$35 — $55/sheet', clientPrice: '$48 — $75/sheet', markupPercent: '30 — 40%', marginDollar: '$13 — $20/sheet', justification: 'Covers: maintaining laminate sample library (100+ colors) for clients to see, ordering from distributor, cutting waste, and the expertise to know which laminates are durable vs which will peel in SG humidity' },
+    // Hardware
+    { category: 'Hardware', item: 'Blum TANDEMBOX antaro (per drawer)', costPrice: '$22 — $30', clientPrice: '$35 — $50', markupPercent: '40 — 65%', marginDollar: '$13 — $20', justification: 'Authorized dealer pricing. Includes: stocking inventory, correct sizing (different depths), installation expertise, and LIFETIME WARRANTY processing if anything fails. You\'re not paying for a drawer slide — you\'re paying for a SYSTEM' },
+    { category: 'Hardware', item: 'Blum CLIP top Hinge (per pair)', costPrice: '$3.50 — $5', clientPrice: '$6 — $10', markupPercent: '50 — 100%', marginDollar: '$2.50 — $5', justification: 'Small item, high markup % but LOW absolute margin. A kitchen has 20-30 hinges = $50-150 total hinge margin. Covers: stocking 4+ types, proper 3-way adjustment during install, warranty claims' },
+    { category: 'Hardware', item: 'Blum AVENTOS HF Lift (per unit)', costPrice: '$55 — $75', clientPrice: '$80 — $130', markupPercent: '35 — 55%', marginDollar: '$25 — $55', justification: 'Specialty mechanism requiring precise installation. Wrong spring strength = door too heavy or slams up. Designer needs to calculate door weight × height to order correct spring. Installation takes 30-45min per unit' },
+    { category: 'Hardware', item: 'Häfele Pull-out Basket/Organizer', costPrice: '$40 — $120', clientPrice: '$65 — $200', markupPercent: '50 — 65%', marginDollar: '$25 — $80', justification: 'Client sees a basket. Designer sees: measuring cabinet width to nearest mm, ordering from catalog (500+ options), checking fitment, installing rails, adjusting height. Returns/exchanges on wrong sizes are common' },
+    // Labor
+    { category: 'Labor', item: 'Carpentry (per day, site install)', costPrice: '$120 — $160', clientPrice: '$180 — $280', markupPercent: '40 — 75%', marginDollar: '$60 — $120', justification: 'Contractor margin covers: finding reliable workers, MOM levy ($300-700/worker/month), CPF for local workers, transport, tools, supervision. If worker doesn\'t show up — contractor still has to deliver. That RISK is the markup' },
+    { category: 'Labor', item: 'Hacking Works (per sqft)', costPrice: '$3 — $5/sqft', clientPrice: '$5 — $8/sqft', markupPercent: '50 — 60%', marginDollar: '$2 — $3/sqft', justification: 'Dirty, dangerous, physical work. Includes: safety barriers, dust protection for existing furniture, debris disposal, and the risk of discovering hidden pipes/wires (who pays for THAT rework?)' },
+    { category: 'Labor', item: 'Electrical Point (per new point)', costPrice: '$50 — $80', clientPrice: '$80 — $150', markupPercent: '50 — 90%', marginDollar: '$30 — $70', justification: 'Licensed EMA electrician mandatory in SG. Licensing costs $2K+/year. Insurance costs $500+/year. One wrong wire = fire hazard. Margin covers: liability, licensing overhead, and the KNOWLEDGE of where to route cables safely' },
+    { category: 'Labor', item: 'Plumbing Point (per new point)', costPrice: '$80 — $150', clientPrice: '$150 — $280', markupPercent: '60 — 90%', marginDollar: '$70 — $130', justification: 'PUB-licensed plumber mandatory. Moving a water point involves: floor hacking, new pipe routing, pressure testing, waterproofing repair. If it leaks after handover = contractor\'s problem (and cost). HIGH margin = HIGH risk' },
+    // Design
+    { category: 'Design', item: 'Design Fee (4-room HDB)', costPrice: '$1,500 — $3,000 (designer salary allocation)', clientPrice: '$3,000 — $8,000', markupPercent: '100 — 170%', marginDollar: '$1,500 — $5,000', justification: 'Looks like high markup but includes: 20-40 hours of design work, 2-5 site visits, 5-15 revisions, material library maintenance, software licenses (AutoCAD $2K/yr, SketchUp $300/yr, 3D render $500/yr), CPF, office rent. A designer doing 2 projects/month = $6-16K revenue to cover ALL of this' },
+    { category: 'Design', item: '3D Rendering (per view)', costPrice: '$50 — $100', clientPrice: '$100 — $300', markupPercent: '100 — 200%', marginDollar: '$50 — $200', justification: 'Each 3D render takes 2-4 hours: modeling, texturing, lighting, rendering, revisions. Software costs $500-2000/year. Hardware (GPU) costs $2-5K. The render is what SELLS the project to the client — it\'s the visualization of their future home' },
+];
+
+// ── COMPLETE PROJECT COST BREAKDOWN (The "No More Kaopeh" Example) ──
+// Real-world 4-room HDB standard renovation breakdown
+export const PROJECT_COST_EXAMPLE: ProjectCostBreakdown = {
+    projectType: 'HDB 4-Room Standard Renovation',
+    totalClientPrice: '$45,000',
+    lineItems: [
+        // Carpentry
+        { item: 'Kitchen cabinets (L-shaped, 4.5m)', costPrice: 3600, clientPrice: 5400, markupPercent: 50 },
+        { item: 'Kitchen countertop (quartz)', costPrice: 800, clientPrice: 1200, markupPercent: 50 },
+        { item: 'Kitchen backsplash (subway tile)', costPrice: 400, clientPrice: 650, markupPercent: 63 },
+        { item: 'Kitchen hardware (Blum full set)', costPrice: 900, clientPrice: 1350, markupPercent: 50 },
+        { item: 'Master bedroom wardrobe (8ft)', costPrice: 2200, clientPrice: 3300, markupPercent: 50 },
+        { item: 'Common room wardrobe (6ft)', costPrice: 1600, clientPrice: 2400, markupPercent: 50 },
+        { item: 'Study room built-in desk + shelf', costPrice: 1200, clientPrice: 1800, markupPercent: 50 },
+        { item: 'Shoe cabinet + feature wall', costPrice: 1000, clientPrice: 1500, markupPercent: 50 },
+        { item: 'TV console + wall panel', costPrice: 800, clientPrice: 1200, markupPercent: 50 },
+        // Wet works
+        { item: 'Bathroom 1 renovation (hack + retile + fittings)', costPrice: 3500, clientPrice: 5500, markupPercent: 57 },
+        { item: 'Bathroom 2 renovation (hack + retile + fittings)', costPrice: 3200, clientPrice: 5000, markupPercent: 56 },
+        // Electrical & Plumbing
+        { item: 'Electrical works (15 new points + rewiring)', costPrice: 1800, clientPrice: 2800, markupPercent: 56 },
+        { item: 'Plumbing works (relocate kitchen sink + 2 bathrooms)', costPrice: 1200, clientPrice: 2000, markupPercent: 67 },
+        // Painting
+        { item: 'Full house painting (Nippon/Dulux)', costPrice: 1200, clientPrice: 1800, markupPercent: 50 },
+        // Flooring
+        { item: 'Vinyl flooring (living + 3 rooms, 60sqm)', costPrice: 1500, clientPrice: 2400, markupPercent: 60 },
+        // Overhead (hidden costs absorbed)
+        { item: 'Transport & delivery (5 trips)', costPrice: 600, clientPrice: 800, markupPercent: 33 },
+        { item: 'Debris disposal (hacking waste)', costPrice: 500, clientPrice: 700, markupPercent: 40 },
+        { item: 'Insurance + permit + deposit', costPrice: 800, clientPrice: 800, markupPercent: 0 },
+        // Design
+        { item: 'Design fee + 3D renders + site supervision', costPrice: 3000, clientPrice: 4500, markupPercent: 50 },
+    ],
+    totalCost: 29800,
+    totalMargin: 15200,
+    marginPercent: 34,
+    fixedOverheads: 'From the $15,200 margin, deduct: Workshop rent allocation ($800), worker levies ($400), showroom/office rent ($600), software licenses ($200), accounting ($150), phone/transport ($200), CPF ($400), misc ($200) = $2,950 fixed overhead per project',
+    netProfitEstimate: '$15,200 gross margin — $2,950 fixed overheads = $12,250 net profit on $45,000 project (27%). BUT: if doing 2 projects/month, that\'s $24,500/month for a firm with 2-3 staff. After salaries ($8-12K), rent ($3-5K), the business owner takes home $7-14K. For managing $90K+ in monthly project value, coordinating 10+ workers, and being on-call 7 days a week — that\'s FAIR.',
+    reality: 'The 34% markup LOOKS high to clients. But after ALL overheads, the REAL profit is 15-20%. Compare to: property agent (2% commission on $1M = $20K for 1 week of work). Car dealer (10-15% on $150K = $15-22K). Restaurant (60-70% markup on food). Interior design markup of 30-40% with 8-12 weeks of work is one of the LOWEST margin professional services in Singapore.',
+};
+
+// ── INDUSTRY STANDARD MARKUPS (for designer reference) ──
+export interface IndustryMarkup {
+    industry: string;
+    typicalMarkup: string;
+    comparison: string;
+}
+
+export const INDUSTRY_MARKUP_COMPARISON: IndustryMarkup[] = [
+    { industry: 'Interior Design / Renovation', typicalMarkup: '25 — 40%', comparison: 'Lowest margin professional service. 8-12 weeks per project. High coordination, high risk (rework, delays, defaults)' },
+    { industry: 'Property Agent', typicalMarkup: '1 — 2% (of property value)', comparison: 'On a $1M property = $10-20K commission for ~1-4 weeks work. Lower effort per dollar earned' },
+    { industry: 'Restaurant / F&B', typicalMarkup: '60 — 300%', comparison: 'Coffee costs $0.30 to make, sells for $5-7. Pasta costs $3, sells for $18-28. Accepted without question' },
+    { industry: 'Car Dealer', typicalMarkup: '8 — 15%', comparison: 'On $150K car = $12-22K margin. Less project management than reno, shorter transaction cycle' },
+    { industry: 'Fashion Retail', typicalMarkup: '100 — 400%', comparison: 'T-shirt costs $5 to make, sells for $30-80. Designer brands: $10 cost → $200+ retail. Nobody questions this' },
+    { industry: 'Optician / Eyewear', typicalMarkup: '200 — 1000%', comparison: 'Frames cost $5-15, sell for $100-500. Lenses cost $5-20, sell for $50-300. The markup nobody complains about' },
+    { industry: 'Wedding Industry', typicalMarkup: '50 — 200%', comparison: 'Wedding dinner costs hotel $30/pax, charges $150-300/pax. Photographer: 4 hours = $3-8K. Flowers: $500 cost = $2-5K. But "it\'s my special day" so nobody questions' },
+    { industry: 'Dental', typicalMarkup: '200 — 500%', comparison: 'Crown costs $50-100 in materials/lab, charges $800-2000. Filling: $5 material = $100-300 charge. Expertise premium' },
+    { industry: 'Legal Services', typicalMarkup: '300 — 800%', comparison: 'Junior lawyer costs firm $3-5K/month, bills at $300-600/hour. 10 hours work = $3-6K bill. "Professional service" premium' },
+];
