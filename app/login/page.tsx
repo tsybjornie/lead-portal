@@ -31,6 +31,13 @@ export default function LoginPage() {
         setIsLoading(true);
         setError('');
 
+        // ── Admin dummy account (no Supabase needed) ──
+        if (email.trim().toLowerCase() === 'admin@roof.sg' && password === 'roof2026') {
+            login('admin' as any);
+            router.push('/sequence');
+            return;
+        }
+
         try {
             const { data, error: authError } = await supabase.auth.signInWithPassword({
                 email: email.trim(),
