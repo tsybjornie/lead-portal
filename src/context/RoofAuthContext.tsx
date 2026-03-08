@@ -234,6 +234,22 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
 
 export function useRoofAuth() {
     const ctx = useContext(RoofAuthContext);
-    if (!ctx) throw new Error('useRoofAuth must be inside RoofAuthProvider');
+    if (!ctx) {
+        // Return safe defaults during SSR/prerender when provider isn't mounted yet
+        return {
+            user: null,
+            supabaseUser: null,
+            isLoggedIn: false,
+            isLoading: true,
+            isApproved: false,
+            login: () => { },
+            loginByCode: () => ({ success: false, route: '/login' }),
+            logout: async () => { },
+            switchRole: () => { },
+            sidebarCollapsed: false,
+            setSidebarCollapsed: () => { },
+            defaultRoute: '/login',
+        } as RoofAuthContextType;
+    }
     return ctx;
 }
