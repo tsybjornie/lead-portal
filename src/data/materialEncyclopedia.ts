@@ -1384,3 +1384,179 @@ export function searchMaterials(query: string): {
         motifs: WORLD_MOTIFS.filter(m => m.name.toLowerCase().includes(q) || m.region.toLowerCase().includes(q) || m.description.toLowerCase().includes(q)),
     };
 }
+
+// ── CABINETRY CONSTRUCTION ENCYCLOPEDIA ──
+// Plywood grades, glue types, assembly methods, hardware, and SG/MY pricing
+
+export interface PlywoodGrade {
+    name: string;
+    core: string;
+    origin: string;
+    region: string;
+    glueType: string;
+    glueAbbreviation: string;
+    emissionGrade: string;
+    emissionStandard: string;
+    formaldehyde: 'zero' | 'low' | 'medium' | 'high';
+    waterResistance: 'poor' | 'moderate' | 'good' | 'excellent';
+    thickness: string;
+    pricePerSheet: string;
+    bestFor: string;
+    notes: string;
+}
+
+export interface AssemblyMethod {
+    name: string;
+    category: string;
+    costPerJoint: string;
+    strength: number; // 1-5
+    speed: 'slow' | 'medium' | 'fast';
+    visible: boolean;
+    disassemblable: boolean;
+    description: string;
+    process: string;
+    bestFor: string;
+    avoidFor: string;
+}
+
+export interface CabinetHardware {
+    name: string;
+    brand: string;
+    country: string;
+    category: string;
+    priceRange: string;
+    quality: number; // 1-5
+    warranty: string;
+    description: string;
+    notes: string;
+}
+
+export interface CabinetTier {
+    tier: string;
+    label: string;
+    carcassMaterial: string;
+    carcassAssembly: string;
+    doorMaterial: string;
+    doorFinish: string;
+    drawerSystem: string;
+    hinges: string;
+    pricePerLM: string;
+    description: string;
+}
+
+// ── PLYWOOD ENCYCLOPEDIA (Comprehensive — grades, glues, emissions, pricing) ──
+export const PLYWOOD_ENCYCLOPEDIA: PlywoodGrade[] = [
+    { name: 'China Poplar (Budget)', core: 'Poplar veneer', origin: 'China (Shandong/Jiangsu)', region: '🇨🇳 China', glueType: 'Urea Formaldehyde', glueAbbreviation: 'UF', emissionGrade: 'E2', emissionStandard: '≤5.0 mg/L', formaldehyde: 'high', waterResistance: 'poor', thickness: '18mm (often under-sized at 17.2mm)', pricePerSheet: '$18 — $25/sheet', bestFor: '⚠️ Temporary structures only. Avoid for residential cabinetry', notes: 'Cheapest option. Strong chemical smell = off-gassing. Not recommended for SG/MY homes. Some vendors sell E2 as "standard" — always ask for emission cert' },
+    { name: 'China Poplar (Standard)', core: 'Poplar veneer', origin: 'China (Shandong/Jiangsu)', region: '🇨🇳 China', glueType: 'Melamine Urea Formaldehyde', glueAbbreviation: 'MUF', emissionGrade: 'E1', emissionStandard: '≤1.5 mg/L (EN 13966)', formaldehyde: 'medium', waterResistance: 'moderate', thickness: '18mm', pricePerSheet: '$28 — $40/sheet', bestFor: 'Budget carcass (hidden inside cabinets). Kitchen carcass where doors cover everything', notes: 'Most common budget option in SG/MY. Acceptable for adult bedrooms with good ventilation. Smell dissipates in 2-4 weeks' },
+    { name: 'Malaysian Meranti', core: 'Meranti/tropical hardwood veneer', origin: 'Malaysia (Sarawak/Sabah)', region: '🇲🇾 Malaysia', glueType: 'Melamine Urea Formaldehyde', glueAbbreviation: 'MUF', emissionGrade: 'E1', emissionStandard: '≤1.5 mg/L', formaldehyde: 'medium', waterResistance: 'moderate', thickness: '18mm (true 18mm)', pricePerSheet: '$40 — $55/sheet', bestFor: '★★★★★ THE standard SG/MY renovation plywood. 80% of all carpentry uses this', notes: 'Stronger than poplar core. True 18mm thickness (China ply often undersized). Tropical hardwood core resists humidity better. The "safe default" choice' },
+    { name: 'Malaysian Meranti (ENF)', core: 'Meranti hardwood veneer', origin: 'Malaysia', region: '🇲🇾 Malaysia', glueType: 'MDI (Methylene Diphenyl Diisocyanate)', glueAbbreviation: 'MDI', emissionGrade: 'ENF', emissionStandard: '≤0.025 mg/m³ (GB/T 39600)', formaldehyde: 'zero', waterResistance: 'excellent', thickness: '18mm', pricePerSheet: '$55 — $75/sheet', bestFor: 'Children\'s rooms, master bedrooms, homes with allergies/asthma. Premium residential choice', notes: 'Zero formaldehyde glue. No smell from day 1. Worth 30-50% premium for sleeping areas. Ask vendor for GB/T 39600 test cert — some fake ENF labels exist' },
+    { name: 'Indonesian Falcata', core: 'Falcata/albasia veneer', origin: 'Indonesia (Java/Sumatra)', region: '🇮🇩 Indonesia', glueType: 'Melamine Urea Formaldehyde', glueAbbreviation: 'MUF', emissionGrade: 'E1', emissionStandard: '≤1.5 mg/L', formaldehyde: 'medium', waterResistance: 'moderate', thickness: '18mm', pricePerSheet: '$35 — $50/sheet', bestFor: 'Lightweight carcass, shelving, wardrobe carcass', notes: 'Lighter than meranti (easier for wall-hung cabinets). Fast-growing sustainable wood. Slightly softer than meranti — not ideal for heavy-load kitchen bases' },
+    { name: 'Finnish Birch', core: '13+ layers Baltic birch veneer', origin: 'Finland/Russia/Baltic states', region: '🇫🇮 Finland', glueType: 'Phenol Formaldehyde', glueAbbreviation: 'PF', emissionGrade: 'E1', emissionStandard: '≤0.124 mg/m³', formaldehyde: 'low', waterResistance: 'excellent', thickness: '18mm (13 layers, void-free)', pricePerSheet: '$85 — $120/sheet', bestFor: 'Premium visible shelving, exposed plywood edges, furniture, CNC projects', notes: 'The "designer plywood." Beautiful layered birch edge when exposed. 13+ layers = no voids. Brands: UPM, Metsä. Popular with architects for exposed-edge aesthetic' },
+    { name: 'Japanese Shin-ei', core: 'Japanese cedar/larch veneer', origin: 'Japan', region: '🇯🇵 Japan', glueType: 'EPI (Emulsion Polymer Isocyanate)', glueAbbreviation: 'EPI', emissionGrade: 'F★★★★ (F4 Star)', emissionStandard: '≤0.3 mg/L (JIS A 1460)', formaldehyde: 'zero', waterResistance: 'good', thickness: '18mm', pricePerSheet: '$120 — $200/sheet', bestFor: 'Ultra-premium cabinetry, Japanese-inspired interiors, health-conscious clients', notes: 'F★★★★ is Japan\'s strictest standard. EPI glue is formaldehyde-free. Used in Japanese hospitals and schools. The gold standard globally. Worth it for clients who ask "what\'s the absolute safest?"' },
+    { name: 'Marine Plywood (Meranti)', core: 'Meranti hardwood, graded BS1088', origin: 'Malaysia/Indonesia', region: '🇲🇾 Malaysia', glueType: 'Phenol Formaldehyde', glueAbbreviation: 'PF', emissionGrade: 'Exterior', emissionStandard: 'N/A (PF cures fully)', formaldehyde: 'low', waterResistance: 'excellent', thickness: '18mm', pricePerSheet: '$60 — $90/sheet', bestFor: 'Bathroom vanities, outdoor cabinetry, kitchen sink area, laundry room', notes: 'MUST use for wet areas. PF glue is waterproof (dark brown glue line visible). BS1088 standard = no voids in core. Will NOT delaminate when exposed to water. Required for areas near water' },
+];
+
+// ── ASSEMBLY METHODS ──
+export const ASSEMBLY_METHODS: AssemblyMethod[] = [
+    { name: 'Staple/Nail Gun', category: 'Budget', costPerJoint: '$0.02', strength: 1, speed: 'fast', visible: true, disassemblable: false, description: 'Pneumatic staples or brad nails shot through panels', process: 'Align panels → pneumatic staple/nail gun → done. No glue, no pre-drilling', bestFor: 'Temporary installations, site hoardings', avoidFor: 'ALL permanent cabinetry. Staples loosen in SG/MY humidity' },
+    { name: 'Cam Lock (Flat-Pack)', category: 'Knock-Down', costPerJoint: '$0.30 — $0.50', strength: 3, speed: 'fast', visible: true, disassemblable: true, description: 'Pre-drilled holes with cam bolt + wooden dowel. IKEA system', process: 'Factory pre-drills holes in 32mm system grid → insert cam bolt → insert dowel → turn cam 90° to lock', bestFor: 'Modular furniture, rental properties, IKEA-style systems', avoidFor: 'Heavy-use kitchens (cam holes widen over time, especially in particleboard)' },
+    { name: 'Confirmat Screw + PVA Glue', category: 'Standard', costPerJoint: '$0.10 — $0.20', strength: 4, speed: 'fast', visible: true, disassemblable: false, description: 'Thick-threaded furniture screws (7×50mm) with PVA wood glue on joint faces. THE SG/MY standard', process: '1. Cut panels (CNC/panel saw) → 2. Edge band → 3. Pre-drill with confirmat jig (5mm pilot + 7mm countersink) → 4. Apply PVA glue → 5. Drive confirmat screw → 6. Cover with plastic cap/sticker', bestFor: '★★★★★ 80% of all SG/MY residential cabinetry. Best value for money', avoidFor: 'Ultra-premium visible cabinetry (screw caps visible)' },
+    { name: 'Dowel + Glue', category: 'European', costPerJoint: '$0.05 — $0.10', strength: 4, speed: 'medium', visible: false, disassemblable: false, description: 'Hardwood dowels (8mm beech) glued into precision-drilled holes. European factory standard', process: '1. CNC multi-spindle drill dowel holes (8mm, 32mm spacing) → 2. Insert pre-glued dowels (swell with moisture for tight fit) → 3. Apply PVA/PUR glue to faces → 4. Clamp → 5. No visible fasteners', bestFor: 'European-style kitchens, premium workshops that have CNC boring machines', avoidFor: 'Site carpentry without CNC (alignment is critical — hand-drilling dowels is risky)' },
+    { name: 'Biscuit Joint (Lamello)', category: 'Premium', costPerJoint: '$0.15 — $0.30', strength: 5, speed: 'medium', visible: false, disassemblable: false, description: 'Compressed beech biscuits (#0/#10/#20) in biscuit-joiner-cut slots + glue. Biscuit swells with glue moisture → locks tight', process: '1. Mark joint positions → 2. Cut slots with biscuit joiner (Lamello) → 3. Apply PVA glue in slot + on face → 4. Insert biscuit → 5. Clamp until cured (30-60 min)', bestFor: 'Mitered joints (45° corners), wide panel edge joints, premium built-ins', avoidFor: 'Standard box construction (overkill — use confirmat or dowel instead)' },
+    { name: 'Minifix / Rafix', category: 'Premium Knock-Down', costPerJoint: '$2 — $5', strength: 4, speed: 'medium', visible: true, disassemblable: true, description: 'Precision cam + bolt system from Häfele/Hettich. Can fully disassemble and reassemble without losing strength', process: '1. Drill 15mm Forstner hole for cam housing → 2. Drill connecting bolt hole → 3. Insert cam housing → 4. Thread connecting bolt → 5. Turn cam to lock', bestFor: 'Premium modular kitchens (Blum/Hettich system), furniture that may need to relocate', avoidFor: 'Budget projects (hardware cost is 10-50× more than confirmat)' },
+    { name: 'Dado/Rabbet + Glue', category: 'Traditional Premium', costPerJoint: '$0.05 (glue only)', strength: 5, speed: 'slow', visible: false, disassemblable: false, description: 'Grooves (dado) or shelf slots (rabbet) routed into panels — mating panel slides into groove + glued. Maximum strength', process: '1. Route 6-9mm dado groove (table saw with dado blade or router) → 2. Dry-fit panel into groove → 3. Apply PVA/epoxy glue → 4. Slide panel in → 5. Clamp or pin-nail for alignment → 6. Clean squeeze-out', bestFor: 'Back panels (9mm ply in dado is strongest back), drawer boxes, premium bookcases', avoidFor: 'Projects without router/table saw access. Requires skilled carpentry' },
+];
+
+// ── CABINET HARDWARE ──
+export const CABINET_HARDWARE: CabinetHardware[] = [
+    // Drawer Systems
+    { name: 'Roller Slide', brand: 'Various/No-brand', country: '🇨🇳 China', category: 'Drawer slide', priceRange: '$5 — $10/drawer', quality: 1, warranty: '1 year', description: 'Basic white roller slides. Noisy, no soft-close, partial extension only (75%). Will fail in 1-2 years under daily kitchen use', notes: '⚠️ AVOID for kitchens. Acceptable only for bedroom closet drawers with light use. The #1 indicator of "budget reno"' },
+    { name: 'Ball Bearing Slide', brand: 'Various', country: '🇨🇳 China / 🇹🇼 Taiwan', category: 'Drawer slide', priceRange: '$10 — $20/drawer', quality: 3, warranty: '3 years', description: 'Steel ball bearing slides. Smooth, full extension, some models include soft-close. The "mid-range default"', notes: 'Acceptable for most residential use. Full extension lets you see entire drawer. Brands: King Slide (TW), DTC (CN), FGV (IT budget)' },
+    { name: 'Blum MOVENTO', brand: 'Blum', country: '🇦🇹 Austria', category: 'Drawer slide (concealed)', priceRange: '$25 — $35/drawer', quality: 4, warranty: 'Lifetime', description: 'Concealed undermount runner with BLUMOTION soft-close. Invisible from outside. TIP-ON option (push-to-open for handleless kitchens)', notes: 'Entry-level Blum quality. Concealed = cleaner look. Lifetime warranty means Blum replaces free if it fails. The "sweet spot" for quality vs cost' },
+    { name: 'Blum TANDEMBOX antaro', brand: 'Blum', country: '🇦🇹 Austria', category: 'Drawer system (complete)', priceRange: '$35 — $50/drawer', quality: 5, warranty: 'Lifetime', description: '★★★★★ Complete drawer system: steel sides + concealed runners + BLUMOTION soft-close + SERVO-DRIVE (optional electric open). 40-65kg capacity', notes: 'THE gold standard for SG/MY kitchen drawers. Every premium ID firm specifies this. Steel sides = no drawer box carpentry needed. Just cut plywood base + back' },
+    { name: 'Blum LEGRABOX', brand: 'Blum', country: '🇦🇹 Austria', category: 'Drawer system (slim)', priceRange: '$50 — $80/drawer', quality: 5, warranty: 'Lifetime', description: 'Thinnest drawer side walls (12.8mm). Maximum interior space. Available in silk white, orion grey, terra black, stainless steel. Premium aesthetic', notes: 'For clients who want the thinnest, most premium drawer aesthetic. Internal space is 15% more than TANDEMBOX. The "Rolls Royce" of drawer systems' },
+    { name: 'Hettich ArciTech', brand: 'Hettich', country: '🇩🇪 Germany', category: 'Drawer system (complete)', priceRange: '$30 — $45/drawer', quality: 5, warranty: 'Lifetime', description: 'Hettich\'s answer to Blum TANDEMBOX. Steel sides, Push to Open Silent option, 40-80kg capacity. Same quality, sometimes slightly cheaper', notes: 'Premium alternative to Blum. Some SG/MY carpentry shops prefer Hettich pricing. Both are equally excellent — brand preference only' },
+    { name: 'Grass Nova Pro Scala', brand: 'Grass', country: '🇦🇹 Austria', category: 'Drawer system', priceRange: '$25 — $40/drawer', quality: 4, warranty: 'Lifetime', description: 'Austrian drawer system with integrated Tipmatic push-to-open. Slimline steel sides. Good mid-premium option', notes: 'Third major European drawer brand. Less common in SG/MY than Blum/Hettich but equally good quality. Usually slightly cheaper' },
+    // Hinges
+    { name: 'No-Brand Hydraulic Hinge', brand: 'Various/No-brand', country: '🇨🇳 China', category: 'Cabinet hinge', priceRange: '$1 — $3/pair', quality: 1, warranty: '6-12 months', description: 'Budget soft-close hinges. Initial soft-close fades in 6-12 months → doors start slamming. Pot screws strip easily', notes: '⚠️ The #1 source of "my kitchen doors are slamming" complaints 1 year after reno. Save $2/pair now, pay for replacement + labor later' },
+    { name: 'Blum CLIP top BLUMOTION', brand: 'Blum', country: '🇦🇹 Austria', category: 'Cabinet hinge', priceRange: '$5 — $8/pair', quality: 5, warranty: 'Lifetime (200,000 cycles tested)', description: '★★★★★ Industry standard concealed hinge. Integrated BLUMOTION soft-close. Tool-free CLIP mounting (click on, click off). 110°/155° opening', notes: 'THE hinge. Every premium kitchen uses this. Tool-free mounting means doors can be removed for cleaning without screwdriver. Lifetime warranty. $3 more than budget = decades of difference' },
+    { name: 'Hettich Sensys', brand: 'Hettich', country: '🇩🇪 Germany', category: 'Cabinet hinge', priceRange: '$4 — $7/pair', quality: 5, warranty: 'Lifetime (200,000 cycles)', description: 'Hettich equivalent of Blum CLIP top. Integrated Silent System soft-close. TIP-ON option for handleless. Zero-protrusion option', notes: 'Equal to Blum in every way. Some carpenters prefer Sensys because of easier 3-way adjustment (horizontal, vertical, depth)' },
+    { name: 'Salice C2 Silentia', brand: 'Salice', country: '🇮🇹 Italy', category: 'Cabinet hinge', priceRange: '$3 — $5/pair', quality: 4, warranty: '10 years', description: 'Italian-made soft-close hinge. Good quality at lower price point than Blum/Hettich. Silentia = integrated damper', notes: 'Good budget-premium option. Italian engineering without Blum pricing. Popular in SG/MY among cost-conscious quality workshops' },
+    // Fittings
+    { name: 'Häfele Loox LED System', brand: 'Häfele', country: '🇩🇪 Germany', category: 'Cabinet lighting', priceRange: '$20 — $100/cabinet', quality: 5, warranty: '5 years', description: 'Plug-and-play LED strip/puck system for cabinet interiors. Warm white 3000K. Door-activated switch. Dimmable', notes: 'Under-cabinet and in-cabinet lighting is the #1 "wow factor" upgrade clients notice. Loox system makes it easy — no electrician needed, 12V/24V safe' },
+    { name: 'Blum SERVO-DRIVE', brand: 'Blum', country: '🇦🇹 Austria', category: 'Electric opener', priceRange: '$80 — $150/unit', quality: 5, warranty: 'Lifetime', description: 'Electric push-to-open system for handleless drawers/doors. Touch front panel → drawer opens automatically. Works with TANDEMBOX/LEGRABOX/AVENTOS', notes: 'The "luxury kitchen" detail. Handleless design = completely flush fronts → contemporary minimal aesthetic. Battery or mains powered' },
+    { name: 'Blum AVENTOS Lift System', brand: 'Blum', country: '🇦🇹 Austria', category: 'Wall cabinet lift', priceRange: '$40 — $120/unit', quality: 5, warranty: 'Lifetime', description: 'Wall cabinet lift-up mechanisms. HF (bi-fold), HL (parallel), HK-XS (small), HS (up/over). Replaces swing-out doors on wall cabinets', notes: 'AVENTOS HF (bi-fold) is the most popular in SG/MY kitchens — door folds up instead of swinging out. No head-bumping. Essential for small kitchens' },
+];
+
+// ── COMPLETE CABINET TIER PRICING (SG/MY Market, per linear meter) ──
+export const CABINET_TIERS: CabinetTier[] = [
+    { tier: 'budget', label: '🔴 Budget', carcassMaterial: 'China E2 poplar ply', carcassAssembly: 'Staples/nail gun', doorMaterial: 'Melamine-faced chipboard', doorFinish: 'Melamine wrap', drawerSystem: 'Roller slides', hinges: 'No-brand hydraulic', pricePerLM: '$200 — $350/LM', description: 'The "$25K HDB package" tier. Maximum cost cutting at every step. Will look acceptable for 2-3 years, then drawers fail, doors sag, chemical smell lingers. Common in mass-market reno packages' },
+    { tier: 'standard', label: '🟡 Standard', carcassMaterial: 'Malaysian E1 meranti ply', carcassAssembly: 'Confirmat screws + PVA glue', doorMaterial: 'Laminate (Formica/Lamitak) on plywood', doorFinish: 'High-pressure laminate', drawerSystem: 'Ball bearing slides', hinges: 'Mixed brand (DTC/King Slide)', pricePerLM: '$400 — $600/LM', description: 'The "responsible standard" tier. Solid E1 meranti plywood, proper assembly, decent hardware. This is where most SG/MY renovations should start. Good for 8-10+ years' },
+    { tier: 'good', label: '🟢 Good', carcassMaterial: 'Malaysian E1 meranti ply', carcassAssembly: 'Dowel + PVA glue (or confirmat)', doorMaterial: 'MDF spray-painted or timber veneer on ply', doorFinish: '2K PU spray paint or veneer + clear coat', drawerSystem: 'Blum TANDEMBOX antaro', hinges: 'Blum CLIP top BLUMOTION', pricePerLM: '$600 — $900/LM', description: '★★★★ The "worth it" tier. Full Blum hardware = lifetime warranty on all moving parts. Spray-painted doors look premium. This is the quality leap most clients notice immediately' },
+    { tier: 'premium', label: '🔵 Premium', carcassMaterial: 'Malaysian ENF meranti (MDI glue)', carcassAssembly: 'Dowel + PUR glue', doorMaterial: 'Premium veneer (walnut/oak) on MDF or solid timber', doorFinish: '2K PU spray paint (8+ coats) or natural veneer + matte lacquer', drawerSystem: 'Blum LEGRABOX', hinges: 'Blum CLIP top BLUMOTION + SERVO-DRIVE', pricePerLM: '$900 — $1,400/LM', description: '★★★★★ Zero-formaldehyde carcass, premium finishes, electric push-to-open for handleless design. Häfele LED lighting inside. This is ID-firm-specified quality — what design magazines photograph' },
+    { tier: 'luxury', label: '⭐ Luxury', carcassMaterial: 'Finnish birch or Japanese F★★★★ ply', carcassAssembly: 'Dado/rabbet joinery + epoxy', doorMaterial: 'Solid timber or stone/Fenix/Dekton panels', doorFinish: 'Hand-finished oil/lacquer or engineered stone face', drawerSystem: 'Blum LEGRABOX + SERVO-DRIVE (electric)', hinges: 'Blum + full Häfele fittings', pricePerLM: '$1,400 — $2,500+/LM', description: 'Bespoke joinery-level. European import-grade materials, traditional woodworking joints, solid timber or stone doors. This is the tier where a 3m kitchen island costs $10,000-20,000+. Landed property and penthouse territory' },
+];
+
+// ── RENOVATION OVERHEAD COSTS (SG Market — What clients DON'T see) ──
+// This is the "math" that proves designers aren't overcharging.
+// Total project cost = Materials + Hardware + Labor + Transport + Overhead + Margin
+
+export interface OverheadCostItem {
+    category: string;
+    item: string;
+    costRange: string;
+    unit: string;
+    frequency: string;
+    description: string;
+    notes: string;
+}
+
+export const RENOVATION_OVERHEAD_COSTS: OverheadCostItem[] = [
+    // Transport & Logistics
+    { category: 'Transport', item: 'Material Delivery (Lorry 10ft)', costRange: '$80 — $150', unit: 'per trip', frequency: 'Multiple trips per project', description: 'Lorry delivery from supplier warehouse (Defu Lane, Kaki Bukit, Sungei Kadut) to site. 10ft open truck for plywood, tiles, etc.', notes: 'Minimum 3-5 deliveries per HDB reno. Some suppliers include delivery above $500 order. JB material delivery: $200-400/trip (customs, bridge toll, petrol)' },
+    { category: 'Transport', item: 'Material Delivery (Lorry 14ft/24ft)', costRange: '$150 — $350', unit: 'per trip', frequency: '1-2 per project', description: 'Large lorry for bulk items: full kitchen cabinet set, wardrobes, countertops, large tile orders', notes: 'Needed when full kitchen arrives from workshop as assembled units. Crane/tailgate surcharge: +$50-100 for high-floor delivery without lift' },
+    { category: 'Transport', item: 'Disposal / Debris Removal', costRange: '$300 — $800', unit: 'per project', frequency: '2-4 trips', description: 'Hacking debris, old cabinets, construction waste. Open-top bin or lorry trips to Tuas disposal facility', notes: 'NEA disposal fee included. HDB requires registered waste collector. Some contractors "hide" this cost — it\'s mandatory. Budget $500+ for full reno' },
+    { category: 'Transport', item: 'Worker Transport (Daily)', costRange: '$20 — $40', unit: 'per day', frequency: 'Every workday', description: 'Van/transport for 2-4 workers from dormitory/pickup to site', notes: 'Often absorbed by contractor but factored into overall labor rate. Workers in SG typically need transport from Tuas/Woodlands dorms' },
+    // Workshop & Rental
+    { category: 'Workshop', item: 'Carpentry Workshop Rental', costRange: '$3,000 — $8,000', unit: 'per month', frequency: 'Ongoing', description: 'Industrial workshop space for cabinet fabrication (100-300 sqm). Includes CNC, panel saw, edge bander, spray booth', notes: 'SG workshop rents in Defu Lane, Woodlands, Ubi = $3-5/sqft. This is why SG carpentry costs more than JB/MY — workshop space alone is $3K-8K/month overhead' },
+    { category: 'Workshop', item: 'JB/MY Workshop Rental', costRange: 'RM 2,000 — RM 5,000', unit: 'per month', frequency: 'Ongoing', description: 'Malaysian workshop space (200-500 sqm). Significantly cheaper than SG. Many SG firms fabricate in JB', notes: '60-70% cheaper than SG workshop. This is WHY JB-made cabinets are cheaper — not because quality is worse, but workshop rent is 1/3 the price' },
+    { category: 'Workshop', item: 'CNC Machine Amortization', costRange: '$500 — $1,500', unit: 'per month', frequency: 'Ongoing', description: 'CNC router ($30K-80K), panel saw ($15K-30K), edge bander ($20K-50K) — monthly amortization over 5-7 years', notes: 'Quality workshops invest $100K-200K in machines. This overhead is spread across all projects. A workshop doing 10 kitchens/month: ~$100-150/kitchen for machine cost alone' },
+    // Labor
+    { category: 'Labor', item: 'Carpenter (Skilled)', costRange: '$120 — $200', unit: 'per day', frequency: 'Per workday', description: 'Skilled carpenter — read drawings, operate machines, install cabinets, problem-solve on site. SG work permit holder', notes: 'SG minimum: $120/day for experienced carpenter. A 4-room HDB kitchen takes 3-5 days carpentry on-site. Labor alone for kitchen: $360-1,000' },
+    { category: 'Labor', item: 'Carpenter Helper', costRange: '$60 — $90', unit: 'per day', frequency: 'Per workday', description: 'General worker — carry materials, hold panels, clean site. Often paired with skilled carpenter', notes: 'Usually 1 helper per carpenter. Required for heavy lifting (18mm plywood sheets weigh 30-40kg). MOM work levy: $300-700/month/worker adds to cost' },
+    { category: 'Labor', item: 'Spray Painter (2K PU)', costRange: '$150 — $250', unit: 'per day', frequency: '2-5 days per project', description: 'Specialized spray painter for 2K polyurethane cabinet doors. Needs spray booth, PPE, ventilation', notes: 'Spray painting is a SKILL — not every carpenter can do it well. 2K PU requires 6-8 coats, sanding between coats. A kitchen\'s worth of doors = 2-3 days spraying' },
+    { category: 'Labor', item: 'Electrician', costRange: '$120 — $200', unit: 'per day/per point', frequency: '1-3 days', description: 'Licensed EMA electrician for power points, lighting circuits, DB box. SG requires licensed electrician', notes: 'Each new power point: $80-150. Moving a point: $100-180. New lighting circuit: $150-250. HDB MUST use licensed contractor for electrical works' },
+    { category: 'Labor', item: 'Plumber', costRange: '$120 — $250', unit: 'per day/per point', frequency: '1-3 days', description: 'Licensed PUB plumber for water supply, drainage, trap installation. SG requires licensed plumber', notes: 'Moving kitchen sink point: $300-600 (involves floor hacking). New water point: $150-250. Bathtub to shower conversion: $500-1,200. All plumbing changes need PUB-licensed worker' },
+    { category: 'Labor', item: 'Tiler', costRange: '$8 — $18', unit: 'per sqft', frequency: '3-7 days', description: 'Floor/wall tiling including waterproofing membrane, adhesive, grouting. Rate depends on tile size and pattern', notes: 'Small tiles (mosaic/subway) cost MORE to install: $12-18/sqft. Large format (600×1200mm): $10-15/sqft. Herringbone/pattern: +30% labor. Waterproofing: $3-5/sqft additional' },
+    // Overhead & Insurance
+    { category: 'Overhead', item: 'BCA / HDB Renovation Permit', costRange: '$0 (HDB) / $100-500', unit: 'per project', frequency: 'Each project', description: 'HDB renovation application (free but requires compliance). BCA permit for structural works in private property', notes: 'HDB: Free but MUST apply before starting. Processing: 3-5 working days. No permit = fine + forced restoration. Private: BCA for structural changes only' },
+    { category: 'Overhead', item: 'Contractor All-Risk Insurance', costRange: '$300 — $800', unit: 'per project', frequency: 'Each project', description: 'Insurance covering property damage, worker injury, third-party liability during renovation', notes: 'REQUIRED in SG. Covers: fire risk, worker injury, damage to neighbor\'s unit. Without this = massive liability. Some condos require $1M coverage minimum' },
+    { category: 'Overhead', item: 'MOM Work Permit Levy', costRange: '$300 — $700', unit: 'per worker/month', frequency: 'Monthly', description: 'Singapore MOM foreign worker levy for each work permit holder (carpenter, helper, etc.)', notes: 'A workshop with 5 foreign workers pays $1,500-3,500/MONTH in levies alone. This is a pure SG overhead that doesn\'t exist in MY/JB. Major cost driver' },
+    { category: 'Overhead', item: 'Condo/Management Deposit', costRange: '$1,000 — $5,000', unit: 'per project', frequency: 'Refundable', description: 'Refundable deposit to condo management before renovation starts. Covers potential damage to common areas', notes: 'Ranges from $1K (small condo) to $5K (luxury). Refundable after completion + inspection. Ties up contractor\'s cash flow across multiple projects' },
+    // Design Fees (what clients are actually paying for)
+    { category: 'Design', item: 'Interior Design Fee', costRange: '$3,000 — $15,000', unit: 'per project', frequency: 'One-time', description: 'Conceptual design, 3D renders, material selection, space planning, contractor coordination, site supervision', notes: 'SG ID firms charge 10-15% of project value OR flat fee. For $50K reno: $5K-7.5K design fee. This covers: 2-3 site visits, 5-10 design revisions, 10-20 hours supervision, full material spec sheet. Designers do NOT make money on material markup — they make money HERE' },
+    { category: 'Design', item: 'Drafting / 3D Rendering', costRange: '$500 — $3,000', unit: 'per project', frequency: 'One-time', description: 'Technical drawings for carpentry (CNC-ready), plumbing layout, electrical layout. 3D photorealistic renders for client approval', notes: 'AutoCAD/SketchUp drafting: 10-30 hours per project. 3D renders: $100-300 per view. A 4-room HDB needs ~15 drawings. This is where junior designers/drafters add value' },
+];
+
+// ── SG RENOVATION MARKET PRICE RANGES (What clients typically pay) ──
+export interface RenovationPriceRange {
+    propertyType: string;
+    scope: string;
+    budgetRange: string;
+    standardRange: string;
+    premiumRange: string;
+    luxuryRange: string;
+    timeline: string;
+    notes: string;
+}
+
+export const SG_RENOVATION_PRICES: RenovationPriceRange[] = [
+    { propertyType: 'HDB 3-Room (65 sqm)', scope: 'Full renovation', budgetRange: '$18,000 — $28,000', standardRange: '$28,000 — $45,000', premiumRange: '$45,000 — $70,000', luxuryRange: '$70,000 — $100,000+', timeline: '6-10 weeks', notes: 'Budget = repaint + laminate + basic kitchen. Standard = hacking + new layout + good carpentry. Premium = full Blum, spray paint, feature walls, designer lighting' },
+    { propertyType: 'HDB 4-Room (90 sqm)', scope: 'Full renovation', budgetRange: '$25,000 — $38,000', standardRange: '$38,000 — $58,000', premiumRange: '$58,000 — $90,000', luxuryRange: '$90,000 — $130,000+', timeline: '8-12 weeks', notes: 'THE most common SG renovation. 4-room HDB is the benchmark. "$40K reno" is the SG median. Below $35K = cutting corners somewhere' },
+    { propertyType: 'HDB 5-Room / EA (110 sqm)', scope: 'Full renovation', budgetRange: '$30,000 — $45,000', standardRange: '$45,000 — $70,000', premiumRange: '$70,000 — $110,000', luxuryRange: '$110,000 — $160,000+', timeline: '8-14 weeks', notes: 'Larger space = more carpentry. Extra bedroom often converted to study/walk-in. Premium tier includes built-in wardrobes for all rooms' },
+    { propertyType: 'BTO (New HDB)', scope: 'First-time renovation', budgetRange: '$20,000 — $35,000', standardRange: '$35,000 — $55,000', premiumRange: '$55,000 — $85,000', luxuryRange: '$85,000 — $120,000+', timeline: '6-10 weeks', notes: 'BTO = no hacking needed (save $3-8K). But flooring/tiling still needed. Most BTO owners budget $40-60K. Couples often combine BTO grant savings with reno' },
+    { propertyType: 'Condo (80-120 sqm)', scope: 'Full renovation', budgetRange: '$35,000 — $55,000', standardRange: '$55,000 — $85,000', premiumRange: '$85,000 — $140,000', luxuryRange: '$140,000 — $250,000+', timeline: '10-16 weeks', notes: 'Condo reno costs 20-40% more than HDB: management deposits, stricter rules, often more detailed finishes. Permit timelines slow things down. Material delivery restricted to certain hours' },
+    { propertyType: 'Landed (Terrace/Semi-D)', scope: 'Full renovation (interior)', budgetRange: '$60,000 — $100,000', standardRange: '$100,000 — $180,000', premiumRange: '$180,000 — $350,000', luxuryRange: '$350,000 — $800,000+', timeline: '16-30 weeks', notes: 'Landed = multiple floors, outdoor areas, possibly A&A (additions & alterations). BCA structural permit needed for A&A. Premium includes marble, custom joinery, smart home, landscaping' },
+    { propertyType: 'Kitchen Only', scope: 'Kitchen renovation', budgetRange: '$5,000 — $10,000', standardRange: '$10,000 — $20,000', premiumRange: '$20,000 — $35,000', luxuryRange: '$35,000 — $60,000+', timeline: '2-4 weeks', notes: 'Most common standalone reno. Budget = reface doors + new countertop. Standard = new carcass + countertop + backsplash. Premium = full Blum + stone countertop + feature lighting' },
+    { propertyType: 'Bathroom Only', scope: 'Bathroom renovation', budgetRange: '$4,000 — $8,000', standardRange: '$8,000 — $15,000', premiumRange: '$15,000 — $25,000', luxuryRange: '$25,000 — $50,000+', timeline: '2-3 weeks', notes: 'Must include waterproofing ($3-5/sqft). Budget = overlay tiles. Standard = hack + retile + new fittings. Premium = rain shower, freestanding tub, heated towel rail, niche lighting' },
+];
