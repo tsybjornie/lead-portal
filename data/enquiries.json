@@ -1,0 +1,62 @@
+{
+  "enquiries": [
+    {
+      "id": "1769629893025",
+      "name": "Teo Shaoyang",
+      "email": "tsybjorn@live.com.sg",
+      "phone": "98004317",
+      "property_type": "Condo",
+      "renovation_type": "full",
+      "budget_range": "$60k-$100k",
+      "scope": [
+        "Hacking/Demolition",
+        "Facade / External Works",
+        "Roofing Works",
+        "Air-Con (Installation/Replacement)",
+        "Ceiling & Partition",
+        "Flooring"
+      ],
+      "scope_other": "",
+      "timeline": "3-6 months",
+      "decision_speed": "",
+      "communication_pref": "",
+      "involvement_level": "",
+      "additional_notes": "",
+      "assessment_score": 25,
+      "karenScore": 25,
+      "tier": "Concierge",
+      "status": "new",
+      "assignedFirms": [],
+      "submittedAt": "2026-01-28T19:51:33.025Z"
+    },
+    {
+      "id": "1769629895654",
+      "name": "Teo Shaoyang",
+      "email": "tsybjorn@live.com.sg",
+      "phone": "98004317",
+      "property_type": "Condo",
+      "renovation_type": "full",
+      "budget_range": "$60k-$100k",
+      "scope": [
+        "Hacking/Demolition",
+        "Facade / External Works",
+        "Roofing Works",
+        "Air-Con (Installation/Replacement)",
+        "Ceiling & Partition",
+        "Flooring"
+      ],
+      "scope_other": "",
+      "timeline": "3-6 months",
+      "decision_speed": "",
+      "communication_pref": "",
+      "involvement_level": "",
+      "additional_notes": "",
+      "assessment_score": 25,
+      "karenScore": 25,
+      "tier": "Concierge",
+      "status": "new",
+      "assignedFirms": [],
+      "submittedAt": "2026-01-28T19:51:35.654Z"
+    }
+  ]
+}

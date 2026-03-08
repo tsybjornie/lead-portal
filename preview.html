@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RenoBuilders - Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; }
+        .hero { background: linear-gradient(135deg, #2c3e50 0%, #3d5a80 100%); color: white; padding: 100px 20px; text-align: center; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1.5rem; font-weight: 600; }
+        .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto 2rem; line-height: 1.6; opacity: 0.95; }
+        .btn { display: inline-block; padding: 1rem 2.5rem; margin: 0.5rem; text-decoration: none; border-radius: 4px; font-weight: 600; transition: all 0.3s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; transform: translateY(-2px); }
+        .btn-secondary { background: transparent; color: white; border: 2px solid white; }
+        .btn-secondary:hover { background: white; color: #2c3e50; }
+        .section { padding: 5rem 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: #2c3e50; }
+        .how-it-works { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; text-align: center; }
+        .step { background: white; padding: 2rem; border: 1px solid #ddd; }
+        .step-number { font-size: 3.5rem; color: #3498db; font-weight: 600; margin-bottom: 1rem; }
+        .stats-section { background: linear-gradient(135deg, #2c3e50 0%, #4a4a4a 100%); color: white; padding: 4rem 20px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: 300; margin-bottom: 0.5rem; }
+        .stat-label { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem; opacity: 0.9; }
+        .cream-bg { background: #faf8f3; }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <h1>No Grey Areas Before You Renovate</h1>
+            <p>Discover your style. Answer a few questions. We connect you with 2-4 qualified professionals based on your aesthetic, budget, and working style. No browsing. No guesswork.</p>
+            <div>
+                <a href="#" class="btn btn-primary">For Homeowners</a>
+                <a href="#" class="btn btn-secondary">For Firms</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="how-it-works">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Submit Your Requirements</h3>
+                    <p>Tell us about your property, budget, scope, and working style preferences</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>We Match You</h3>
+                    <p>Our team reviews and connects you with 2-4 suitable professionals</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Direct Contact</h3>
+                    <p>Matched firms reach out directly to discuss your project</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats">
+                <div>
+                    <div class="stat-number">Beta</div>
+                    <div class="stat-label">Early Access Launch</div>
+                </div>
+                <div>
+                    <div class="stat-number">Limited</div>
+                    <div class="stat-label">Spots Available</div>
+                </div>
+                <div>
+                    <div class="stat-number">48hrs</div>
+                    <div class="stat-label">Average Match Time</div>
+                </div>
+                <div>
+                    <div class="stat-number">$0</div>
+                    <div class="stat-label">Free for Homeowners</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section cream-bg">
+        <div class="container" style="max-width: 900px;">
+            <h2 class="section-title">For Interior Designers & Contractors</h2>
+            <div style="background: white; padding: 3rem; border: 1px solid #ddd; text-align: center;">
+                <p style="font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.8;">
+                    Join our network of qualified renovation professionals. Get access to pre-qualified homeowner leads that match your expertise and capacity.
+                </p>
+                <a href="#" class="btn btn-secondary" style="color: #2c3e50; border-color: #2c3e50;">Apply for Access</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
