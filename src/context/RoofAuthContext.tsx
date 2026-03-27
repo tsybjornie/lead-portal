@@ -192,10 +192,21 @@ export function RoofAuthProvider({ children }: { children: ReactNode }) {
         return () => subscription.unsubscribe();
     }, []);
 
-    // Legacy: login by role (for backward compat — sets role but uses current user)
+    // Login by role — creates a dummy user for admin bypass, or updates existing user
     const login = (role: UserRole) => {
         if (user) {
             setUser({ ...user, activeRole: role, roles: [...new Set([...user.roles, role])] });
+        } else {
+            // Admin bypass: create a dummy RoofUser without Supabase
+            setUser({
+                id: 'admin-local',
+                name: role === 'admin' ? 'Admin' : 'User',
+                email: role === 'admin' ? 'admin@roof.sg' : '',
+                roles: [role],
+                activeRole: role,
+                code: 'ADMIN0',
+            });
+            setIsLoading(false);
         }
     };
 

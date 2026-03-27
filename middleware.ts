@@ -47,7 +47,13 @@ const ROUTE_ACCESS: Record<string, Role[]> = {
 // Routes that are public (no auth required)
 const PUBLIC_ROUTES = [
     '/login',
+    '/landing',      // Landing / marketing page
+    '/forgot-password',
+    '/signup',
     '/invite',       // Vendor invitation link
+    '/quote/',       // Public quote view
+    '/homeowner',    // Homeowner onboarding
+    '/legal',        // Legal pages
     '/_next',        // Next.js internals
     '/favicon.ico',
 ];

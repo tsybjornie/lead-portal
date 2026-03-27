@@ -33,8 +33,9 @@ export default function LoginPage() {
 
         // ── Admin dummy account (no Supabase needed) ──
         if (email.trim().toLowerCase() === 'admin@roof.sg' && password === 'roof2026') {
+            document.cookie = 'role=admin; path=/; max-age=86400';
             login('admin' as any);
-            router.push('/sequence');
+            router.push('/hub');
             return;
         }
 
@@ -65,8 +66,10 @@ export default function LoginPage() {
                 login(role as any);
                 router.push('/hub');
             }
-        } catch {
-            setError('Connection error. Please try again.');
+        } catch (err: any) {
+            setError(err?.message === 'Failed to fetch'
+                ? 'Cannot reach server. Check your connection and try again.'
+                : 'Connection error. Please try again.');
             setIsLoading(false);
         }
     };
